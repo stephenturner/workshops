@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Tidy Text mining with R</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<!-- Font Awesome -->
+<!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
+<!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
+
+<!-- Google fonts -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic|Oswald:400,700' rel='stylesheet' type='text/css'>
+
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-8298649-8', 'auto');
+  ga('send', 'pageview');
+</script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BIODATASCI</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="setup.html">
+    <span class="fa fa-cog"></span>
+     
+    Setup
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-download"></span>
+     
+    Data
+  </a>
+</li>
+<li>
+  <a href="thriv.html">
+    <span class="fa fa-graduation-cap"></span>
+     
+    Syllabus
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-university"></span>
+     
+    Course Material
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="thriv.html">
+        <span class="fa fa-graduation-cap"></span>
+         
+        Syllabus
+      </a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">--- Lessons ---</li>
+    <li>
+      <a href="r-basics.html">R Basics</a>
+    </li>
+    <li>
+      <a href="r-dataframes.html">Data Frames</a>
+    </li>
+    <li>
+      <a href="r-dplyr-yeast.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="r-tidy.html">Tidying data</a>
+    </li>
+    <li>
+      <a href="r-viz-gapminder.html">Data Visualization</a>
+    </li>
+    <li>
+      <a href="r-refresher-tidy-eda.html">Refresher: Tidy EDA</a>
+    </li>
+    <li>
+      <a href="r-rmarkdown.html">Reproducible Research &amp; RMarkdown</a>
+    </li>
+    <li>
+      <a href="r-stats.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-survival.html">Survival Analysis</a>
+    </li>
+    <li>
+      <a href="r-predictive-modeling.html">Predictive Analytics &amp; Forecasting Influenza</a>
+    </li>
+    <li>
+      <a href="r-textmining.html">Text Mining</a>
+    </li>
+    <li class="dropdown-header">--- Homework ---</li>
+    <li>
+      <a href="r-dplyr-homework.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="r-viz-homework.html">Data Visualization</a>
+    </li>
+    <li>
+      <a href="r-rmarkdown-homework.html">Reproducible Research &amp; RMarkdown</a>
+    </li>
+    <li>
+      <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question fa-lg"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="people.html">People</a>
+    </li>
+    <li>
+      <a href="help.html">Further resources</a>
+    </li>
+    <li>
+      <a href="https://github.com/thriv/biodatasci">Source code for this site</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Tidy Text mining with R</h1>
+
+</div>
+
+
+<div id="class-overview" class="section level2">
+<h2>Class overview</h2>
+<p><small></p>
+<blockquote>
+<p><strong><em>Attribution</em>:</strong> This workshop was inspired by and/or modified in part from <a href="https://www.tidytextmining.com/"><em>Text Mining with R</em></a> by Julia Silge and David Robinson.</p>
+</blockquote>
+<p></small></p>
+<p>Most of the data we’ve dealt with so far in this course has been rectangular, in the form of a data frame or tibble, and mostly numeric. But lots of data these days comes in the form of unstructured text. This workshop provides an overview of fundamental principles in text mining, and introduces the <strong><a href="https://cran.r-project.org/web/packages/tidytext/index.html">tidytext</a></strong> package that allows you to apply to text data the same “tidy” methods you’re familiar with for wrangling and vizualizing data.</p>
+<p>Course pre-requisites:</p>
+<ul>
+<li><a href="r-basics.html">R Basics</a></li>
+<li><a href="r-dataframes.html">Data frames</a></li>
+<li><a href="r-dplyr-yeast.html">Manipulating and analyzing data with <strong>dplyr</strong></a> (and the associated <a href="r-dplyr-homework.html">homework</a>)</li>
+<li><a href="r-tidy.html">Tidying data with <strong>tidyr</strong></a></li>
+<li><a href="r-viz-gapminder.html">Data visualization with <strong>ggplot2</strong></a> (and the associated <a href="r-viz-homework.html">homework</a>)</li>
+</ul>
+<p>This course is <em>not</em> an extensive deep dive into natural language processing (NLP). For that check out the <a href="https://cran.r-project.org/web/views/NaturalLanguageProcessing.html">CRAN task view on NLP</a> for a long list of packages that will aid you in computational linguistics.</p>
+<p>Before we get started, let’s load the packages we’ll need.</p>
+<pre class="r"><code>library(tidyverse)
+library(tidytext)
+library(gutenbergr)
+library(topicmodels)</code></pre>
+</div>
+<div id="the-tidy-text-format" class="section level2">
+<h2>The Tidy Text Format</h2>
+<p>In the previous lessons linked above we discussed the three features of Tidy Data, as outlined in Hadley Wickham’s <a href="http://vita.had.co.nz/papers/tidy-data.html">Tidy Data paper</a>:</p>
+<ul>
+<li>Each variable is a column</li>
+<li>Each observation is a row</li>
+<li>Each type of observational unit is a table</li>
+</ul>
+<p>Tidy text format can be defined as <strong>a table with one-token-per-row.</strong> A <strong>token</strong> is any meaningful unit of text, such as a word, that we are interested in using for analysis. <strong>Tokenization</strong> is the process of splitting text into tokens. This is in contrast to storing text in strings or in a document-term matrix (discussed later). Here, the token stored in a single row is most often a single word. The <strong><a href="https://cran.r-project.org/web/packages/tidytext/index.html">tidytext</a></strong> package provides functionality to tokenize strings by words (or n-grams, or sentences) and convert to a one-term-per-row format. By keeping text in “tidy” tables, you can use the normal tools you’re familiar with, including dplyr, tidyr, ggplot2, etc., for manipulation, analysis, and visualization. The tidytext package also includes functions to convert to and from other data structures for text processing, such as a <em>corpus</em><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> or a <em>document-term matrix</em>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<div class="figure">
+<img src="img/tidytext-1-overview.png" alt="Workflow for text analysis using tidy principles." />
+<p class="caption">Workflow for text analysis using tidy principles.</p>
+</div>
+<div id="the-unnest_tokens-function" class="section level3">
+<h3>The <code>unnest_tokens</code> function</h3>
+<p>We briefly mentioned before how to create vectors using the <code>c()</code> function. Let’s create a simple character vector.</p>
+<pre class="r"><code>text &lt;- c(&quot;a&quot;, &quot;banana&quot;, &quot;crouton&quot;)</code></pre>
+<p>Let’s extend that to create another character vector, this time with sentences:</p>
+<pre class="r"><code>text &lt;- c(&quot;It was the best of times,&quot;,
+          &quot;it was the worse of times,&quot;,
+          &quot;It was the spring of hope, it was the winter of despair.&quot;)
+text</code></pre>
+<p>Before we can turn this into a tidy text dataset, we first have to put it in a data frame.</p>
+<pre class="r"><code>text_df &lt;- data_frame(line = 1:3, text = text)
+text_df</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##    line text                                                    
+##   &lt;int&gt; &lt;chr&gt;                                                   
+## 1     1 It was the best of times,                               
+## 2     2 it was the worse of times,                              
+## 3     3 It was the spring of hope, it was the winter of despair.</code></pre>
+<p>This data isn’t yet “tidy.” We can’t do the kinds of operations like filter out particular words or summarize operations, for instance, to count which occur most frequently, since each row is made up of multiple combined words. We need to convert this so that it has <strong>one-token-per-document-per-row</strong>. Here we only have a single document, but later we’ll have multiple documents.</p>
+<p>We need to (1) break the text into individual tokens (i.e. <em>tokenization</em>) and transform it to a tidy data structure. To do this, we use tidytext’s <code>unnest_tokens()</code> function.</p>
+<pre class="r"><code>text_df %&gt;%
+  unnest_tokens(output=word, input=text)</code></pre>
+<pre><code>## # A tibble: 24 x 2
+##     line word 
+##    &lt;int&gt; &lt;chr&gt;
+##  1     1 it   
+##  2     1 was  
+##  3     1 the  
+##  4     1 best 
+##  5     1 of   
+##  6     1 times
+##  7     2 it   
+##  8     2 was  
+##  9     2 the  
+## 10     2 worse
+## # ... with 14 more rows</code></pre>
+<p>The <code>unnest_tokens</code> function takes a data frame (or tibble), and two additional parameters, the <code>output</code> and <code>input</code> column names. If you specify them in the correct order, you don’t have to specify <code>output=</code> or <code>input=</code>. You can pipe to <code>print(n=Inf)</code> to print them all.</p>
+<pre class="r"><code>text_df %&gt;%
+  unnest_tokens(word, text) %&gt;% 
+  print(n=Inf)</code></pre>
+<p>First you give it the output column name that will be created as the text is unnested into it (<code>word</code>, in this example). This is a column name that you choose – you could call it anything, but <code>word</code> usually makes sense. Then you give it the input column that the text comes from in the data frame you’re passing to it (<code>text</code>, in this case). Our <code>text_df</code> dataset has a column called <code>text</code> that contains the data of interest.</p>
+<p>The <code>unnest_tokens</code> function splits each row so that there is one word per row of the new data frame; the default tokenization in <code>unnest_tokens()</code> is for single words, as shown here. Also notice:</p>
+<ul>
+<li>Other columns, such as the line number each word came from, are retained.</li>
+<li>Punctuation has been stripped.</li>
+<li>By default, <code>unnest_tokens()</code> converts the tokens to lowercase, which makes them easier to compare or combine with other datasets. (Use the <code>to_lower = FALSE</code> argument to turn off this behavior).</li>
+</ul>
+<p>Now our data is in a tidy format, and we can easily use all the normal dplyr, tidyr, and ggplot2 tools.</p>
+</div>
+<div id="example-jane-austen-novels" class="section level3">
+<h3>Example: Jane Austen Novels</h3>
+<p>Let’s load the <strong><a href="data/austen.csv">austen.csv</a></strong> data.</p>
+<pre class="r"><code>jaorig &lt;- read_csv(&quot;data/austen.csv&quot;)
+jaorig</code></pre>
+<p>Click the <code>jaorig</code> dataset in the environment pane or use <code>View(jaorig)</code> to see what’s being read in here. Before we can do anything else we’ll need to tidy this up by unnesting the <code>text</code> column into words.</p>
+<pre class="r"><code>jatidy &lt;- jaorig %&gt;% 
+  unnest_tokens(word, text)
+jatidy</code></pre>
+<p>Let’s use the dplyr <code>count</code> function to count how many occurances we have for each word in the entire corpus. The <code>sort=TRUE</code> option puts the most common results on top.</p>
+<pre class="r"><code>jatidy %&gt;%
+  count(word, sort = TRUE) </code></pre>
+<p>Not surprisingly the most common words are some of the most commonly used words in the English language. These are known as <a href="https://en.wikipedia.org/wiki/Stop_words">stop words</a>. They’re words you’ll want to filter out before doing any text mining. There are lists of stop words online, but the tidytext package comes with a <code>stop_words</code> built-in dataset with some of the most common stop words across three different lexicons. See <code>?stop_words</code> for more information.</p>
+<pre class="r"><code>data(stop_words)
+stop_words</code></pre>
+<p>As in a previous lesson where we did an <code>inner_join</code> to link information across two different tables by a common key, there’s also an <a href="https://dplyr.tidyverse.org/reference/join.html#join-types"><code>anti_join()</code></a> which takes two tibbles, <em>x</em> and <em>y</em>, and returns all rows from <em>x</em> where there are not matching values in <em>y</em>, keeping just columns from <em>x</em>. Let’s <code>anti_join</code> the data to the stop words. Because we chose “word” as the output variable to <code>unnest_tokens()</code>, and “word” is the variable in the <code>stop_words</code> dataset, we don’t have to be specific about which columns we’re joining.</p>
+<pre class="r"><code>jatidy %&gt;% 
+  anti_join(stop_words)</code></pre>
+<p>Now there are <em>far</em> fewer rows than initially present. Let’s run that count again, now with the stop words removed.</p>
+<pre class="r"><code>jatidy %&gt;%
+  anti_join(stop_words) %&gt;% 
+  count(word, sort = TRUE) </code></pre>
+<pre><code>## # A tibble: 13,914 x 2
+##    word       n
+##    &lt;chr&gt;  &lt;int&gt;
+##  1 miss    1855
+##  2 time    1337
+##  3 fanny    862
+##  4 dear     822
+##  5 lady     817
+##  6 sir      806
+##  7 day      797
+##  8 emma     787
+##  9 sister   727
+## 10 house    699
+## # ... with 13,904 more rows</code></pre>
+<p>That’s <em>much</em> more in line with what we want. We have this data in a tibble. Let’s keep piping to other operations!</p>
+<pre class="r"><code>jatidy %&gt;%
+  anti_join(stop_words) %&gt;% 
+  count(word, sort = TRUE) %&gt;% 
+  head(20) %&gt;% 
+  mutate(word = reorder(word, n)) %&gt;%
+  ggplot(aes(word, n)) +
+  geom_col() +
+  coord_flip()</code></pre>
+<p><img src="r-textmining_files/figure-html/unnamed-chunk-14-1.png" width="816" /></p>
+</div>
+</div>
+<div id="sentiment-analysis" class="section level2">
+<h2>Sentiment Analysis</h2>
+<p>Let’s start to do some high-level analysis of the text we have. Sentiment analysis<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>, also called opinion mining, is the use of text mining to “systematically identify, extract, quantify, and study affective states and subjective information.” It’s a way to try to understand the emotional intent of words to infer whether a section of text is positive or negative, or perhaps characterized by some other more nuanced emotion like surprise or disgust.</p>
+<p>If you make a simplifying assumption regarding the text you have as a combination of its individual words, you can treat the sentiment content of the whole text as the sum of the sentiment content of the individual words. It’s a simplification, and it isn’t the only way to approach sentiment analysis, but it’s simple and easy to do with tidy principles.</p>
+<p>To get started you’ll need a <em>sentiment lexicon</em> that attempt to evaluate the opinion or emotion in text. The tidytext package contains several sentiment lexicons in the <code>sentiments</code> dataset. All three of these lexicons are based on single words in the English language, assigning scores for positive/negative sentiment, or assigning emotions like joy, anger, sadness, etc.</p>
+<ul>
+<li><strong><code>nrc</code></strong> from Saif Mohammad and Peter Turney<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> categorizes words in a binary fashion (“yes”/“no”) into categories of positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust.</li>
+<li><strong><code>bing</code></strong> from Bing Liu and collaborators<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> categorizes words in a binary fashion into positive and negative categories.</li>
+<li><strong><code>AFINN</code></strong> from Finn Arup Nielsen<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> assigns words with a score that runs between -5 and 5, with negative scores indicating negative sentiment and positive scores indicating positive sentiment.</li>
+</ul>
+<p>The built-in <code>sentiments</code> dataset available when you load the tidytext package contains all of this information. You could filter it to a single lexicon with the dplyr <code>filter()</code> function, or use tidytext’s <code>get_sentiments()</code> to get specific sentiment lexicons containing only the data used for that lexicon.</p>
+<pre class="r"><code># Look at the sentiments data
+data(sentiments)
+sentiments
+sentiments %&gt;% filter(lexicon==&quot;nrc&quot;)
+sentiments %&gt;% filter(lexicon==&quot;bing&quot;)
+sentiments %&gt;% filter(lexicon==&quot;AFINN&quot;)
+
+# Use the built-in get_sentiments() function
+get_sentiments(&quot;nrc&quot;)
+get_sentiments(&quot;bing&quot;)
+get_sentiments(&quot;afinn&quot;)</code></pre>
+<p>There are a few major caveats to be aware of.</p>
+<ol style="list-style-type: decimal">
+<li>The sentiment lexicons we’re using here were constructed either via crowdsourcing or by the work of the authors, and validated using crowdsourcing, movie/restaurant reviews, or Twitter data. It’s unknown how useful it is to apply these lexicons to text from a completely different time and place (e.g., 200-year old fiction novels). Further, there are other domain-specific lexicons available, e.g., for finance data, that are better used in that context.</li>
+<li>May words in the English language are fairly neutral, and aren’t included in any sentiment lexicon.</li>
+<li>Methods based on unigrams (single words) do not take into account qualifiers before a word, such as in “no good” or “not true”. If you have sustained sections of sarcasm or negated text, this could be problematic.</li>
+<li>The size of the chunk of text that we use to add up single-word sentiment scores matters. Sentiment across many paragraphs often has positive and negative sentiment averaging out to about zero, but sentence-sized or paragraph-sized text might be better.</li>
+</ol>
+<div class="figure">
+<img src="img/tidytext-2-sentiment.png" alt="Workflow for sentiment analysis using tidy principles." />
+<p class="caption">Workflow for sentiment analysis using tidy principles.</p>
+</div>
+<div id="sentiment-analysis-with-tidy-tools" class="section level3">
+<h3>Sentiment analysis with tidy tools</h3>
+<p>Let’s look at the most common joy words in <em>Emma</em>. To do this we will:</p>
+<ol style="list-style-type: decimal">
+<li>Start with the unnested Jane Austen text data.</li>
+<li>Join it to the NRC sentiment lexicon.</li>
+<li>Filter it to only include “joy” words.</li>
+<li>Filter for only words in <em>Emma</em>.</li>
+<li>Count the number of occurences of each word, sorting the output with the highest on top.</li>
+</ol>
+<pre class="r"><code>jatidy %&gt;% 
+  inner_join(get_sentiments(&quot;nrc&quot;)) %&gt;% 
+  filter(sentiment==&quot;joy&quot;) %&gt;% 
+  filter(book==&quot;Emma&quot;) %&gt;% 
+  count(word, sort=TRUE)</code></pre>
+<pre><code>## # A tibble: 303 x 2
+##    word        n
+##    &lt;chr&gt;   &lt;int&gt;
+##  1 good      359
+##  2 young     192
+##  3 friend    166
+##  4 hope      143
+##  5 happy     125
+##  6 love      117
+##  7 deal       92
+##  8 found      92
+##  9 present    89
+## 10 kind       82
+## # ... with 293 more rows</code></pre>
+<p>Try running the same code but replacing “joy” with “anger” or “trust.”</p>
+<pre class="r"><code>jatidy %&gt;% 
+  inner_join(get_sentiments(&quot;nrc&quot;)) %&gt;% 
+  filter(sentiment==&quot;anger&quot;) %&gt;% 
+  filter(book==&quot;Emma&quot;) %&gt;% 
+  count(word, sort=TRUE)</code></pre>
+<p>Let’s look at how sentiment changes over time throughout each novel.</p>
+<ol style="list-style-type: decimal">
+<li>Start with the unnested Jane Austen text data.</li>
+<li>Join it to the ‘bing’ sentiment lexicon (positive vs negative).</li>
+<li>Create a new variable that counts up each 80-line section. First note that the <code>%/%</code> operator does integer division. It tells you the integer quotient without the remainder. This is a way for us to keep track of which 80-line section of text we are counting up negative and positive sentiment in.</li>
+<li>Count the number of occurances of each sentiment (positive vs negative) in each section, for each book.</li>
+<li>Spread the sentiment column into new columns, and fill in missing values with zeros.</li>
+<li>Create your own summary sentiment score that’s the total number of positive words minus the total number of negative words.</li>
+</ol>
+<pre class="r"><code>jatidy %&gt;% 
+  inner_join(get_sentiments(&quot;bing&quot;)) %&gt;% 
+  mutate(section=linenumber %/% 80) %&gt;%
+  count(book, section, sentiment) %&gt;% 
+  spread(sentiment, n, fill=0) %&gt;% 
+  mutate(sentiment=positive-negative)</code></pre>
+<pre><code>## # A tibble: 920 x 5
+##    book  section negative positive sentiment
+##    &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Emma        0       31       43        12
+##  2 Emma        1       28       33         5
+##  3 Emma        2       30       35         5
+##  4 Emma        3       27       51        24
+##  5 Emma        4       23       46        23
+##  6 Emma        5       25       50        25
+##  7 Emma        6       25       47        22
+##  8 Emma        7       27       63        36
+##  9 Emma        8       21       47        26
+## 10 Emma        9       11       40        29
+## # ... with 910 more rows</code></pre>
+<p>Now let’s pipe that whole thing to ggplot2 to see how the sentiment changes over the course of each novel. Facet by book, and pass <code>scales=&quot;free_x&quot;</code> so the x-axis is filled for each panel.</p>
+<pre class="r"><code>jatidy %&gt;% 
+  inner_join(get_sentiments(&quot;bing&quot;)) %&gt;% 
+  mutate(section=linenumber %/% 80) %&gt;%
+  count(book, section, sentiment) %&gt;% 
+  spread(sentiment, n, fill=0) %&gt;% 
+  mutate(sentiment=positive-negative) %&gt;% 
+  ggplot(aes(section, sentiment)) +
+    geom_col() +
+    facet_wrap(~book, ncol = 2, scales = &quot;free_x&quot;)</code></pre>
+<p><img src="r-textmining_files/figure-html/unnamed-chunk-19-1.png" width="816" /></p>
+<p>Try comparing different sentiment lexicons. You might see different results! Different lexicons contain different ratios of positive to negative sentiment words, and thus will give you different results. You would probably want to try a few different lexicons using a known dataset to see what lexicon is most appropriate for your purpose. For more information on this topic, see <a href="https://www.tidytextmining.com/sentiment.html#comparing-the-three-sentiment-dictionaries">section 2.3 of the Tidy Text Mining book</a>.</p>
+</div>
+<div id="measuring-contribution-to-sentiment" class="section level3">
+<h3>Measuring contribution to sentiment</h3>
+<p>We could also analyze word counts that contribute to each sentiment. This first joins Jane Austen’s tidy text data to the bing lexicon and counts how many times each word-sentiment linkage exists.</p>
+<pre class="r"><code>jatidy %&gt;% 
+  inner_join(get_sentiments(&quot;bing&quot;)) %&gt;% 
+  count(word, sentiment, sort=TRUE)</code></pre>
+<pre><code>## # A tibble: 2,585 x 3
+##    word     sentiment     n
+##    &lt;chr&gt;    &lt;chr&gt;     &lt;int&gt;
+##  1 miss     negative   1855
+##  2 well     positive   1523
+##  3 good     positive   1380
+##  4 great    positive    981
+##  5 like     positive    725
+##  6 better   positive    639
+##  7 enough   positive    613
+##  8 happy    positive    534
+##  9 love     positive    495
+## 10 pleasure positive    462
+## # ... with 2,575 more rows</code></pre>
+<p>Look at the help for <code>?top_n</code>. It’s similar to arranging a dataset then using <code>head</code> to get the first few rows. But if we want the top <em>n</em> from each group, we need the <code>top_n</code> function. Let’s continue the pipeline above.</p>
+<ol style="list-style-type: decimal">
+<li>First group by sentiment.</li>
+<li>Next get the top 10 observations in each group. By default, it uses the last column here as a ranking metric.</li>
+<li>The <code>top_n</code> function leaves the dataset grouped. In this case we want to ungroup the data.</li>
+<li>Let’s plot a bar plot showing the n for each word separately for positive and negative words.</li>
+<li>We could mutate word to reorder it as a factor by n.</li>
+</ol>
+<pre class="r"><code>jatidy %&gt;% 
+  inner_join(get_sentiments(&quot;bing&quot;)) %&gt;% 
+  count(word, sentiment, sort=TRUE) %&gt;% 
+  group_by(sentiment) %&gt;% 
+  top_n(10) %&gt;% 
+  ungroup() %&gt;%
+  mutate(word=reorder(word, n)) %&gt;% 
+  ggplot(aes(word, n)) + 
+  geom_col(aes(fill=sentiment)) +
+  facet_wrap(~sentiment, scale=&quot;free_y&quot;) + 
+  coord_flip()</code></pre>
+<p><img src="r-textmining_files/figure-html/unnamed-chunk-21-1.png" width="816" /></p>
+<p>Notice that “miss” is probably erroneous here. It’s used as a title for unmarried women in Jane Austen’s works, and should probably be excluded from analysis. You could filter this, or you could create a custom stop words lexicon and add this to it. You could also unnest the corpus using bigrams instead of single words, then filter to look for bigrams that start with “miss,” counting to show the most common ones.</p>
+<pre class="r"><code>jaorig %&gt;% 
+  unnest_tokens(bigram, text, token=&quot;ngrams&quot;, n=2) %&gt;% 
+  filter(str_detect(bigram, &quot;^miss&quot;)) %&gt;% 
+  count(bigram, sort=TRUE)</code></pre>
+<pre><code>## # A tibble: 169 x 2
+##    bigram             n
+##    &lt;chr&gt;          &lt;int&gt;
+##  1 miss crawford    196
+##  2 miss woodhouse   143
+##  3 miss fairfax      98
+##  4 miss bates        92
+##  5 miss tilney       74
+##  6 miss bingley      67
+##  7 miss dashwood     55
+##  8 miss bennet       52
+##  9 miss morland      50
+## 10 miss smith        48
+## # ... with 159 more rows</code></pre>
+</div>
+</div>
+<div id="word-and-document-frequencies" class="section level2">
+<h2>Word and Document Frequencies</h2>
+<div id="tf-idf-and-tf-idf" class="section level3">
+<h3>TF, IDF, and TF-IDF</h3>
+<p>In text mining we’re trying to get at “what is this text about?” We can start to get a sense of this by looking at the words that make up the text, and we can start to measure measure how important a word is by its <strong>term frequency</strong> (tf), how frequently a word occurs in a document. When we did this we saw some common words in the English language, so we took an approach to filter out our data first by a list of common stop words.</p>
+<pre class="r"><code>jatidy %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  count(word, sort=TRUE)</code></pre>
+<p>Another way is to look at a term’s <strong>inverse document frequency</strong> (idf), which decreases the weight for commonly used words and increases the weight for words that are not used very much in a collection of documents. It’s defined as:</p>
+<p><span class="math display">\[idf(\text{term}) = \ln{\left(\frac{n_{\text{documents}}}{n_{\text{documents containing term}}}\right)}\]</span></p>
+<p>If you multiply the two values together, you get the <strong>tf-idf</strong><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>, which is the frequency of a term adjusted for how rarely it is used. The tf-idf measures how important a word is to a document in a collection (or corpus) of documents, for example, to one novel in a collection of novels or to one website in a collection of websites.</p>
+<p>We want to use tf-idf to find the important words for the content of each document by decreasing the weight for common words and increasing the weight for words that are not used very much in a corpus of documents (in this case, the group of Jane Austen’s novels). Calculating tf-idf attempts to find the words that are important (i.e., common) in a text, but not <em>too</em> common.</p>
+<p>You could do this all manually, but there’s a nice function in the tidytext package called <code>bind_tf_idf</code> that does this for you. It takes a tidy text dataset as input with one row per word, per document. One column (<code>word</code> here) contains the terms/tokens, one column contains the documents (<code>book</code> in this case), and the last necessary column contains the counts, how many times each document contains each term (<code>n</code> in this example).</p>
+<p>Let’s start by counting the number of occurances of each word in each book:</p>
+<pre class="r"><code>jatidy %&gt;% 
+  count(book, word, sort=TRUE)</code></pre>
+<p>Then we simply pipe that to the <code>bind_tf_idf</code> function, giving it the column names for the word, document, and count column (<code>word</code>, <code>book</code>, and <code>n</code> here):</p>
+<pre class="r"><code>jatidy %&gt;% 
+  count(word, book, sort=TRUE) %&gt;% 
+  bind_tf_idf(word, book, n)</code></pre>
+<p>You’ll see that the idf (and the tf-idf) are zero for really common words. These are all words that appear in all six of Jane Austen’s novels, so the idf is zero. This is how this approach decreases the weight for common words. The inverse document frequency will be a higher number for words that occur in fewer of the documents in the collection. Let’s arrange descending by tf-idf (<code>tf_idf</code> with an underscore).</p>
+<pre class="r"><code>jatidy %&gt;% 
+  count(word, book, sort=TRUE) %&gt;% 
+  bind_tf_idf(word, book, n) %&gt;% 
+  arrange(desc(tf_idf))</code></pre>
+<pre><code>## # A tibble: 40,379 x 6
+##    word      book                    n      tf   idf  tf_idf
+##    &lt;chr&gt;     &lt;chr&gt;               &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+##  1 elinor    Sense &amp; Sensibility   623 0.00519  1.79 0.00931
+##  2 marianne  Sense &amp; Sensibility   492 0.00410  1.79 0.00735
+##  3 crawford  Mansfield Park        493 0.00307  1.79 0.00551
+##  4 darcy     Pride &amp; Prejudice     373 0.00305  1.79 0.00547
+##  5 elliot    Persuasion            254 0.00304  1.79 0.00544
+##  6 emma      Emma                  786 0.00488  1.10 0.00536
+##  7 tilney    Northanger Abbey      196 0.00252  1.79 0.00452
+##  8 weston    Emma                  389 0.00242  1.79 0.00433
+##  9 bennet    Pride &amp; Prejudice     294 0.00241  1.79 0.00431
+## 10 wentworth Persuasion            191 0.00228  1.79 0.00409
+## # ... with 40,369 more rows</code></pre>
+<p>No surprise - we see all proper nouns, names that are important for each novel. None of them occur in all of novels, and they are important, characteristic words for each text within the entire corpus of Jane Austen’s novels. Let’s visualize this data!</p>
+<pre class="r"><code>jatidy %&gt;% 
+  count(word, book, sort=TRUE) %&gt;% 
+  bind_tf_idf(word, book, n) %&gt;% 
+  arrange(desc(tf_idf)) %&gt;% 
+  group_by(book) %&gt;% 
+  top_n(15) %&gt;% 
+  ungroup %&gt;%
+  mutate(word=reorder(word, tf_idf)) %&gt;% 
+  ggplot(aes(word, tf_idf)) +
+  geom_col() +
+  labs(x = NULL, y = &quot;tf-idf&quot;) +
+  facet_wrap(~book, ncol = 2, scales = &quot;free&quot;) +
+  coord_flip()</code></pre>
+<p><img src="r-textmining_files/figure-html/unnamed-chunk-27-1.png" width="816" /></p>
+</div>
+<div id="project-gutenberg" class="section level3">
+<h3>Project Gutenberg</h3>
+<p>Project Gutenberg (<a href="https://www.gutenberg.org/" class="uri">https://www.gutenberg.org/</a>) is a collection of freely available books that are in the public domain. You can get most books in all kinds of different formats (plain text, HTML, epub/kindle, etc). The <strong><a href="https://cran.r-project.org/web/packages/gutenbergr/vignettes/intro.html">gutenbergr</a></strong> package includes tools for downloading books (and stripping header/footer information), and a complete dataset of Project Gutenberg metadata that can be used to find words of interest. Includes:</p>
+<ul>
+<li>A function <code>gutenberg_download()</code> that downloads one or more works from Project Gutenberg by ID: e.g., <code>gutenberg_download(84)</code> downloads the text of Frankenstein.</li>
+<li>Metadata for all Project Gutenberg works as R datasets, so that they can be searched and filtered:
+<ul>
+<li><code>gutenberg_metadata</code> contains information about each work, pairing Gutenberg ID with title, author, language, etc</li>
+<li><code>gutenberg_authors</code> contains information about each author, such as aliases and birth/death year</li>
+<li><code>gutenberg_subjects</code> contains pairings of works with Library of Congress subjects and topics</li>
+</ul></li>
+</ul>
+<p>Let’s use a different corpus of documents, to see what terms are important in a different set of works. Let’s download some classic science texts from Project Gutenberg and see what terms are important in these works, as measured by tf-idf. We’ll use three classic physics texts, and a classic Darwin text. Let’s use:</p>
+<ul>
+<li><em>Discourse on Floating Bodies</em> by Galileo Galilei: <a href="http://www.gutenberg.org/ebooks/37729" class="uri">http://www.gutenberg.org/ebooks/37729</a></li>
+<li><em>Treatise on Light</em> by Christiaan Huygens: <a href="http://www.gutenberg.org/ebooks/14725" class="uri">http://www.gutenberg.org/ebooks/14725</a></li>
+<li><em>Experiments with Alternate Currents of High Potential and High Frequency</em> by Nikola Tesla: <a href="http://www.gutenberg.org/ebooks/13476" class="uri">http://www.gutenberg.org/ebooks/13476</a></li>
+<li><em>On the Origin of Species By Means of Natural Selection</em> by Charles Darwin: <a href="http://www.gutenberg.org/ebooks/5001" class="uri">http://www.gutenberg.org/ebooks/5001</a></li>
+</ul>
+<p>These might all be physics classics, but they were written across a 300-year timespan, and some of them were first written in other languages and then translated to English.</p>
+<pre class="r"><code>library(gutenbergr)
+sci &lt;- gutenberg_download(c(37729, 14725, 13476, 1228), meta_fields = &quot;author&quot;)</code></pre>
+<p>Now that we have the texts, let’s use <code>unnest_tokens()</code> and <code>count()</code> to find out how many times each word was used in each text. Let’s assign this to an object called <code>sciwords</code>. Let’s go ahead and add the tf-idf also.</p>
+<pre class="r"><code>scitidy &lt;- sci %&gt;% 
+  unnest_tokens(word, text)
+
+sciwords &lt;- scitidy %&gt;%
+  count(word, author, sort = TRUE) %&gt;%
+  bind_tf_idf(word, author, n)
+sciwords</code></pre>
+<pre><code>## # A tibble: 16,992 x 6
+##    word  author                  n     tf   idf tf_idf
+##    &lt;chr&gt; &lt;chr&gt;               &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 the   Darwin, Charles     10287 0.0656     0      0
+##  2 of    Darwin, Charles      7849 0.0501     0      0
+##  3 and   Darwin, Charles      4439 0.0283     0      0
+##  4 in    Darwin, Charles      4016 0.0256     0      0
+##  5 the   Galilei, Galileo     3760 0.0935     0      0
+##  6 to    Darwin, Charles      3605 0.0230     0      0
+##  7 the   Tesla, Nikola        3604 0.0913     0      0
+##  8 the   Huygens, Christiaan  3553 0.0928     0      0
+##  9 a     Darwin, Charles      2470 0.0158     0      0
+## 10 that  Darwin, Charles      2083 0.0133     0      0
+## # ... with 16,982 more rows</code></pre>
+<p>Now let’s do the same thing we did before with Jane Austen’s novels:</p>
+<pre class="r"><code>sciwords %&gt;% 
+  group_by(author) %&gt;% 
+  top_n(15) %&gt;% 
+  ungroup() %&gt;%
+  mutate(word=reorder(word, tf_idf)) %&gt;% 
+  ggplot(aes(word, tf_idf)) +
+  geom_col() +
+  labs(x = NULL, y = &quot;tf-idf&quot;) +
+  facet_wrap(~author, ncol = 2, scales = &quot;free&quot;) +
+  coord_flip()</code></pre>
+<p><img src="r-textmining_files/figure-html/unnamed-chunk-31-1.png" width="816" /></p>
+<p>We see some weird things here. We see “fig” for Tesla, but I doubt he was writing about a fruit tree. We see things like ab, ac, rc, etc for Huygens – these are names of rays and angles, etc. We could create a custom stop words dictionary to remove these. Let’s create a stop words data frame, then anti join that before plotting.</p>
+<pre class="r"><code>mystopwords &lt;- data_frame(word=c(&quot;ab&quot;, &quot;ac&quot;, &quot;rc&quot;, &quot;cm&quot;, &quot;cg&quot;, &quot;cb&quot;, &quot;ak&quot;, &quot;bn&quot;, &quot;fig&quot;))
+sciwords %&gt;% 
+  anti_join(mystopwords) %&gt;% 
+  group_by(author) %&gt;% 
+  top_n(15) %&gt;% 
+  ungroup() %&gt;%
+  mutate(word=reorder(word, tf_idf)) %&gt;% 
+  ggplot(aes(word, tf_idf)) +
+  geom_col() +
+  labs(x = NULL, y = &quot;tf-idf&quot;) +
+  facet_wrap(~author, ncol = 2, scales = &quot;free&quot;) +
+  coord_flip()</code></pre>
+</div>
+</div>
+<div id="topic-modeling" class="section level2">
+<h2>Topic Modeling</h2>
+<p><strong>Topic modeling</strong><a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> is a method for unsupervised classification of such documents, similar to clustering on numeric data, which finds natural groups of items even when we’re not sure what we’re looking for. It’s a way to find abstract “topics” that occur in a collection of documents, and it’s frequently used to find hidden semantic structures in a text body. Topic models can help us understand large collections of unstructured text bodies. In addition to text mining tasks like what we’ll do here, topic models have been used to detect useful structures in data such as genetic information, images, and networks, and have also been used in bioinformatics.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a></p>
+<p><strong>Latent Dirichlet Allocation</strong><a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> is one of the most common algorithms used in topic modeling. LDA treats each document as a mixture of topics, and each topic as a mixture of words:</p>
+<ol style="list-style-type: decimal">
+<li><em>Each document is a mixture of topics.</em> Each document contains words from several topics in particular proportions. For example, in a two-topic model we could say “Document 1 is 90% topic A and 10% topic B, while Document 2 is 30% topic A and 70% topic B.”</li>
+<li><em>Every topic is a mixture of words.</em> Imagine a two-topic model of American news, with one topic for “politics” and one for “entertainment.” Common words in the politics topic might be “President”, “Congress”, and “government”, while the entertainment topic may be made up of words such as “movies”, “television”, and “actor”. Words can be shared between topics; a word like “budget” might appear in both equally.</li>
+</ol>
+<p>LDA attempts to estimate both of these at the same time: finding words associated with each topic, while simutaneously determining the mixture of topics that describes each document.</p>
+<div id="document-term-matrix" class="section level3">
+<h3>Document-term matrix</h3>
+<p>Before we can get started in topic modeling we need to take a look at another common format for storing text data that’s not the tidy one-token-per-document-per-row format we’ve used so far (what we get from <code>unnest_tokens</code>). Another very common structure that’s used by other text mining packages (such as <strong>tm</strong> or <strong>quanteda</strong>) is the <strong><a href="https://en.wikipedia.org/wiki/Document-term_matrix">document-term matrix</a></strong><a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> (DTM). This is a matrix where:</p>
+<ul>
+<li>Each row represents one document (such as a book or article).</li>
+<li>Each column represents one term.</li>
+<li>Each value contains the number of appearances of that term in that document.</li>
+</ul>
+<p>Since most pairings of document and term do not occur (they have the value zero), DTMs are usually implemented as sparse matrices. These objects can be treated as though they were matrices (for example, accessing particular rows and columns), but are stored in a more efficient format. DTM objects can’t be used directly with tidy tools, just as tidy data frames can’t be used as input for other text mining packages. The tidytext package provides two verbs that convert between the two formats.</p>
+<ul>
+<li><code>tidy()</code> turns a DTM into a tidy data frame. This verb comes from the broom package.</li>
+<li><code>cast()</code> turns a tidy one-term-per-row data frame into a matrix. tidytext provides three variations of this verb, each converting to a different type of matrix:
+<ul>
+<li><code>cast_sparse()</code>: converts to a sparse matrix from the Matrix package.</li>
+<li><code>cast_dtm()</code>: converts to a <code>DocumentTermMatrix</code> object from tm.</li>
+<li><code>cast_dfm()</code>: converts to a <code>dfm</code> object from quanteda.</li>
+</ul></li>
+</ul>
+<p>First let’s load the <code>AssociatedPress</code> data from the topicmodels package. Take a look. We can see that the <code>AssociatedPress</code> data is a DTM with 2,246 documents (AP articles from 1988) and 10,473 terms. The 99% sparsity indicates that the matrix is almost complete made of zeros, i.e., almost all the document-term pairs are zero – most terms are not used in most documents. If we want to use the typical tidy tools we’ve used above, we’ll use the <code>tidy()</code> function to melt this matrix into a tidy one-token-per-document-per-row format. Notice that this only returns the 302,031 non-zero entries.</p>
+<pre class="r"><code>library(topicmodels)
+data(AssociatedPress)
+AssociatedPress
+tidy(AssociatedPress)</code></pre>
+<p>First let’s use the <code>LDA()</code> function from the topicmodels package, setting <code>k = 2</code>, to create a two-topic LDA model. This function returns an object containing the full details of the model fit, such as how words are associated with topics and how topics are associated with documents. Fitting the model is easy. For the rest of this section we’ll be exploring and interpreting the model.</p>
+<pre class="r"><code># set a seed so that the output of the model is predictable
+ap_lda &lt;- LDA(AssociatedPress, k = 2, control=list(seed=1234))
+ap_lda</code></pre>
+</div>
+<div id="word-topic-probabilities" class="section level3">
+<h3>Word-topic probabilities</h3>
+<p>Displaying the model itself, <code>ap_lda</code> isn’t that interesting. The tidytext package provides a <code>tidy</code> method for extracting the per-topic-per-word probabilities, called <span class="math inline">\(\beta\)</span> (“beta”), from the model.</p>
+<pre class="r"><code>ap_topics &lt;- tidy(ap_lda, matrix = &quot;beta&quot;)
+ap_topics</code></pre>
+<pre><code>## # A tibble: 20,946 x 3
+##    topic term           beta
+##    &lt;int&gt; &lt;chr&gt;         &lt;dbl&gt;
+##  1     1 aaron      1.69e-12
+##  2     2 aaron      3.90e- 5
+##  3     1 abandon    2.65e- 5
+##  4     2 abandon    3.99e- 5
+##  5     1 abandoned  1.39e- 4
+##  6     2 abandoned  5.88e- 5
+##  7     1 abandoning 2.45e-33
+##  8     2 abandoning 2.34e- 5
+##  9     1 abbott     2.13e- 6
+## 10     2 abbott     2.97e- 5
+## # ... with 20,936 more rows</code></pre>
+<p>This returns a one-topic-per-term-per-row format. For each combination, the model computes the probability of that term being generated from that topic. For example, the term “aaron” has a <span class="math inline">\(1.687\times 10^{-12}\)</span> probability of being generated from topic 1, but a <span class="math inline">\(3.896\times 10^{-5}\)</span> probability of being generated from topic 2.</p>
+<p>We could use dplyr’s <code>top_n()</code> to find the 10 terms that are most common within each topic. Because this returns a tidy data frame, we could easily continue piping to ggplot2.</p>
+<pre class="r"><code># What are the top words for each topic?
+ap_topics %&gt;%
+  group_by(topic) %&gt;%
+  top_n(10) %&gt;%
+  ungroup() %&gt;%
+  arrange(topic, desc(beta))</code></pre>
+<pre class="r"><code># Continue piping to ggplot2
+ap_topics %&gt;%
+  group_by(topic) %&gt;%
+  top_n(10) %&gt;%
+  ungroup() %&gt;%
+  arrange(topic, desc(beta)) %&gt;% 
+  mutate(term = reorder(term, beta)) %&gt;%
+  ggplot(aes(term, beta)) +
+  geom_col() +
+  facet_wrap(~topic, scales = &quot;free&quot;) +
+  coord_flip()</code></pre>
+<p><img src="r-textmining_files/figure-html/unnamed-chunk-36-1.png" width="816" /></p>
+<p>This visualization lets us understand the two topics that were extracted from the articles. Common words in topic 1 include “percent”, “million”, “billion”, and “company”. Perhaps topic 1 represents business or financial news. Common in topic 2 include “president”, “government”, and “soviet”, suggeting that this topic represents political news. Note that some words, such as “new” and “people”, are common within both topics. This is an advantage (as opposed to “hard clustering” methods): topics used in natural language could have some overlap in terms of words.</p>
+<p>Let’s look at the terms that had the <em>greatest difference</em> in <span class="math inline">\(\beta\)</span> between topic 1 and topic 2. This can be estimated based on the log ratio of the two: <span class="math inline">\(\log_2(\frac{\beta_2}{\beta_1})\)</span> (a log ratio is useful because it makes the difference symmetrical: <span class="math inline">\(\beta_2\)</span> being twice as large leads to a log ratio of 1, while <span class="math inline">\(\beta_1\)</span> being twice as large results in -1). To constrain it to a set of especially relevant words, we can filter for relatively common words, such as those that have a <span class="math inline">\(\beta\)</span> greater than 1/1000 in at least one topic.</p>
+<p>First let’s turn <code>1</code> and <code>2</code> into <code>topic1</code> and <code>topic2</code> so that after the <code>spread</code> we’ll easily be able to work with those columns.</p>
+<pre class="r"><code>ap_topics %&gt;%
+  mutate(topic = paste0(&quot;topic&quot;, topic)) %&gt;%
+  spread(topic, beta) %&gt;%
+  filter(topic1 &gt; .001 | topic2 &gt; .001) %&gt;%
+  mutate(log_ratio = log2(topic2 / topic1))</code></pre>
+<p>We could continue piping to ggplot2. First, let’s create a new variable we’ll group on, which is the direction of imbalance. We’ll also create a variable showing the absolute value of the log ratio, which is a directionless value indicating the magnitude of the effect. This lets us select the top 10 terms most associated with either topic1 or topic2.</p>
+<pre class="r"><code>ap_topics %&gt;%
+  mutate(topic = paste0(&quot;topic&quot;, topic)) %&gt;%
+  spread(topic, beta) %&gt;%
+  filter(topic1 &gt; .001 | topic2 &gt; .001) %&gt;%
+  mutate(log_ratio = log2(topic2 / topic1)) %&gt;% 
+  mutate(direction = (log_ratio&gt;0)) %&gt;% 
+  mutate(absratio=abs(log_ratio)) %&gt;% 
+  group_by(direction) %&gt;%
+  top_n(10) %&gt;%
+  ungroup() %&gt;%
+  mutate(term = reorder(term, log_ratio)) %&gt;%
+  ggplot(aes(term, log_ratio)) +
+  geom_col() +
+  labs(y = &quot;Log2 ratio of beta in topic 2 / topic 1&quot;) +
+  coord_flip()</code></pre>
+<p><img src="r-textmining_files/figure-html/unnamed-chunk-37-1.png" width="816" /></p>
+<p>We can see that the words more common in topic 2 include political parties such as “democratic” and “republican”, as well as politician’s names such as “dukakis” and “gorbachev”. Topic 1 was more characterized by currencies like “yen” and “dollar”, as well as financial terms such as “index”, “prices” and “rates”. This helps confirm that the two topics the algorithm identified were political and financial news.</p>
+</div>
+<div id="document-topic-probabilities" class="section level3">
+<h3>Document-topic probabilities</h3>
+<p>Above we estimated the per-topic-per-word probabilities, <span class="math inline">\(\beta\)</span> (“beta”). LDA also models each document as a mixture of topics. Let’s look at the per-document-per-topic probabilities, <span class="math inline">\(\gamma\)</span> (“gamma”), with the <code>matrix = &quot;gamma&quot;</code> argument to <code>tidy()</code>.</p>
+<pre class="r"><code>ap_documents &lt;- tidy(ap_lda, matrix = &quot;gamma&quot;)
+ap_documents</code></pre>
+<pre><code>## # A tibble: 4,492 x 3
+##    document topic    gamma
+##       &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+##  1        1     1 0.248   
+##  2        2     1 0.362   
+##  3        3     1 0.527   
+##  4        4     1 0.357   
+##  5        5     1 0.181   
+##  6        6     1 0.000588
+##  7        7     1 0.773   
+##  8        8     1 0.00445 
+##  9        9     1 0.967   
+## 10       10     1 0.147   
+## # ... with 4,482 more rows</code></pre>
+<p>These values represent the estimated proportion of words from that document that are generated from that topic. For example, the the model estimates only about 24.8% of the words in document 1 were generated from topic 1.</p>
+<p>Most of these documents were drawn from a mix of the two topics, but document 6 was drawn almost entirely from topic 2, having a <span class="math inline">\(\gamma\)</span> from topic 1 close to zero. To check this answer, we could <code>tidy()</code> the document-term matrix.</p>
+<pre class="r"><code>tidy(AssociatedPress) %&gt;%
+  filter(document == 6) %&gt;%
+  arrange(desc(count))</code></pre>
+<pre><code>## # A tibble: 287 x 3
+##    document term           count
+##       &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt;
+##  1        6 noriega           16
+##  2        6 panama            12
+##  3        6 jackson            6
+##  4        6 powell             6
+##  5        6 administration     5
+##  6        6 economic           5
+##  7        6 general            5
+##  8        6 i                  5
+##  9        6 panamanian         5
+## 10        6 american           4
+## # ... with 277 more rows</code></pre>
+<p>Based on the most common words, this looks like an article about the relationship between the American government and Panamanian dictator <a href="https://en.wikipedia.org/wiki/Manuel_Noriega">Manuel Noriega</a>, which means the algorithm was right to place it in topic 2 (as political/national news).</p>
+</div>
+</div>
+<div id="case-studies-examples" class="section level2">
+<h2>Case Studies &amp; Examples</h2>
+<div id="the-great-library-heist" class="section level3">
+<h3>The Great Library Heist</h3>
+<blockquote>
+<p>From <a href="https://www.tidytextmining.com/topicmodeling.html#library-heist">section 6.2 of Tidy Text Mining</a>.</p>
+</blockquote>
+<p>When examining a statistical method, it can be useful to try it on a very simple case where you know the “right answer”. For example, we could collect a set of documents that definitely relate to four separate topics, then perform topic modeling to see whether the algorithm can correctly distinguish the four groups. This lets us double-check that the method is useful, and gain a sense of how and when it can go wrong. We’ll try this with some data from classic literature.</p>
+<p>Suppose a vandal has broken into your study and torn apart four of your books:</p>
+<ul>
+<li><em>Great Expectations</em> by Charles Dickens</li>
+<li><em>The War of the Worlds</em> by H.G. Wells</li>
+<li><em>Twenty Thousand Leagues Under the Sea</em> by Jules Verne</li>
+<li><em>Pride and Prejudice</em> by Jane Austen</li>
+</ul>
+<p>This vandal has torn the books into individual chapters, and left them in one large pile. How can we restore these disorganized chapters to their original books? This is a challenging problem since the individual chapters are <strong>unlabeled</strong>: we don’t know what words might distinguish them into groups. We’ll thus use topic modeling to discover how chapters cluster into distinct topics, each of them (presumably) representing one of the books.</p>
+<p>We’ll retrieve the text of these four books using the gutenbergr package:</p>
+<pre class="r"><code>library(gutenbergr)
+titles &lt;- c(&quot;Twenty Thousand Leagues under the Sea&quot;, 
+            &quot;The War of the Worlds&quot;,
+            &quot;Pride and Prejudice&quot;, 
+            &quot;Great Expectations&quot;)
+books &lt;- gutenberg_works(title %in% titles) %&gt;%
+  gutenberg_download(meta_fields = &quot;title&quot;)</code></pre>
+<p>You’ll want to start by dividing the books these into chapters, use tidytext’s <code>unnest_tokens()</code> to separate them into words, then remove <code>stop_words</code>. You’ll be treating every chapter as a separate “document”, each with a name like <code>Great Expectations_1</code> or <code>Pride and Prejudice_11</code>. You’ll cast this into a DTM then run LDA. You’ll look at the word-topic probabilities to try to get a sense of which topic represents which book, and you’ll use document-topic probabilities to assign chapters to their books. See <a href="https://www.tidytextmining.com/topicmodeling.html#library-heist">section 6.2 of Tidy Text Mining</a> for code and a walk-through.</p>
+</div>
+<div id="happy-galentines-day" class="section level3">
+<h3>Happy Galentine’s Day!</h3>
+<p>Source: <strong><a href="https://suzan.rbind.io/2018/02/happy-galentines-day/" class="uri">https://suzan.rbind.io/2018/02/happy-galentines-day/</a></strong></p>
+<p>This analysis does a tidy text mining analysis of several scripts from <em>Parks and Recreation</em>. In addition to the kinds of analyses we’ve performed here, it also illustrates some additional functionality for extracting text from PDF documents (the scripts were only available as PDFs).</p>
+<p><img src="img/tm-cs1-prec-1.png" /></p>
+<p><img src="img/tm-cs1-prec-2.png" /></p>
+</div>
+<div id="who-wrote-the-anti-trump-new-york-times-op-ed" class="section level3">
+<h3>Who wrote the anti-Trump New York Times op-ed?</h3>
+<p>Source: <strong><a href="http://varianceexplained.org/r/op-ed-text-analysis/" class="uri">http://varianceexplained.org/r/op-ed-text-analysis/</a></strong></p>
+<p>In September 2018 the New York Times published an anonymous op-ed, <a href="https://www.nytimes.com/2018/09/05/opinion/trump-white-house-anonymous-resistance.html">“I Am Part of the Resistance Inside the Trump Administration”</a>, written by a “senior official in the Trump administration”. Lots of data scientists tried to use text-mining techniques to determine who wrote this op-ed. This analysis compares the text of the op-ed to the set of documents representing “senior officials.” In addition to what we’ve covered here, this also covers scraping text from Twitter accounts, and methods for comparing TF-IDF vectors using cosine similarity, which was touched on in <a href="https://www.tidytextmining.com/ngrams.html#counting-and-correlating-pairs-of-words-with-the-widyr-package">section 4.2 of Tidy Text Mining</a>.</p>
+<p><img src="img/tm-cs2-trumpoped.png" /></p>
+</div>
+<div id="seinfeld-dialogues" class="section level3">
+<h3>Seinfeld dialogues</h3>
+<p>Source: <strong><a href="https://pradeepadhokshaja.wordpress.com/2018/08/06/looking-at-seinfeld-dialogues-using-tidytext/" class="uri">https://pradeepadhokshaja.wordpress.com/2018/08/06/looking-at-seinfeld-dialogues-using-tidytext/</a></strong></p>
+<p>Data: <strong><a href="https://www.kaggle.com/thec03u5/seinfeld-chronicles" class="uri">https://www.kaggle.com/thec03u5/seinfeld-chronicles</a></strong></p>
+<p>This analysis uses the tidytext package to analyze the full text of the entire <em>Seinfeld</em> series that ran 1989-1998.</p>
+<div class="figure">
+<img src="img/tm-cs3-seinfeld.gif" alt="Sentiment across time for Seinfeld main characters." />
+<p class="caption">Sentiment across time for Seinfeld main characters.</p>
+</div>
+</div>
+<div id="sentiment-analysis-in-shakespeare-tragedies" class="section level3">
+<h3>Sentiment analysis in Shakespeare tragedies</h3>
+<p>Source: <strong><a href="https://peerchristensen.netlify.com/post/fair-is-foul-and-foul-is-fair-a-tidytext-entiment-analysis-of-shakespeare-s-tragedies/" class="uri">https://peerchristensen.netlify.com/post/fair-is-foul-and-foul-is-fair-a-tidytext-entiment-analysis-of-shakespeare-s-tragedies/</a></strong></p>
+<p>This analysis illustrates a tidytext approach to examine the use of sentiment words in the tragedies written by William Shakespeare.</p>
+<div class="figure">
+<img src="img/tm-cs4-shake-1.png" alt="Plays ranked by ratio of negative sentiment words" />
+<p class="caption">Plays ranked by ratio of negative sentiment words</p>
+</div>
+<div class="figure">
+<img src="img/tm-cs4-shake-2.png" alt="Sentiment over time for Romeo &amp; Juliet" />
+<p class="caption">Sentiment over time for Romeo &amp; Juliet</p>
+</div>
+</div>
+<div id="authorship-of-the-federalist-papers" class="section level3">
+<h3>Authorship of the Federalist Papers</h3>
+<p>Source: <strong><a href="https://kanishka.xyz/2018/my-first-few-open-source-contributions-authorship-attribution-of-the-federalist-papers/" class="uri">https://kanishka.xyz/2018/my-first-few-open-source-contributions-authorship-attribution-of-the-federalist-papers/</a></strong></p>
+<p>The Federalist Papers were written as essays between 1787-1788 by Alexander Hamilton, John Jay and James Madison to promote the ratification of the constitution. They were all authored under the pseudonym ‘Publius’, which was a tribute to the founder of the Roman Republic, but were then confirmed to be written by the three authors where Hamilton wrote 51 essays, Jay wrote 5, Madison wrote 14, and Hamilton and Madison co-authored 3. The authorship of the remaining 12 has been in dispute. This post uses tidy text mining and some additional functionality to try to determine who authored the 12 in dispute.</p>
+<p><img src="img/tm-cs5-fed.png" /></p>
+<!--
+
+Search https://www.gutenberg.org/ for "H G Wells" and click on one of the results. You'll see the book ID in the URL. One thing we might do in text mining is to compare word frequencies across different texts. We loaded Jane Austen's novels from a file. Let's use gutenbergr to get two more sets of texts. First, let's look at some science fiction and fantasy novels by H.G. Wells, who lived in the late 19th and early 20th centuries. Let's get [*The Time Machine*](https://www.gutenberg.org/ebooks/35), [*The War of the Worlds*](https://www.gutenberg.org/ebooks/36), [*The Invisible Man*](https://www.gutenberg.org/ebooks/5230), and [*The Island of Doctor Moreau*](https://www.gutenberg.org/ebooks/159). We can access these works using `gutenberg_download()` and the Project Gutenberg ID numbers for each novel.
+
+
+
+
+
+```r
+library(gutenbergr)
+hgwells <- gutenberg_download(c(35, 36, 5230, 159), meta_fields="author")
+hgwells
+```
+
+Let's get some well-known works of the Bronte sisters, whose lives overlapped with Jane Austen's somewhat but who wrote in a rather different style. Let's get [*Jane Eyre*](https://www.gutenberg.org/ebooks/1260), [*Wuthering Heights*](https://www.gutenberg.org/ebooks/768), [*The Tenant of Wildfell Hall*](https://www.gutenberg.org/ebooks/969), [*Villette*](https://www.gutenberg.org/ebooks/9182), and [*Agnes Grey*](https://www.gutenberg.org/ebooks/767). 
+
+
+```r
+bronte <- gutenberg_download(c(1260, 768, 969, 9182, 767), meta_fields="author")
+bronte
+```
+
+Now let's tidy each dataset:
+
+
+```r
+hgtidy <- hgwells %>% 
+  unnest_tokens(word, text) %>% 
+  anti_join(stop_words)
+hgtidy
+
+brtidy <- bronte %>% 
+  unnest_tokens(word, text) %>% 
+  anti_join(stop_words)
+brtidy
+```
+
+Now let's look at the top words in each:
+
+
+```r
+hgtidy %>% 
+  count(word, sort=TRUE)
+```
+
+```
+## # A tibble: 11,769 x 2
+##    word       n
+##    <chr>  <int>
+##  1 time     454
+##  2 people   302
+##  3 door     260
+##  4 heard    249
+##  5 black    232
+##  6 stood    229
+##  7 white    222
+##  8 hand     218
+##  9 kemp     213
+## 10 eyes     210
+## # ... with 11,759 more rows
+```
+
+```r
+brtidy %>% 
+  count(word, sort=TRUE)
+```
+
+```
+## # A tibble: 23,050 x 2
+##    word       n
+##    <chr>  <int>
+##  1 time    1065
+##  2 miss     855
+##  3 day      827
+##  4 hand     768
+##  5 eyes     713
+##  6 night    647
+##  7 heart    638
+##  8 looked   601
+##  9 door     592
+## 10 half     586
+## # ... with 23,040 more rows
+```
+
+-->
+<hr />
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Corpus objects contain strings annotated with additional metadata.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>This is a (sparse) matrix describing a collection (corpus) of documents with one row for each document and one column for each term. The value in the matrix is typically word count or tf-idf for the document in that row for the term in that column.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="https://en.wikipedia.org/wiki/Sentiment_analysis" class="uri">https://en.wikipedia.org/wiki/Sentiment_analysis</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm" class="uri">http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p><a href="https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html" class="uri">https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p><a href="http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010" class="uri">http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p><a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">https://en.wikipedia.org/wiki/Tf%E2%80%93idf</a><a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p><a href="https://en.wikipedia.org/wiki/Topic_model" class="uri">https://en.wikipedia.org/wiki/Topic_model</a><a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p>Blei, David (April 2012). “Probabilistic Topic Models”. <em>Communications of the ACM</em>. 55 (4): 77-84. <a href="doi:10.1145/2133806.2133826" class="uri">doi:10.1145/2133806.2133826</a><a href="#fnref9" class="footnote-back">↩</a></p></li>
+<li id="fn10"><p><a href="https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation" class="uri">https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation</a><a href="#fnref10" class="footnote-back">↩</a></p></li>
+<li id="fn11"><p><a href="https://en.wikipedia.org/wiki/Document-term_matrix" class="uri">https://en.wikipedia.org/wiki/Document-term_matrix</a><a href="#fnref11" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+
+<div class="footer">
+This work is licensed under the  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0 Creative Commons License</a>.<br>
+<!-- For more information, visit <a href="http://data.hsl.virginia.edu/" target="_blank">data.hsl.virginia.edu</a>.<br> -->
+<a href="https://twitter.com/strnr" target="_blank"><i class="fa fa-twitter fa-lg"></i></a>&nbsp;
+<a href="https://github.com/thriv/biodatasci" target="_blank"><i class="fa fa-github fa-lg"></i></a>&nbsp;
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

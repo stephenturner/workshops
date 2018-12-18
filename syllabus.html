@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>THRIV Biomedical Data Science 2018</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<!-- Font Awesome -->
+<!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
+<!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
+
+<!-- Google fonts -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic|Oswald:400,700' rel='stylesheet' type='text/css'>
+
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+
+<!-- Google analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-8298649-8', 'auto');
+  ga('send', 'pageview');
+</script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BIODATASCI</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="setup.html">
+    <span class="fa fa-cog"></span>
+     
+    Setup
+  </a>
+</li>
+<li>
+  <a href="data.html">
+    <span class="fa fa-download"></span>
+     
+    Data
+  </a>
+</li>
+<li>
+  <a href="thriv.html">
+    <span class="fa fa-graduation-cap"></span>
+     
+    Syllabus
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-university"></span>
+     
+    Course Material
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="thriv.html">
+        <span class="fa fa-graduation-cap"></span>
+         
+        Syllabus
+      </a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">--- Lessons ---</li>
+    <li>
+      <a href="r-basics.html">R Basics</a>
+    </li>
+    <li>
+      <a href="r-dataframes.html">Data Frames</a>
+    </li>
+    <li>
+      <a href="r-dplyr-yeast.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="r-tidy.html">Tidying data</a>
+    </li>
+    <li>
+      <a href="r-viz-gapminder.html">Data Visualization</a>
+    </li>
+    <li>
+      <a href="r-refresher-tidy-eda.html">Refresher: Tidy EDA</a>
+    </li>
+    <li>
+      <a href="r-rmarkdown.html">Reproducible Research &amp; RMarkdown</a>
+    </li>
+    <li>
+      <a href="r-stats.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-survival.html">Survival Analysis</a>
+    </li>
+    <li>
+      <a href="r-predictive-modeling.html">Predictive Analytics &amp; Forecasting Influenza</a>
+    </li>
+    <li>
+      <a href="r-textmining.html">Text Mining</a>
+    </li>
+    <li class="dropdown-header">--- Homework ---</li>
+    <li>
+      <a href="r-dplyr-homework.html">Data Manipulation</a>
+    </li>
+    <li>
+      <a href="r-viz-homework.html">Data Visualization</a>
+    </li>
+    <li>
+      <a href="r-rmarkdown-homework.html">Reproducible Research &amp; RMarkdown</a>
+    </li>
+    <li>
+      <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-question fa-lg"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="people.html">People</a>
+    </li>
+    <li>
+      <a href="help.html">Further resources</a>
+    </li>
+    <li>
+      <a href="https://github.com/thriv/biodatasci">Source code for this site</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">THRIV Biomedical Data Science 2018</h1>
+
+</div>
+
+
+<div id="general-information" class="section level2">
+<h2>General Information</h2>
+<p><strong><em>Instructor</em>: Stephen Turner</strong>  <a href="people.html"><i class="fa fa-envelope"></i></a> <!-- <a href="https://med.virginia.edu/phs/faculty-and-staff-directory/stephen-d-turner-ph-d/" target="_blank"><i class="fa fa-phone"></i></a> --> <a href="https://twitter.com/strnr" target="_blank"><i class="fa fa-twitter"></i></a> <a href="https://github.com/stephenturner/" target="_blank"><i class="fa fa-github"></i></a> <!-- <a href="http://www.gettinggeneticsdone.com/" target="_blank"><i class="fa fa-rss"></i></a>   --> <br> <small>Stephen Turner, Ph.D. is faculty in the Department of Public Health Sciences, and director of the <a href="http://bioinformatics.virginia.edu">Bioinformatics Core</a> at the UVA School of Medicine.</small></p>
+<p><strong><em>When</em>:</strong> Fall 2018, Tuesdays <strong>2-5pm</strong> at <a href="https://goo.gl/maps/MiqYpredRPS2">560 Ray C Hunt Drive</a>, unless noted otherwise below.</p>
+<table>
+<caption>Core classes</caption>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Location/Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Oct 16</td>
+<td>2-5pm.</td>
+</tr>
+<tr class="even">
+<td>Oct 23</td>
+<td>2-5pm. <strong>Location change</strong>: <a href="https://www.hsl.virginia.edu/sites/default/files/floorplan2014.pdf">Carter classroom</a>, <a href="https://www.hsl.virginia.edu/directions">Health Sciences Library</a></td>
+</tr>
+<tr class="odd">
+<td>Oct 30</td>
+<td><strong>No class.</strong></td>
+</tr>
+<tr class="even">
+<td>Nov 6</td>
+<td>2-5pm.</td>
+</tr>
+<tr class="odd">
+<td>Nov 13</td>
+<td>2-5pm. Joint refresher class with 2nd years.</td>
+</tr>
+<tr class="even">
+<td>Nov 20</td>
+<td>2-5pm.</td>
+</tr>
+<tr class="odd">
+<td>Nov 27</td>
+<td>2-5pm.</td>
+</tr>
+<tr class="even">
+<td>Dec 4</td>
+<td>2-5pm.</td>
+</tr>
+<tr class="odd">
+<td>Dec 11</td>
+<td>2-5pm. Joint class with 2nd years.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Follow-up classes</caption>
+<thead>
+<tr class="header">
+<th>Date</th>
+<th>Location/Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jan 22</td>
+<td>2-5pm. Bring your own data.</td>
+</tr>
+<tr class="even">
+<td>Feb 12</td>
+<td>2-5pm. Bring your own data.</td>
+</tr>
+</tbody>
+</table>
+<!--
+Spring 2017 Module S1  
+Feb 13 - Mar 27, 2017  
+2:00pm - 5:00pm  
+-->
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p><strong><a href="setup.html">Click the <i class="fa fa-cog"></i> Setup</a> link on the navbar at the top and review all the information and follow the instructions <em>prior to the workshop</em></strong>.</p>
+<p>You should set aside a couple hours to download, install, and test all the software needed for the course. All the software we’re using in class is open-source and freely available online. This setup must be completed <em>prior to class</em>, as we will not have much time for troubleshooting software installation issues during class. <a href="people.html">Email Stephen Turner</a> if you’re having difficulty.</p>
+<p>After installing and testing the software we’ll be using, please download the data as instructed, and review the required reading <em>prior to class</em>.</p>
+</div>
+<div id="course-schedule" class="section level2">
+<h2>Course Schedule</h2>
+<!-- <mark>(Under development and subject to change)</mark> -->
+<div id="week-1-intro-to-r" class="section level3">
+<h3>Week 1: Intro to R</h3>
+<p>This novice-level introduction is directed toward life scientists with little to no experience with statistical computing or bioinformatics. This interactive introduction will introduce the R statistical computing environment. The first part of this workshop will demonstrate very basic functionality in R, including functions, functions, vectors, creating variables, getting help, filtering, data frames, plotting, and reading/writing files.</p>
+<blockquote>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Become familiar with the RStudio interface and project management using RStudio</li>
+<li>Using R scripts to make analyses reproducible</li>
+<li>Perform basic arithmetic operations in R</li>
+<li>Using functions, creating variables, getting help</li>
+<li>Installing and loading R packages</li>
+<li>Importing and inspecting data</li>
+</ul>
+</blockquote>
+</div>
+<div id="week-2-advanced-data-manipulation-with-r" class="section level3">
+<h3>Week 2: Advanced Data Manipulation with R</h3>
+<p>Data analysis involves a large amount of janitor work – munging and cleaning data to facilitate downstream data analysis. This session assumes a basic familiarity with R and covers tools and techniques for advanced data manipulation. It will cover data cleaning and “tidy data,” and will introduce R packages that enable data manipulation, analysis, and visualization using split-apply-combine strategies. Upon completing this lesson, students will be able to use the <em>dplyr</em> package in R to effectively manipulate and conditionally compute summary statistics over subsets of a “big” dataset containing many observations.</p>
+<blockquote>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Employ the <code>filter</code> operation to return only rows of data meeting a condition</li>
+<li>Employ the <code>select</code> function to subset data including only columns of interest</li>
+<li>Employ the <code>mutate</code> function to apply other chosen functions to existing columns and create new columns of data</li>
+<li>Employ the <code>arrange</code> function to sort data by columns of interest</li>
+<li>Use the <code>group_by</code> and <code>summarize</code> functions in combination to perform summary and statistical analyses over subgroupings of data</li>
+<li>Employ the ‘pipe’ operator, <code>%&gt;%</code>, to link together a sequence of functions</li>
+<li>Reformat and reshape “messy” wide data to a tidy format using functions from the tidyr package</li>
+</ul>
+</blockquote>
+</div>
+<div id="week-3-advanced-data-visualization-with-r-and-ggplot2" class="section level3">
+<h3>Week 3: Advanced Data Visualization with R and ggplot2</h3>
+<p>This session will cover fundamental concepts for creating effective data visualization and will introduce tools and techniques for visualizing large, high-dimensional data using R. We will review fundamental concepts for visually displaying quantitative information, such as using series of small multiples, avoiding “chart-junk,” and maximizing the data-ink ratio. After briefly covering data visualization using base R graphics, we will introduce the <em>ggplot2</em> package for advanced high-dimensional visualization. We will cover the grammar of graphics (geoms, aesthetics, stats, and faceting), and using ggplot2 to create plots layer-by-layer. Upon completing this lesson, students will be able to use R to explore a high-dimensional dataset by faceting and scaling arbitrarily complex plots in small multiples.</p>
+<blockquote>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Understand the grammar of graphics, and about building a plot layer by layer</li>
+<li>Map features of the data to aesthetics of a plot</li>
+<li>Rescale data for more effective visualization</li>
+<li>Create typical visualizations, such as scatter plots, histograms, density plots, boxplots, and their alternatives.</li>
+<li>Faceting plots to show visualizations in small multiples</li>
+<li>Creating publication-ready plots and using themes</li>
+</ul>
+</blockquote>
+</div>
+<div id="week-4-take-home-reproducible-research-dynamic-documents" class="section level3">
+<h3>Week 4 / take-home: Reproducible Research &amp; Dynamic Documents</h3>
+<p>Contemporary life sciences research is plagued by reproducibility issues. This session covers some of the barriers to reproducible research and how to start to address some of those problems during the data management and analysis phases of the research life cycle. In this session we will cover using R and dynamic document generation with RMarkdown and RStudio to weave together reporting text with executable R code to automatically generate reports in the form of PDF, Word, or HTML documents.</p>
+<blockquote>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Understand the benefits of using dynamic documentation for reproducible research</li>
+<li>Using markdown as a markup / formatting language</li>
+<li>Embedding R code in an RMarkdown document</li>
+<li>Compiling Rmarkdown to an HTML or PDF report</li>
+</ul>
+</blockquote>
+</div>
+<div id="week-4-essential-statistics" class="section level3">
+<h3>Week 4: Essential Statistics</h3>
+<p>This session will provide hands-on instruction and exercises covering basic statistical analysis in R. This will cover descriptive statistics, t-tests, linear models, chi-square, clustering, dimensionality reduction, and resampling strategies. We will also cover methods for “tidying” model results for downstream visualization and summarization.</p>
+<blockquote>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Using exploratory data analysis and descriptive statistics to get a “feel” for the data you are working with</li>
+<li>Implementing statistical tests for continuous outcomes in R: t-tests, ANOVA, simple linear regression, and multiple linear regression</li>
+<li>Implementing statistical tests for categorical outcomes in R: chi-square tests, fisher exact tests, logistic regression</li>
+<li>Perform power and sample size analysis using R</li>
+<li>“Tidying” the results of statistical analysis</li>
+</ul>
+</blockquote>
+</div>
+<div id="week-5-survival-analysis" class="section level3">
+<h3>Week 5: Survival Analysis</h3>
+<p>This session will provide hands-on instruction and exercises covering survival analysis using R. The data for parts of this session will come from The Cancer Genome Atlas (TCGA), where we will also cover programmatic access to TCGA through Bioconductor.</p>
+<blockquote>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Learn the meaning of terms used in survival analysis: hazard, survival function, Kaplan-Meier curve, censoring, and proportional hazards</li>
+<li>Constructing a survival table in R</li>
+<li>Using the survminer package to create Kaplan-Meier plots</li>
+<li>Perform cox regression for survival analysis on multiple variables</li>
+<li>Categorizing continuous exposure variables for Kaplan-Meier analysis</li>
+<li>Accessing and using data from The Cancer Genome Atlas (TCGA) for basic survival analysis</li>
+</ul>
+</blockquote>
+</div>
+<div id="week-6-predictive-modeling-forecasting" class="section level3">
+<h3>Week 6: Predictive Modeling &amp; Forecasting</h3>
+<p>This session will provide hands-on instruction for using machine learning algorithms to predict a disease outcome. We will cover data cleaning, feature extraction, imputation, and using a variety of models to try to predict disease outcome. We will use resampling strategies to assess the performance of predictive modeling procedures such as Random Forest, stochastic gradient boosting, elastic net regularized regression (LASSO), and k-nearest neighbors. We will also demonstrate demonstrate how to <em>forecast</em> future trends given historical infectious disease surveillance data using methodology that accounts for seasonality and nonlinearity.</p>
+<blockquote>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Using exploratory data analysis &amp; reviewing data visualization techniques to get a “feel” for the data you are working with</li>
+<li>Feature extraction and variable re-coding for machine learning analysis</li>
+<li>Imputing missing data</li>
+<li>Using the caret package for automated model training and testing</li>
+<li>Understand how resampling techniques can be used to develop a predictive model</li>
+<li>Assess the performance of a variety of predictive models on a particular data set: random forest, support vector machines, k-nearest neighbor, and elastic net regularized &gt; regression</li>
+<li>Introduce forecasting and time series analysis</li>
+</ul>
+</blockquote>
+</div>
+<div id="week-7a-text-mining" class="section level3">
+<h3>Week 7a: Text mining</h3>
+<!-- <mark>Under development.</mark> -->
+<ul>
+<li>Tokenizing text</li>
+<li>Stop words</li>
+<li>Sentiment analysis
+<ul>
+<li>Trajectory of sentiment over time</li>
+<li>Contribution of terms to sentiment in a corpus</li>
+</ul></li>
+<li>Word/document frequency: TF-IDF statistics.</li>
+<li>Topic modeling
+<ul>
+<li>Latent Dirichlet allocation</li>
+<li>Clustering, document-topic, topic-term modeling</li>
+</ul></li>
+<li>Capstone analysis</li>
+</ul>
+</div>
+<div id="week-7b-introduction-to-rna-seq-data-analysis" class="section level3">
+<h3>Week 7b: Introduction to RNA-seq Data Analysis</h3>
+<p>This session focuses on analyzing real data from a biological application - analyzing RNA-seq data for differentially expressed genes. This session provides an introduction to RNA-seq data analysis, involving reading in count data from an RNA-seq experiment, exploring the data using base R functions and then analysis with the DESeq2 Bioconductor package. The session will conclude with downstream pathway analysis and exploring the biological and functional context of the results.</p>
+</div>
+<div id="week-7c-visualizing-and-annotating-phylogenetic-trees" class="section level3">
+<h3>Week 7c: Visualizing and Annotating Phylogenetic Trees</h3>
+<p>This lesson demonstrates how to use R and ggtree, an extension of the ggplot2 package, to visualize and annotate phylogenetic trees. This lesson does <em>not</em> cover methods and software for <em>generating</em> phylogenetic trees, nor does it it cover <em>interpreting</em> phylogenies. Genome-wide sequencing allows for examination of the entire genome, and from this, many methods and software tools exist for comparative genomics using SNP- and gene-based phylogenetic analysis, either from unassembled sequencing reads, draft assemblies/contigs, or complete genome sequences. These methods are beyond the scope of this lesson.</p>
+<!--
+, and follow all instructions under the major headings for:
+
+- [R](setup.html#r)
+- [R+RStudio+Packages](setup.html#r+rstudio+packages)
+- [Bioconductor](setup.html#bioconductor)
+- [RMarkdown](setup.html#rmarkdown)
+- [RNA-seq](setup.html#rna-seq)
+- [Survival Analysis](setup.html#survival_analysis)
+- [Getting data](setup.html#get_data)
+
+You'll need to download _all_ the data. As [described in the setup page](setup.html#get_data), navigate to the [data page](data.html) and download _all_ the relevant datasets, saving them to a folder that's easy to find.
+-->
+</div>
+</div>
+
+<div class="footer">
+This work is licensed under the  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0 Creative Commons License</a>.<br>
+<!-- For more information, visit <a href="http://data.hsl.virginia.edu/" target="_blank">data.hsl.virginia.edu</a>.<br> -->
+<a href="https://twitter.com/strnr" target="_blank"><i class="fa fa-twitter fa-lg"></i></a>&nbsp;
+<a href="https://github.com/thriv/biodatasci" target="_blank"><i class="fa fa-github fa-lg"></i></a>&nbsp;
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
