@@ -1,0 +1,146 @@
+---
+title: "Advanced Data Manipulation Homework"
+output:
+  html_document:
+    code_folding: hide
+---
+
+(_Refer back to the [Advanced Data Manipulation lesson](r-dplyr-yeast.html))._
+
+```{r inithw, echo=FALSE}
+knitr::opts_chunk$set(echo=TRUE, message = FALSE, warning = FALSE, cache=TRUE)
+```
+
+### Key Concepts
+
+> 
+- **dplyr** verbs
+- the pipe `%>%`
+- variable creation
+- multiple conditions
+- properties of grouped data
+- aggregation
+- summary functions
+- window functions
+
+### Getting Started
+
+We're going to work with a different dataset for the homework here. It's a [cleaned-up excerpt](https://github.com/jennybc/gapminder) from the [Gapminder data](http://www.gapminder.org/data/). Download the [**gapminder.csv** data by clicking here](data/gapminder.csv) or using the link above. Download it, and save it in a `data/` subfolder of the project directory where you can access it easily from R.
+
+
+Load the **dplyr** and **readr** packages, and read the gapminder data into R using the `read_csv()` function (n.b. `read_csv()` is _not_ the same as `read.csv()`). Assign the data to an object called `gm`. Run `gm` to display it.
+
+_Note, the code is available by hitting the "Code" button above each expected output, but try not to use it unless you're stuck_.
+
+<!-- In your submitted homework assignment, I would prefer you use the `read_csv()` function to read the data directly from the web (see below). This way I can run your R code without worrying about whether I have the `data/` directory or not. -->
+
+
+```{r loaddatatrue, eval=TRUE, include=TRUE}
+# Load required libraries
+library(dplyr)
+library(readr)
+
+# Read the data
+gm <- read_csv("data/gapminder.csv")
+
+# Take a look
+gm
+```
+
+
+### Problem set
+
+Use **dplyr** functions to address the following questions:
+
+1) How many unique countries are represented per continent? (_Hint:_ `group_by` then summarize with a call to `n_distinct(...)`).
+
+```{r problem1}
+gm %>% 
+  group_by(continent) %>% 
+  summarize(n=n_distinct(country))
+```
+
+
+2) Which European nation had the lowest GDP per capita in 1997? (_Hint:_ filter, arrange, `head(n=1)`)
+
+```{r problem2}
+gm %>%
+    filter(continent == "Europe" & year == 1997) %>%
+    arrange(gdpPercap) %>%
+    head(1)
+```
+
+
+3) According to the data available, what was the average life expectancy across each continent in the 1980s? (_Hint:_ filter, group\_by, summarize)
+
+```{r problem3}
+gm %>%
+    filter(year == 1982 | year == 1987) %>%
+    group_by(continent) %>%
+    summarize(mean_lifeExp = mean(lifeExp))
+```
+
+
+4) What 5 countries have the highest total GDP over all years combined? (_Hint:_ GDP per capita is simply GDP divided by the total population size. To get GDP back, you'd mutate to calculate GDP as the product of GDP per capita times the population size. Mutate, group_by, summarize, arrange, `head(n=5)`)
+
+```{r problem4}
+gm %>%
+    mutate(gdp = gdpPercap*pop) %>%
+    group_by(country) %>%
+    summarise(Total.GDP = sum(gdp)) %>%
+    arrange(desc(Total.GDP)) %>%
+    head(5)
+```
+
+
+5) What countries and years had life expectancies of _at least_ 80 years? _N.b. only output the columns of interest: country, life expectancy and year (in that order)._
+
+```{r problem5}
+gm %>%
+    filter(lifeExp >= 80) %>%
+    select(country, lifeExp, year)
+```
+
+
+6) What 10 countries have the strongest correlation (in either direction) between life expectancy and per capita GDP?
+
+```{r problem6}
+gm %>%
+    group_by(country) %>%
+    summarise(cor = cor(lifeExp, gdpPercap)) %>%
+    arrange(desc(abs(cor))) %>%
+    head(10)
+```
+
+
+7) Which combinations of continent (besides Asia) and year have the highest average population across all countries? _N.b. your output should include all results sorted by highest average population_.  (_Hint:_ filter where continent `!=` Asia, group by two variables, summarize, then arrange.)
+
+```{r problem7}
+gm %>%
+    filter(continent != "Asia") %>%
+    group_by(continent, year) %>%
+    summarise(mean.pop = mean(pop)) %>%
+    arrange(desc(mean.pop)) 
+```
+
+
+8) Which three countries have had the most consistent population estimates (i.e. lowest standard deviation) across the years of available data? 
+
+```{r problem8}
+gm %>%
+    group_by(country) %>%
+    summarize(sd.pop = sd(pop)) %>%
+    arrange(sd.pop) %>%
+    head(3)
+```
+
+
+9) **_Bonus!_** Which observations indicate that the population of a country has *decreased* from the previous year **and** the life expectancy has *increased* from the previous year? See [the vignette on window functions](https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html).
+
+
+```{r problem10}
+gm %>% 
+  arrange(country, year) %>% 
+  group_by(country) %>% 
+  filter(pop < lag(pop) & lifeExp > lag(lifeExp))
+```

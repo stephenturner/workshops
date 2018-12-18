@@ -1,0 +1,83 @@
+---
+title: "Biological Data Science Workshops"
+output: 
+  html_document:
+    toc: no
+---
+
+This is a seven-part series of courses introducing the essentials of biomedical data science using R. This class introduces methods, tools, and software for reproducibly managing, manipulating, analyzing, and visualizing large-scale biological data using the R statistical computing environment. The workshops also cover essential statistical analysis, and advanced topics including survival analysis, predictive modeling, forecasting, and text mining.
+
+<!-- **Please see the _[THRIV syllabus](thriv.html)_ for more information.**  -->
+
+<!-- **[Click here to download the entire course archive as a zip file.](https://github.com/thriv/biodatasci2018/archive/gh-pages.zip)** Once downloaded and extracted, double-click the **`index.html`** file in the extracted folder to view the course material offline. -->
+
+<!-- ### Course Material -->
+
+<!-- #### Lesson transcripts & code -->
+
+<!-- 1. [R Basics](r-basics.html) -->
+<!-- 1. [Data Frames](r-dataframes.html) -->
+<!-- 1. [Data Manipulation](r-dplyr-yeast.html) -->
+<!-- 1. [Tidying data](r-tidy.html) -->
+<!-- 1. [Data Visualization](r-viz-gapminder.html) -->
+<!-- 1. [Refresher: Tidy EDA](r-viz-gapminder.html) -->
+<!-- 1. [Reproducible Research & RMarkdown](r-rmarkdown.html) -->
+<!-- 1. [Essential Statistics with R](r-stats.html) -->
+<!-- 1. [Survival Analysis](r-survival.html) -->
+<!-- 1. [Predictive Analytics & Forecasting](r-predictive-modeling.html) -->
+<!-- 1. [Text Mining](r-textmining.html) -->
+
+<!-- #### Homework assignments -->
+
+<!-- 1. [Data Manipulation](r-dplyr-homework.html) -->
+<!-- 1. [Data Visualization](r-viz-homework.html) -->
+<!-- 1. [Reproducible Research & RMarkdown](r-rmarkdown-homework.html) -->
+<!-- 1. [Essential Statistics](r-stats-homework.html) -->
+
+
+----
+
+### FAQ
+
+#### What's this series all about? 
+
+This class introduces methods, tools, and software for reproducibly managing, manipulating, analyzing, and visualizing large-scale biomedical data. Specifically, the course introduces the R statistical computing environment and packages for manipulating and visualizing high-dimensional data, covers strategies for reproducible research, and culminates with predictive modeling and forecasting analyses of real public health data.
+
+**This is not a _"Tool X"_ or _"Software Y"_ class.** I want you to take away from this series the ability to use an extremely powerful scientific computing environment (R) to do many of the things that you'll do _across study designs and disciplines_ -- managing, manipulating, visualizing, and analyzing large, sometimes high-dimensional data. Whether that data is gene expression data from yeast, microbial genomics data from _B. pertussis_, public health data from [Gapminder](http://www.gapminder.org/), RNA-seq data from humans, movie preference trends from Netflix, or truck routing data from FedEx, you'll need the same computational know-how and data literacy to do the same kinds of basic tasks in each. I might show you how to use specific tools here and there (DESeq2 for RNA-seq analysis, ggtree for drawing phylogenetic trees, etc.), but these are not important -- you probably won't be using the same specific software or methods 10 years from now, but you'll still use the same underlying data and computational foundation. **That** is the point of this series -- to arm you with a basic foundation, and more importantly, to **enable you to figure out how to use _this tool_ or _that tool_ on your own**, when you need to.
+
+**_This is not a statistics class._** There is a short lesson on [essential statistics using R](r-stats.html) but this 3-hour lesson offers neither a comprehensive background on underlying theory nor in-depth coverage of implementation strategies using R. Some general knowledge of statistics and study design is helpful, but isn't required for this course.
+
+
+#### What are the pre-requisites?
+
+_There are none!_ 
+
+However, **[click here for instructions on setting up your computer](setup.html).** Each class involves lots of hands-on practice coding, and you'll need to download and install some free software **_prior to our first class_**. This may take up to an hour or so, and please do not hesitate to [email me](people.html) _prior to the workshop_ if you are having difficulty.
+
+
+<!-- ## Can I audit this course? -->
+
+<!-- Yes! However, **_you will be expected to attend every class meeting, participate in coding exercises during class, and complete any and all assignments_**, just as if you are taking the course for credit.  -->
+
+<!-- **_UPDATE Feb 9 2016_**: The class is currently full. -->
+
+<!-- [Click here to register to request to audit](https://docs.google.com/forms/d/1tHO-X4DupnHgIEsUei0K3kX5_UfLRK-y2KfxmxC6Ux0/viewform). The first day of the course is Monday, Feb 15, 2016. One week prior to the course starting, I will allow anyone who's requested to audit into the course, giving priority to people registering for credit. There are still plenty of seats open, so good chances you'll be able to get in. -->
+
+<!-- ## Where will the class meet? -->
+
+<!-- Carter Classroom, Health Sciences Library room 1211. This is downstairs one floor to the right (across the hall from Stephen Turner's office). -->
+
+
+#### Do I need a laptop?
+
+**_YES._** You must have access to a computer on which you can install software. The class will be a mix of lecture, discussion, but primarily live coding. You must bring your laptop to each session. Bring your charging cable also. Please follow the [setup instructions](setup.html) prior to the workshop.
+
+#### Where do I get additional help?
+
+Glad you asked! [See here](help.html).
+
+
+
+----
+
+<small>**_Attribution_:** Course material is inspired by and/or modified in part from [Jenny Bryan's Stat 545 course](http://stat545-ubc.github.io/), [Software Carpentry](http://software-carpentry.org/), [Data Carpentry](http://datacarpentry.org/), [David Robinson's blog](http://varianceexplained.org/), [Marian Schmidt's MSU NGS Workshop](https://github.com/marschmi/NGS2015_RMarkdown_Reproducibility), [Vanderbilt Department of BioStatistics Datasets](http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets?CGISESSID=10713f6d891653ddcbb7ddbdd9cffb79), the [ggtree vignettes](http://bioconductor.org/packages/release/bioc/html/ggtree.html), [Shirin Glander's blog](https://shiring.github.io/machine_learning/2016/11/27/flu_outcome_ML_post), [_Text Mining with R_](https://www.tidytextmining.com/) by Julia Silge and David Robinson, and likely many others.</small>

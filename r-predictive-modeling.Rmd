@@ -1,0 +1,848 @@
+---
+title: "Predictive Analytics: Predicting and Forecasting Influenza"
+---
+
+```{r init, include=F}
+library(knitr)
+opts_chunk$set(message=FALSE, warning=FALSE, eval=TRUE, echo=TRUE, cache=TRUE)
+options(digits=3)
+options(max.print=200)
+.ex <- 1 # Track ex numbers w/ hidden var. Increment each ex: `r .ex``r .ex=.ex+1`
+
+library(ggplot2)
+theme_set(theme_bw(base_size=16) + theme(strip.background = element_blank()))
+```
+
+
+```{r createData, eval=FALSE, include=FALSE}
+# # Uncomment this block to recreate datasets
+# 
+# # Create china flu data
+# library(tidyverse)
+# 
+# # create semiclean data ----
+# outbreaks::fluH7N9_china_2013 %>%
+#   # remove the two cases where gender or age is missing
+#   filter(!is.na(gender) & age!="?") %>%
+#   # Make age numeric
+#   mutate(age=as.numeric(age)) %>%
+#   # american english please
+#   rename(date_of_hospitalization = date_of_hospitalisation) %>%
+#   # lump all but three of the most common provinces together
+#   mutate(province=forcats::fct_lump(province, 3)) %>%
+#   # make the names easier to deal with
+#   set_names(~gsub("_of_", "_", .)) %>%
+#   # make this more explicitly a string/factor
+#   mutate(case_id=paste0("case_", case_id)) %>%
+#   as_tibble() %>%
+#   write_csv(here::here("data", "h7n9.csv"))
+# flu <- read_csv(here::here("data", "h7n9.csv"))
+# 
+# flu <- flu %>%
+#   # make male yes/no if gender is F, then remove gender.
+#   mutate(male = gender=="m") %>% select(-gender) %>%
+#   # Was someone ever hospitalized?
+#   mutate(hospital = !is.na(date_hospitalization)) %>%
+#   mutate(days_to_hospital = as.numeric(date_hospitalization - date_onset)) %>%
+#   mutate(days_to_outcome  = as.numeric(date_outcome - date_onset)) %>%
+#   mutate(early_outcome = date_outcome < median(date_outcome, na.rm=TRUE)) %>%
+#   select(-starts_with("date")) %>%
+#   mutate_if(is.logical, as.integer)
+# 
+# # is this dummy-variable creation necessary or will caret just do it for you? test both ways.
+# model.matrix(~0+province, data=flu)
+# 
+# # bind the columns with the original data
+# cbind(flu, model.matrix(~0+province, data=flu))
+# 
+# # turn it into a tibble, remove the province variable
+# flu <- cbind(flu, model.matrix(~0+province, data=flu)) %>%
+#   as_tibble() %>%
+#   select(-province)
+# 
+# # Remove "province" from the names
+# names(flu) <- gsub("province", "", names(flu))
+# flu
+# 
+# 
+# # Imputation
+# library(mice)
+# set.seed(42)
+# fluimp <- flu %>%
+#   select(-1, -2) %>%
+#   mice(print=FALSE) %>%
+#   complete()
+# 
+# # put the data back together
+# fluimp <- flu %>%
+#   select(1,2) %>%
+#   cbind(fluimp) %>%
+#   as_tibble()
+# 
+# fluimp %>% write_csv(here::here("data", "h7n9_analysisready.csv"))
+# 
+# 
+# 
+# # Create ILInet data
+# library(tidyverse)
+# library(cdcfluview)
+# 
+# ili <- ilinet()
+# ili <- ili %>% select(week_start, ilitotal, total_patients)
+# ili
+# 
+# pi <- pi_mortality(coverage_area = "national")
+# pi
+# pi <- pi %>% transmute(week_start=wk_start+1, fludeaths=number_influenza, pneumoniadeaths=number_pneumonia, all_deaths)
+# pi
+# 
+# ilidata <- ili %>%
+#   left_join(pi, by="week_start") %>%
+#   filter(!is.na(week_start)) %>%
+#   filter(week_start>="2003-01-01" & week_start<="2018-09-30")
+# 
+# ilidata %>% write_csv(here::here("data", "ilinet.csv"))
+```
+
+
+This class will provide hands-on instruction for using machine learning algorithms to predict a disease outcome. We will cover data cleaning, feature extraction, imputation, and using a variety of models to try to predict disease outcome. We will use resampling strategies to assess the performance of predictive modeling procedures such as Random Forest, stochastic gradient boosting, elastic net regularized regression (LASSO), and k-nearest neighbors. We will also demonstrate demonstrate how to _forecast_ future trends given historical infectious disease surveillance data using methodology that accounts for seasonality and nonlinearity. 
+
+**Prerequisites: _This is not a beginner R class._** [Familiarity with R](r-basics.html), installing/using packages, importing/saving results, expertise with [data manipulation using **dplyr**](r-dplyr-yeast.html) and [visualization with **ggplot2**](r-viz-gapminder.html) are all _required_. 
+
+
+**You must [complete the setup here](setup.html#predictive_modeling) _prior to class_.** This includes installing R, RStudio, and the required packages under the ["Predictive modeling" heading](setup.html#predictive_modeling). Please [contact me](people.html) _prior to class_ if you are having difficulty with any of the setup. Please bring your laptop and charger cable to class.
+
+**Handout**: Download and print out __[this handout](handouts/r-predictive-modeling.pdf)__ and bring it to class.
+
+<!--
+**Slides**: [click here](slides/r-stats.html).
+-->
+
+## Predictive Modeling 
+
+Here we're going to use some epidemiological data collected during an influenza A (H7N9) outbreak in China in 2013. Of 134 cases with data, 31 died, 46 recovered, but 57 cases do not have a recorded outcome. We'll develop models capable of predicting death or recovery from the unlabeled cases. Along the way, we will: 
+
+- Do some exploratory data analysis and data visualization to get an overall sense of the data we have.
+- Extract and recode _features_ from the raw data that are more amenable to data mining / machine learning algorithms. 
+- Impute missing data points from some of the predictor variables.
+- Use a framework that enables consistent access to hundreds of classification and regression algorithms, and that facilitates automated parameter tuning using bootstrapping-based resampling for model assessment. 
+- We will develop models using several different approaches (Random Forest, stochastic gradient boosting, elastic net regularized logistic regression, _k_-nearest neighbor) by training and testing the models on the data where the outcome is known
+- We will compare the performance of each of the models and apply the best to predict the outcome for cases where we didn't know the outcome.
+
+### H7N9 Outbreak Data
+
+The data we're using here is from the 2013 outbreak of [influenza A H7N9 in China](https://en.wikipedia.org/wiki/Influenza_A_virus_subtype_H7N9), analyzed by Kucharski et al., published in 2014.
+
+> **Publication**: A. Kucharski, H. Mills, A. Pinsent, C. Fraser, M. Van Kerkhove, C. A. Donnelly, and S. Riley. 2014. Distinguishing between reservoir exposure and human-to-human transmission for emerging pathogens using case onset data. [_PLOS Currents Outbreaks_ (2014) Mar 7 Edition 1](http://doi.org/10.1371/currents.outbreaks.e1473d9bfc99d080ca242139a06c455f). 
+
+> **Data**: Kucharski A, Mills HL, Pinsent A, Fraser C, Van Kerkhove M, Donnelly CA, Riley S (2014) Data from: Distinguishing between reservoir exposure and human-to-human transmission for emerging pathogens using case onset data. _Dryad Digital Repository_. https://doi.org/10.5061/dryad.2g43n.
+
+The data is made available in the [outbreaks](https://cran.r-project.org/web/packages/outbreaks/index.html) package, which is a collection of several simulated and real outbreak datasets, and has been very [slightly modified](https://github.com/bioconnector/workshops/blame/master/r-predictive-flu.Rmd#L20) for use here. The analysis we'll do here is inspired by and modified in part from a [similar analysis by Shirin Glander](https://shiring.github.io/machine_learning/2016/11/27/flu_outcome_ML_post).
+
+There are two datasets available to download on the [data](data.html) page: 
+
+1. **[h7n9.csv](data/h7n9.csv)**: The original dataset. Contains the following variables, with lots of missing data throughout.
+    - **`case_id`**: the sample identifier
+    - **`date_onset`**: date of onset of syptoms
+    - **`date_hospitalization`**: date the patient was hospitalized, if available
+    - **`date_outcome`**: date the outcome (recovery, death) was observed, if available
+    - **`outcome`**: "Death" or "Recover," if available
+    - **`gender`**: male (m) or female (f)
+    - **`age`**: age of the individual, if known
+    - **`province`**: either Shanghai, Jiangsu, Zhejiang, or Other (lumps together less common provinces)
+2. **[h7n9\_analysisready.csv](data/h7n9_analysisready.csv)**: The "analysis-ready" dataset. This data has been cleaned up, with some "feature extraction" / variable recoding done to make the data more suitable to data mining / machine learning methods used here. We still have the outcome variable, either _Death_, _Recover_ or unknown (NA).
+    - **`case_id`**: _(same as above)_
+    - **`outcome`**: _(same as above)_
+    - **`age`**: _(same as above, imputed if unknown)_
+    - **`male`**: Instead of sex (m/f), this is a 0/1 indicator, where 1=male, 0=female.
+    - **`hospital`**: Indicator variable whether or not the patient was hospitalized
+    - **`days_to_hospital`**: The number of days between onset and hospitalization
+    - **`days_to_outcome`**: The number of days between onset and outcome (if available)
+    - **`early_outcome`**: Whether or not the outcome was recorded prior to the median date of the outcome in the dataset
+    - **`Jiangsu`**: Indicator variable: 1 = the patient was from the Jiangsu province.
+    - **`Shanghai`**: Indicator variable: 1 = the patient was from the Shanghai province.
+    - **`Zhejiang`**: Indicator variable: 1 = the patient was from the Zhejiang province.
+    - **`Other`**: Indicator variable: 1 = the patient was from some other less common province.
+
+
+### Importing H7N9 data
+
+First, let's load the packages we'll need initially.
+
+```{r loadPkgs}
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+```
+
+Now let's read in the data and take a look. Notice that it correctly read in the dates as date-formatted variables. Later on, when we run functions such as `median()` on a date variable, it knows how to handle that properly. You'll also notice that there are missing values throughout.
+
+```{r importH7N9}
+# Read in data
+flu <- read_csv("data/h7n9.csv")
+
+# View in RStudio (capital V)
+# View(flu)
+
+# Take a look
+flu
+```
+
+
+### Exploratory data analysis
+
+Let's use ggplot2 to take a look at the data. Refer back to the [ggplot2 class](r-viz-gapminder.html) if you need a refresher.
+
+The **outcome** variable is the thing we're most interested in here -- it's the thing we want to eventually predict for the unknown cases. Let's look at the distribution of that outcome variable (Death, Recover or unknown (NA)), by **age**. We'll create a density distribution looking at age, with the fill of the distribution colored by outcome status.
+
+```{r}
+ggplot(flu, aes(age)) + geom_density(aes(fill=outcome), alpha=1/3)
+```
+
+Let's look at the counts of the number of deaths, recoveries, and unknowns by sex, then separately by province.
+
+```{r, fig.show=FALSE, fig.keep='none'}
+ggplot(flu, aes(gender)) +
+  geom_bar(aes(fill=outcome), position="dodge") 
+```
+
+We can simply add a `facet_wrap` to split by province. 
+
+```{r}
+ggplot(flu, aes(gender)) +
+  geom_bar(aes(fill=outcome), position="dodge") +
+  facet_wrap(~province)
+```
+
+Let's draw a boxplot showing the age distribution by province, by outcome. This shows that there's a higher rate of death in older individuals but this is only observed in Jiangsu and Zhejiang provinces.
+
+```{r, fig.keep='last'}
+# First just by age
+ggplot(flu, aes(province, age)) + geom_boxplot()
+# Then by age and outcome
+ggplot(flu, aes(province, age)) + geom_boxplot(aes(fill=outcome))
+```
+
+Let's try something a little bit more advanced. First, take a look at the data again.
+
+```{r, results='hide'}
+flu
+```
+
+Notice how we have three different date variables: date of onset, hospitalization, and outcome. I'd like to draw a plot showing the date on the x-axis with a line connecting the three points from onset, to hospitalization, to outcome (if known) for each patient. I'll put age on the y-axis so the individuals are separated, and I'll do this faceted by province. 
+
+First we need to use the `gather` function from the **tidyr** package to gather up all the `date_?` variables into a single column we'll call `key`, with the actual values being put into a new column called `date`.
+
+```{r}
+# Gather the date columns
+flugather <- flu %>%
+  gather(key, date, starts_with("date_"))
+
+# Look at the data as is
+# flugather
+
+# Better: Show the data arranged by case_id so you see the three entries
+flugather %>% arrange(case_id)
+```
+
+Now that we have this, let's visualize the number of days that passed between onset, hospitalization and outcome, for each case. We see that there are lots of unconnected points, especially in Jiangsu and Zhejiang provinces, where one of these dates isn't known.
+
+```{r, fig.width=10, fig.height=8}
+ggplot(flugather, aes(date, y=age, color=outcome)) +
+  geom_point() +
+  geom_path(aes(group=case_id)) +
+  facet_wrap(~province)
+```
+
+### Feature Extraction
+
+The variables in our data are useful for summary statistics, visualization, EDA, etc. But we need to do some _feature extraction_ or variable recoding to get the most out of machine learning models.
+
+- Age: we'll keep this one as is. 
+- Gender: instead of m/f, let's convert this into a binary indicator variable where 0=female, 1=male. 
+- Province: along the same lines, let's create binary classifiers that indicate Shanghai, Zhejiang, Jiangsu, or other provinces.
+- Hospitalization: let's create a binary classifier where  0=not hospitalized, 1=hospitalized.
+- Dates: Let's also take the _dates_ of onset, hospitalization, and outcome, and transform these into _days_ between onset and hospitalization, and days from onset to outcome. The algorithms aren't going to look at one column then another to do this math -- we have to extract this feature ourselves.
+- Early outcome: let's create another binary 0/1 indicating whether someone had an early outcome (earlier than the median outcome date observed).
+
+Let's build up this pipeline one step at a time. If you want to skip ahead, you can simply read in the already extracted/recoded/imputed dataset at [`data/h7n9_analysisready.csv`](data/h7n9_analysisready.csv).
+
+First, let's make a backup of the original data in case we mess something up. 
+
+```{r}
+flu_orig <- flu
+```
+
+#### Create gender / hospitalization indicators
+
+Now let's start recoding, one step at a time. First of all, when we mutate to add a new variable, we can put in a logical comparison to tell us whether a statement is TRUE or FALSE. For example, let's look at the gender variable.
+
+```{r, results="hide"}
+flu$gender
+```
+
+We can ask if gender is male ("m") like this:
+
+```{r, results="hide"}
+flu$gender=="m"
+```
+
+So we can do that with a mutate statement on a pipeline. Once we do that, we can remove the old gender variable. E.g.:
+
+```{r, results="hide"}
+flu %>%
+  mutate(male = gender=="m") %>% 
+  select(-gender)
+```
+
+Similarly, let's get an indicator whether someone was hospitalized or not. If hospitalization is missing, this would return TRUE. If you want to ask whether they are _not_ missing, you would use `!` to negate the logical question, i.e., `!is.na(flu$date_hospitalization)`.
+
+```{r, results="hide"}
+flu$date_hospitalization
+is.na(flu$date_hospitalization)
+!is.na(flu$date_hospitalization)
+```
+
+So now, let's add that to our pipeline from above.
+
+```{r, results="hide"}
+flu %>%
+  mutate(male = gender=="m") %>% 
+  select(-gender) %>%
+  mutate(hospital = !is.na(date_hospitalization))
+```
+
+#### Convert dates to "days to \_\_\_"
+
+Let's continue to add days from onset to hospitalization and days to outcome by subtracting one date from the other, and converting the value to numeric. We'll also create an early outcome binary variable indicating whether the date of the outcome was less than the median, after removing missing variables. We'll finally remove all the variables that start with "date." Finally, we'll use the `mutate_if` function, which takes a predicate and an action function. We'll ask -- _if_ the variable is logical (TRUE/FALSE), turn it into an integer (1/0). 
+
+
+```{r, results="hide"}
+# What's the median outcome date?
+median(flu$date_outcome, na.rm=TRUE)
+
+# Run the whole pipeline
+flu %>%
+  mutate(male = gender=="m") %>% 
+  select(-gender) %>%
+  mutate(hospital = !is.na(date_hospitalization)) %>%
+  mutate(days_to_hospital = as.numeric(date_hospitalization - date_onset)) %>%
+  mutate(days_to_outcome  = as.numeric(date_outcome - date_onset)) %>%
+  mutate(early_outcome = date_outcome < median(date_outcome, na.rm=TRUE)) %>%
+  select(-starts_with("date")) %>%
+  mutate_if(is.logical, as.integer)
+```
+
+Once you're satisfied your pipeline works, reassign the pipeline back to the `flu` object itself (remember, we created the backup above in case we messed something up here).
+
+```{r}
+# Make the assignment
+flu <- flu %>%
+  mutate(male = gender=="m") %>% 
+  select(-gender) %>%
+  mutate(hospital = !is.na(date_hospitalization)) %>%
+  mutate(days_to_hospital = as.numeric(date_hospitalization - date_onset)) %>%
+  mutate(days_to_outcome  = as.numeric(date_outcome - date_onset)) %>%
+  mutate(early_outcome = date_outcome < median(date_outcome, na.rm=TRUE)) %>%
+  select(-starts_with("date")) %>%
+  mutate_if(is.logical, as.integer)
+
+# Take a look
+flu
+```
+
+#### Create indicators for province
+
+Now, there's one more thing we want to do. Instead of a single "province" variable that has multiple levels, we want to do the dummy coding ourselves. When we ran regression models R handled this internally without our intervention. But we need to be explicit here. Here's one way to do it. 
+
+First, there's a built-in function called `model.matrix` that creates dummy codes. You have to give it a formula like you do in linear models, but here, I give it a `~0+variable` syntax so that it doesn't try to create an intercept. That is, instead of _k-1_ dummy variables, it'll create _k_. Try it.
+
+```{r, results="hide"}
+model.matrix(~0+province, data=flu)
+```
+
+There's another built-in function called `cbind` that binds columns together. This can be dangerous to use if you're not certain that rows are in the same order (there, it's better to use an inner join). But here, we're certain they're in the same order. Try binding the results of that to the original data.
+
+```{r, results="hide"}
+cbind(flu, model.matrix(~0+province, data=flu))
+```
+
+Finally, turn it into a tibble and select out the original province variable. Once you've run the pipeline, go back and make the assignment back to the `flu` object itself.
+
+```{r}
+flu <- cbind(flu, model.matrix(~0+province, data=flu)) %>%
+  as_tibble() %>%
+  select(-province)
+flu
+```
+
+_Optional_: Notice how the new variables are provinceJiangsu, provinceOther, provinceShanghai, provinceZhejiang. If we want to strip off the "province" we can do that. There's a built-in command called `gsub` that can help here. Take a look at the help for `?gsub`.
+
+```{r, results="hide"}
+# Take a look at the names of the flu dataset.
+names(flu)
+
+# Remove "province"
+gsub("province", "", names(flu))
+
+# Now make the assignment back to names(flu)
+names(flu) <- gsub("province", "", names(flu))
+
+# Take a look
+flu
+```
+
+
+### Imputation
+
+We have a lot of missing data points throughout. Most of the data mining algorithms we're going to use later can't handle missing data, so observations with any missing data are excluded from the model completely. If we have a large dataset and only a few missing values, it's probably better to exclude them and proceed. But since we've already got a pretty low number of observations, we need to try to impute missing values to maximize our use of the data we have.
+
+There are lots of different imputation approaches. An overly simplistic method is simply a mean or median imputation -- you simply plug in the mean value for that column for the missing sample's value. This leaves the mean unchanged (good) but artificially decreases the variance (not good). We're going to use the **mice** package for imputation (Multivariate Imputation by Chained Equations). This package gives you functions that can impute continuous, binary, and ordered/unordered categorical data, imputing each incomplete variable with a separate model. It tries to account for relations in the data and uncertainty about those relationships. The methods are described in the paper.
+
+> Buuren, S., & Groothuis-Oudshoorn, K. (2011). mice: Multivariate imputation by chained equations in R. [_Journal of statistical software_, 45(3)](https://www.jstatsoft.org/article/view/v045i03).
+
+Let's load the mice package, and take a look at our data again.
+
+```{r}
+library(mice)
+flu
+```
+
+Eventually we want to predict the outcome, so we don't want to factor that into the imputation. We also don't want to factor in the case ID, because that's just an individual's identifier. So let's create a new dataset selecting out those two variables so we can try to impute everything else.
+
+```{r, results="hide"}
+flu %>% 
+  select(-1, -2)
+```
+
+The `mice()` function itself returns a special kind of object called a multiply imputed data set, and from this we can run mice's `complete()` on the thing returned by `mice()` to complete the dataset that was passed to it. Here's what we'll do. We'll take the flu data, select out the first two columns, create the imputation, then complete the original data, assigning that to a new dataset called `fluimp`. First let's set the random number seed generator to some number (use the same as I do if you want identical results).
+
+```{r mice, results="hide"}
+set.seed(42)
+fluimp <- flu %>%
+  select(-1, -2) %>%
+  mice(print=FALSE) %>%
+  complete()
+fluimp
+```
+
+Now, we need to put the data back together again. We do this by selecting the original two columns from the original flu data, and then using `cbind()` like above to mash the two datasets together side by side. Finally, we'll turn it back into a tibble. Once you've run the pipeline and you like the result, assign it back to `fluimp`.
+
+```{r}
+# Run the pipeline successfully first before you reassign!
+fluimp <- flu %>%
+  select(1,2) %>%
+  cbind(fluimp) %>%
+  as_tibble()
+fluimp
+```
+
+At this point we're almost ready to do some predictive modeling! If you didn't make it this far and you just want to read in the analysis ready dataset, you can do that too. 
+
+```{r}
+fluimp <- read_csv("data/h7n9_analysisready.csv")
+```
+
+
+### The caret package
+
+We're going to use the **caret** package for building and testing predictive models using a variety of different data mining / ML algorithms. The package was published in JSS in 2008. Max Kuhn's [slides from the 2013 useR! conference](https://www.r-project.org/conferences/useR-2013/Tutorials/kuhn/user_caret_2up.pdf) are also a great resource, as is the [caret package vignette](https://cran.r-project.org/web/packages/caret/vignettes/caret.pdf), and the [detailed e-book documentation](http://topepo.github.io/caret/). 
+
+> Kuhn, M. (2008). Building Predictive Models in R Using the caret Package. _Journal of Statistical Software_, 28(5), 1 - 26. doi: <http://dx.doi.org/10.18637/jss.v028.i05>
+
+The [**caret**](http://cran.r-project.org/web/packages/caret/index.html) package (short for **C**lassification **A**nd **RE**gression **T**raining) is a set of functions that streamline the process for creating and testing a wide variety of predictive models with different resampling approaches, as well as estimating variable importance from developed models. There are many different modeling functions in R spread across many different packages, and they all have different syntax for model training and/or prediction. The **caret** package provides a uniform interface the functions themselves, as well as a way to standardize common tasks (such parameter tuning and variable importance).
+
+The `train` function from caret is used to:
+
+- evaluate, using resampling, the effect of model tuning parameters on performance
+- choose the "optimal" model across these parameters
+- estimate model performance from a training set
+
+#### Models available in caret
+
+First you have to choose a specific type of model or algorithm. Currently there are **`r I(length(unique(caret::modelLookup()$model)))`** different algorithms implemented in caret. Caret provides the interface to the method, but you still need the external package installed. For example, we'll be fitting a Random Forest model, and for that we'll need the [randomForest](https://cran.r-project.org/package=randomForest) package installed. You can see all the methods that you can deploy by looking at the help for train.
+
+```{r, include=FALSE}
+library(caret)
+```
+
+
+```{r, eval=FALSE}
+library(caret)
+?train
+```
+
+From here, click on the link to see the [available models](http://topepo.github.io/caret/available-models.html) or [models by tag](http://topepo.github.io/caret/train-models-by-tag.html). From here you can search for particular models by name. We're going to fit models using Random Forest, stochastic gradient boosting, k-Nearest Neighbors, Lasso and Elastic-Net Regularized Generalized Linear Models. These require the packages [randomForest](https://cran.r-project.org/package=randomForest), [gbm](https://cran.r-project.org/package=gbm), [kknn](https://cran.r-project.org/package=kknn), and [glmnet](https://cran.r-project.org/package=glmnet), respectively. 
+
+Each of the models may have one or more _tuning parameters_ -- some value or option you can set to tweak how the algorithm develops. In k-nearest neighbors, we can try different values of _k_. With random forest, we can set the $m_{\text{try}}$ option -- the algorithm will select $m_{\text{try}}$ number of predictors to attempt a split for classification. Caret attempts to do this using a procedure like this:
+
+![_The caret model training algorithm. Image from the caret paper._](img/caret-pseudocode.png)
+
+That is, it sweeps through each possible parameter you can set for the particular type of model you choose, and uses some kind of resampling scheme with your training data, fitting the model on a subset and testing on the held-out samples.
+
+#### Resampling 
+
+The default resampling scheme caret uses is the [bootstrap](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)). Bootstrapping takes a random sample _with replacement_ from your data that's the same size of the original data. Samples might be selected more than once, and some aren't selected at all. On average, each sample has a ~63.2% chance of showing up at least once in a bootstrap sample. Some samples won't show up at all, and these _held out_ samples are the ones that are used for testing the performance of the trained model. You repeat this process many times (e.g., 25, 100, etc) to get an average performance estimate on unseen data. Here's what it looks like in practice.
+
+![_Bootstrapping schematic. Image from Max Kuhn's 2013 useR! talk._](img/caret-bootstrap.png)
+
+Many alternatives exist. Another popular approach is cross-validation. Here, a subset of your data (e.g., 4/5ths, or 80%) is used for training, and the remaining 1/5th or 20% is used for performance assessment. You slide the cross-validation interval over and use the next 4/5ths for training and 1/5th for testing. You do this again for all 5ths of the data. You can optionally repeat this process many times (_repeated cross-validation_) to get an average cross validation prediction accuracy for a given model and set of tuning parameters.
+
+The `trainControl` option in the `train` function controls this, and you can learn more about this under the [Basic Parameter Tuning](http://topepo.github.io/caret/model-training-and-tuning.html#basic-parameter-tuning) section of the caret documentation.
+
+### Model training
+
+```{r reentrypoint1, include=FALSE, eval=FALSE}
+# This chunk is here if you just want to start interactive lesson development
+# from this point without worrying about what happened above.
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+library(caret)
+```
+
+
+Let's try it out! If you didn't make it through the data preprocessing steps and you just want to read in the analysis ready dataset, you can do this: 
+
+```{r}
+fluimp <- read_csv("data/h7n9_analysisready.csv")
+```
+
+#### Splitting data into known and unknown outcomes
+
+Before we continue, let's split the dataset into samples where we know the outcome, and those where we don't. The unknown samples will be the ones where `is.na(outcome)` is TRUE. So you can use a filter statement.
+
+```{r, results="hide"}
+# Run the pipeline successfully first before you reassign!
+# These are samples with unknown data we'll use later to predict
+unknown <- fluimp %>%
+  filter(is.na(outcome))
+unknown
+```
+
+The known samples are the cases where `!is.na(outcome)` is TRUE, that is, cases where the outcome is not (`!`) missing. One thing we want to do here while we're at it is remove the case ID. This is just an arbitrary numerically incrementing counter and we _don't_ want to use this in building a model!
+
+```{r, results="hide"}
+# Run the pipeline successfully first before you reassign!
+# Samples with known outcomes used for model training.
+known <- fluimp %>%
+  filter(!is.na(outcome)) %>%
+  select(-case_id)
+known
+```
+
+#### A note on reproducibility and `set.seed()`
+
+When we train a model using resampling, that sampling is going to happen _pseudo_-randomly. Try running this function which generates five numbers from a random uniform distribution between 0 and 1.
+
+```{r, results="hide"}
+runif(5)
+```
+
+If you run that function over and over again, you'll get different results. But, we can set the random number seed generator with any value we choose, and we'll get the same result. Try setting the seed, drawing the random numbers, then re-setting the same seed, and re-running the `runif` function again. You should get identical results.
+
+```{r, results="hide"}
+set.seed(22908)
+runif(5)
+```
+
+Eventually I'm going to compare different models to each other, so I want to set the random number seed generator to the same value for each model so the same random bootstrap samples are identical across models.
+
+#### Random Forest
+
+Let's fit a [random forest](https://en.wikipedia.org/wiki/Random_forest) model. See the help for `?train` and click on the link therein to see what abbreviations correspond to which model. First set the random number seed generator to some number, e.g., 8382, that we'll use for all other models we make. The model forumula here takes the know data, and the `responseVar~.` syntax says "predict `responseVar` using every other variable in the data." Finally, notice how when we call `train()` from the **caret** package using "rf" as the type of model, it automatically loads the **[randomForest](https://cran.r-project.org/package=randomForest)** package that you installed. If you didn't have it installed, it would probably ask you to install it first.
+
+```{r}
+# Set the random number seed generator
+set.seed(8382)
+
+# Fit a random forest model for outcome against everything in the model (~.)
+modrf <- train(outcome~., data=known, method="rf")
+
+# Take a look at the output
+modrf
+```
+
+Take a look at what that tells us. It tells us it's fitting a Random Forest model using 77 samples, predicting a categorical outcome class (Death or Recover) based on 10 predictors. It's not doing any pre-processing like centering or scaling, and it's doing bootstrap resampling of 77 samples with replacement, repeated 25 times each. Random Forest has a single tuning parameter, $m_{\text{try}}$ -- the algorithm will select $m_{\text{try}}$ number of predictors to attempt a split for classification when building a classification tree. The caret package does 25 bootstrap resamples for different values of $m_{\text{try}}$ (you can also control this too if you want), and computes [accuracy](https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Confusion_matrix) and [kappa](https://en.wikipedia.org/wiki/Cohen%27s_kappa) measures of performance on the held-out samples. 
+
+Accuracy is the number of true assignments to the correct class divided by the total number of samples. [Kappa](https://en.wikipedia.org/wiki/Cohen%27s_kappa) takes into account the expected accuracy while considering chance agreement, and is useful for extremely imbalanced class distributions. For continuous outcomes, you can measure things like RMSE or correlation coefficients.
+
+> **_A bit about random forests._** Random forests are an ensemble learning approach based on classification trees. The CART (classification and regression tree) method searches through all available predictors to try to find a value of a single variable that splits the data into two groups by minimizing the impurity of the outcome between the two groups. The process is repeated over and over again until a hierarchical (tree) structure is created. But trees don't have great performance (prediction accuracy) compared to other models. Small changes in the data can drastically affect the structure of the tree. 
+> 
+> Tree algorithms are improved by ensemble approaches - instead of growing a single tree, grow many trees and aggregate (majority vote or averaging) the predictions made by the ensemble. The random forest algorithm is essentially:
+> 
+> 1. From the training data of _n_ samples, draw a bootstrap sample of size _n_.
+> 1. For each bootstrap sample, grow a classification tree, but with a small modification compared to the traditional algorithm: instead of selecting from all possible predictor variables to form a split, choose the best split among a randomly selected subset of $m_{\text{try}}$ predictors. Here, $m_{\text{try}}$ is the only tuning parameter. The trees are grown to their maximum size and not "pruned" back.
+> 1. Repeat the steps agove until a large number of trees is grown. 
+> 1. Estimate the performance of the ensemble of trees using the "out-of-bag" samples - i.e., those that were never selected during the bootstrap procedure in step #1. 
+> 1. Estimate the importance of each variable in the model by randomly permuting each predictor variable in testing on the out-of-bag samples. If a predictor is important, prediction accuracy will degrade. If the predictor isn't that helpful, performance doesn't deteriorate as much. 
+> 
+> Random forests are efficient compared to growing a single tree. For one, the RF algorithm only selects from $m_{\text{try}}$ predictors at each step, rather than all available predictors. Usually $m_{\text{try}}$ is by default somewhere close to the square root of the total number of available predictors, so the search is very fast. Second, while the traditional CART tree algorithm has to go through extensive cross-validation based pruning to avoid overfitting, the RF algorithm doesn't do any pruning at all. In fact, building an RF model _can_ be faster than building a single tree!
+
+Caret also provides a function for [assessing the importance of each variable](http://topepo.github.io/caret/variable-importance.html). The `varImp` function knows what kind of model was fitted and knows how to estimate variable importance. For Random Forest, it's an estimate of how much worse the prediction gets after randomly shuffling the values of each predictor variable in turn. A variable that's important will result in a much worse prediction than a variable that's not as meaningful.
+
+```{r}
+varImp(modrf, scale=TRUE)
+```
+
+You can also pass that whole thing to `plot()`, or wrap the statement in `plot()`, to see a graphical representation.
+
+```{r}
+varImp(modrf, scale=TRUE) %>% plot()
+```
+
+#### Stochastic Gradient Boosting
+
+Let's try a different method, [stochastic gradient boosting](https://en.wikipedia.org/wiki/Gradient_boosting), which uses a different method for building an ensemble of classification trees (see [this post](https://quantdare.com/what-is-the-difference-between-bagging-and-boosting/) for a discussion of bagging vs boosting). This requires the **[gbm](https://cran.r-project.org/package=gbm)** package. Again, set the random seed generator.
+
+```{r}
+set.seed(8382)
+modgbm <- train(outcome~., data=known, method="gbm", verbose=FALSE)
+modgbm
+```
+
+Notice how stochastic gradient boosting has two different tuning parameters - interaction depth and n trees. There were others (shrinkage, and `n.minobsinnode`) that were held constant. The caret package automates the bootstrap resampling based performance assessment across all combinations of depth and ntrees, and it tells you where you got the best performance. Notice that the performance here doesn't seem to be as good as random forest. We can also look at variable importance here too, and see similar rankings.
+
+```{r, fig.show=FALSE, fig.keep='none', results="hide"}
+library(gbm) # needed because new version of caret doesn't load
+varImp(modgbm, scale=TRUE)
+varImp(modgbm, scale=TRUE) %>% plot()
+```
+
+#### Model comparison: Random Forest vs Gradient Boosting
+
+Let's compare those two models. Because the random seed was set to the same number (8382), the bootstrap resamples were identical across each model. Let's directly compare the results for the best models from each method.
+
+```{r}
+modsum <- resamples(list(gbm=modgbm, rf=modrf))
+summary(modsum)
+```
+
+It appears that random forest is doing much better in terms of both accuracy and kappa. Let's train a few other types of models.
+
+#### Elastic net regularized logistic regression
+
+[Elastic net regularization](https://en.wikipedia.org/wiki/Elastic_net_regularization) is a method that combines both the [lasso](https://en.wikipedia.org/wiki/Lasso_(statistics)) and [ridge](https://en.wikipedia.org/wiki/Tikhonov_regularization) methods of reguarizing a model. [Regularization](https://en.wikipedia.org/wiki/Regularization_(mathematics)) is a method for _penalizing_ a model as it gains complexity with more predictors in an attempt to avoid overfitting. You'll need the **[glmnet](https://cran.r-project.org/package=glmnet)** package for this.
+
+```{r}
+set.seed(8382)
+modglmnet <- train(outcome~., data=known, method="glmnet")
+modglmnet
+```
+
+
+#### k-nearest neighbor
+
+[k-nearest neighbor](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) attempts to assign samples to their closest labeled neighbors in high-dimensional space. You'll need the **[kknn](https://cran.r-project.org/package=kknn)** package for this.
+
+```{r}
+set.seed(8382)
+modknn <- train(outcome~., data=known, method="kknn")
+modknn
+```
+
+#### Compare all the models
+
+Now let's look at the performance characteristics for the best performing model across all four types of models we produced. It still looks like random forest is coming through as the winner.
+
+```{r}
+modsum <- resamples(list(gbm=modgbm, rf=modrf, glmnet=modglmnet, knn=modknn))
+summary(modsum)
+```
+
+The `bwplot()` function can take this model summary object and visualize it. 
+
+```{r}
+bwplot(modsum)
+```
+
+### Prediction on unknown samples
+
+Once we have a model trained it's fairly simple to predict the class of the unknown samples. Take a look at the unknown data again:
+
+```{r, results="hide"}
+unknown
+```
+
+Now, since Random Forest worked best, let's use that model to predict the outcome!
+
+```{r}
+predict(modrf, newdata=unknown)
+```
+
+This gives you a vector of values that would be the outcome for the individuals in the `unknown` dataset. From here it's pretty simple to put them back in the data with a `mutate()`.
+
+```{r}
+unknown %>%
+  mutate(outcome=predict(modrf, newdata=unknown))
+```
+
+Alternatively, you could pass in `type="prob"` to get prediction probabilities instead of predicted classes. 
+
+```{r}
+predict(modrf, newdata=unknown, type="prob") %>% head()
+```
+
+You could also imagine going further to get the prediction probabilities out of each type of model we made. You could add up the prediction probabilities for Death and Recovery for each individual across model types, and then compute a ratio. If across all the models that ratio is, for example, 2x in favor of death, you could predict death, or if it's 2x in favor of recovery, you predict recover, and if it's in between, you might call it "uncertain." This lets you not only reap the advantages of ensemble learning within a single algorithm, but also lets you use information across a variety of different algorithm types.
+
+```{r, eval=FALSE, include=FALSE}
+# # sum up prediction probabilities
+# predict(modrf, newdata=unknown, type="prob")
+# data.frame(rf    = predict(modrf,    newdata=unknown, type="prob"),
+#            gbm   = predict(modgbm,   newdata=unknown, type="prob"),
+#            knn   = predict(modknn,   newdata=unknown, type="prob"),
+#            lasso = predict(modlasso, newdata=unknown, type="prob")) %>%
+#   as_tibble() %>%
+#   mutate(sumdeath = rf.Death + gbm.Death + knn.Death + lasso.Death,
+#          sumrecover = rf.Recover + gbm.Recover + knn.Recover + lasso.Recover,
+#          log2ratio=log2(sumdeath/sumrecover)) %>%
+#   mutate(outcome=case_when(
+#     log2ratio > 1 ~ "Death",
+#     log2ratio < -1 ~ "Recover",
+#     TRUE ~ "UNCERTAIN"
+#   )) %>% View
+```
+
+## Forecasting
+
+### The Prophet Package
+
+Forecasting is a common data science task that helps with things like capacity planning, goal setting, anomaly detection, and resource use projection. Forecasting can involve complex models, where overly simplistic models can be brittle and can be too inflexible to incorporate useful assumptions about the underlying data. 
+
+Recently, the data science team at Facebook released as open-source a tool they developed for forecasting, called **prophet**, as both an R and python package.
+
+<!-- - Release blog post: https://research.fb.com/prophet-forecasting-at-scale/ -->
+- Paper (preprint): https://peerj.com/preprints/3190/
+- Project homepage: https://facebook.github.io/prophet/
+- Documentation: https://facebook.github.io/prophet/docs/quick_start.html
+- R package: https://cran.r-project.org/web/packages/prophet/index.html
+- Python package: https://pypi.python.org/pypi/fbprophet/
+- Source code: https://github.com/facebook/prophet
+
+<small>
+
+> Google and Twitter have released as open-source similar packages: Google's **CausalImpact** software (<https://google.github.io/CausalImpact/>) assists with inferring causal effects of a design intervention on a time series, and Twitter's **AnomalyDetection** package (<https://github.com/twitter/AnomalyDetection>) was designed to detect blips and anomalies in time series data given the presence of seasonality and underlying trends. See also Rob Hyndman's **[forecast](https://cran.r-project.org/package=forecast)** package in R.
+
+</small>
+
+Prophet is optimized for forecasting problems that have the following characteristics:
+
+- Hourly, daily, or weekly observations with at least a few months (preferably a year) of history
+- Strong multiple "human-scale" seasonalities: day of week and time of year
+- Important holidays that occur at irregular intervals that are known in advance (e.g. the Super Bowl)
+- A reasonable number of missing observations or large outliers
+- Historical trend changes, for instance due to product launches or logging changes
+- Trends that are non-linear growth curves, where a trend hits a natural limit or saturates
+
+These use cases are optimized for business forecasting problems encountered at Facebook, but many of the characteristics here apply well to other kinds of forecasting problems. Further, while the default settings can produce fairly high-quality forecasts, if the results aren't satisfactory, you aren't stuck with a completely automated model you can't change. The prophet package allows you to tweak forecasts using different parameters. The process is summarized in the figure below. 
+
+![_Schematic view of the analyst-in-the-loop approach to forecasting at scale, which best makes use of human and automated tasks. Image from the Prophet preprint noted above._](img/prophet.png)
+
+**[Prophet](https://cran.r-project.org/package=prophet)** is a good replacement for the **[forecast](https://cran.r-project.org/package=forecast)** package because:
+
+1. **Prophet makes it easy.** The forecast package offers many different techniques, each with their own strengths, weaknesses, and tuning parameters. While the choice of parameter settings and model specification gives the expert user great flexibility, the downside is that choosing the wrong parameters as a non-expert can give you poor results. Prophet's defaults work pretty well. 
+2. **Prophet's forecasts are intuitively customizable.** You can choose smoothing parameters for seasonality that adjust how closely you fit historical cycles, and you can adjust how agressively to follow historical trend changes. You can manually specify the upper limit on growth curves, which allows for you to supplement the automatic forecast with your own prior information about how your forecast will grow (or decline). You can also specify irregular events or time points (e.g., election day, the Super Bowl, holiday travel times, etc) that can result in outlying data points.
+
+The prophet procedure is essentially a regression model with some additional components:
+
+1. A piecewise linear or logistic growth curve trend. Prophet automatically detects changes in trends by selecting changepoints from the data.
+1. A yearly seasonal component modeled using Fourier series.
+1. A weekly seasonal component using dummy variables.
+1. A user-provided list of important holidays.
+
+See the prophet preprint for more.
+
+> Taylor SJ, Letham B. (2017) Forecasting at scale. _PeerJ Preprints_ 5:e3190v2 https://doi.org/10.7287/peerj.preprints.3190v2
+
+### CDC ILI time series data
+
+Here we're going to use historical flu tracking data from the CDC's U.S. Outpatient [Influenza-like Illness Surveillance Network](https://wwwn.cdc.gov/ilinet/) along with data from the [National Center for Health Statistics (NCHS) Mortality Surveillance System](https://gis.cdc.gov/grasp/fluview/mortality.html). This contains ILI totals from CDC and flu + pneumonia death data from NCHS through the end of October 2017. It's the **[ilinet.csv](data/ilinet.csv)** file on the [data](data.html) page. Let's read it in, then take a look. Notice that `week_start` was automatically read in as a date data type. What you see as `2003-01-06` is actually represented internally as a date, not a character.
+
+```{r}
+# Read in the ILI data.
+ili <- read_csv("data/ilinet.csv")
+ili
+```
+
+We have information on ILI frequency since January 2003, but we don't have information on death data until 2009. From here, we have data up through the end of September 2018.
+
+```{r}
+tail(ili)
+```
+
+### Forecasting with prophet
+
+Let's load the prophet library then take a look at the help for `?prophet`.
+
+```{r}
+library(prophet)
+# ?prophet
+```
+
+The help tells you that prophet requires a data frame containing columns named `ds` of type date and `y`, containing the time series data. Many other options are available. Let's start with the data, select `week_start` calling it `ds`, and `ilitotal` calling it `y`.
+
+```{r, results="hide"}
+ili %>% 
+  select(week_start, ilitotal)
+
+ili %>% 
+  select(ds=week_start, y=ilitotal)
+```
+
+Once we do that, we can simply pipe this to `prophet()` to produce the prophet forecast model.
+
+```{r, results='hide'}
+pmod <- ili %>% 
+  select(ds=week_start, y=ilitotal) %>% 
+  prophet()
+```
+
+Now, let's make a "future" dataset to use to predict. Looking at `?make_future_dataframe` will tell you that this function takes the prophet model and the number of days forward to project.
+
+```{r, results="hide"}
+future <- make_future_dataframe(pmod, periods=365*5)
+tail(future)
+```
+
+Now, let's forecast the future! Take a look - the `yhat`, `yhat_lower`, and `yhat_upper` columns are the predictions, lower, and upper confidence bounds. There are additional columns for seasonal and yearly trend effects.
+
+```{r, results='hide'}
+forecast <- predict(pmod, future)
+tail(forecast)
+```
+
+If we pass the prophet model and the forecast into the generic `plot()` function, it knows what kind of objects are being passed, and will visualize the data appropriately.
+
+```{r}
+plot(pmod, forecast) + ggtitle("Five year ILI forecast")
+```
+
+You can also use the `prophet_plot_components` function to see the forecast broken down into trend and yearly seasonality. We see an inflection point around 2010 where ILI reports seem to stop rising -- if you go back to the previous plot you'll see it there too. Perhaps this is due to a change in surveillance or reporting strategy. You also see the yearly trend, which makes sense for flu outbreaks. You also noticed that when we originally fit the model, daily and weekly seasonality was disabled. This makes sense for broad time-scale things like influenza surveillance over decades, but you might enable it for more granular time-series data.
+
+```{r}
+prophet_plot_components(pmod, forecast)
+```
+
+Try it with the flu death data. Look at both flu deaths and pneumonia deaths. First, limit the data frame to only include the latter portion where we have death surveillance data. Then use the same procedure.
+
+```{r, results='hide'}
+pmod <- ili %>%
+  filter(!is.na(pneumoniadeaths)) %>%
+  select(ds=week_start, y=pneumoniadeaths) %>%
+  prophet()
+future <- make_future_dataframe(pmod, periods=365*5)
+forecast <- predict(pmod, future)
+plot(pmod, forecast) + ggtitle("Five year pneumonia death forecast")
+```
+
+See the prophet preprint for more.
+
+> Taylor SJ, Letham B. (2017) Forecasting at scale. _PeerJ Preprints_ 5:e3190v2 https://doi.org/10.7287/peerj.preprints.3190v2
+
+----
+
+----
+
+<small>**_Attribution_:** Course material inspired by and/or modified in part from [Shirin Glander's blog](https://shiring.github.io/machine_learning/2016/11/27/flu_outcome_ML_post) and [Facebook's Data Science team](https://facebook.github.io/prophet/).

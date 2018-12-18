@@ -1,0 +1,480 @@
+---
+title: 'Setup Instructions'
+---
+
+Please follow the instructions under **_Get Data_** and **_Core Software_** headings below. Depending on the class you're taking, you may also need to follow additional setup instructions under the [**_Electives_**](#electives) heading.
+
+
+## Get Data
+
+Click the **[<i class="fa fa-download"></i> Data](data.html)** link on the navbar at the top. You can download all the data needed by downloading **[this zip file <i class="fa fa-file-archive-o" aria-hidden="true"></i>](data.zip)** or by downloading individual data sets as needed at the **[<i class="fa fa-download"></i> Data](data.html)** page.
+
+
+## Core Lessons
+
+Install the following software regardless of which class(es) you're taking.
+
+### R
+
+**Install R.** You'll need R version **3.5.0** or higher.[^rversion] Download and install R for [Windows](http://cran.r-project.org/bin/windows/base/) or [Mac](http://cran.r-project.org/bin/macosx/) (download the latest R-3.x.x.pkg file for your appropriate version of Mac OS).
+
+### RStudio
+
+Download and install **[RStudio Desktop](https://www.rstudio.com/products/rstudio/download/)** version >= 1.1.456.
+
+R and RStudio are separate downloads and installations. **R** is the underlying statistical computing environment, but using R alone is no fun. **RStudio** is a graphical integrated development environment that makes using R much easier. You need R installed before you install RStudio.
+
+### Essential packages
+
+We will need to install several core packages needed for most lessons. Launch RStudio (RStudio, *not R itself*). Ensure that you have internet access, then copy and paste the following commands, one-at-a-time, into the **Console** panel (usually the lower-left panel, by default) and hit the Enter/Return key. If you receive an error message when trying to install any particular package, please make note of which one you had trouble with, and [email one of the instructors](people.html) _prior to class_ with the command you typed and the error you received.
+
+```r
+install.packages("dplyr")
+install.packages("readr")
+install.packages("tidyr")
+install.packages("ggplot2")
+```
+
+_A few notes_:
+
+- Commands are case-sensitive. 
+- You must be connected to the internet.
+- Even if you've installed these packages in the past, do re-install the most recent version. Many of these packages are updated often, and we may use new features in the workshop that aren't available in older versions.
+- If you're using Windows you might see errors about not having permission to modify the existing libraries -- disregard these. You can avoid this by running RStudio as an administrator (right click the RStudio icon, then click "Run as Administrator").
+- These core packages are part of the "tidyverse" ecosystem (see [tidyverse.org](https://www.tidyverse.org/)). There is a [tidyverse](http://tidyverse.org/) package that's kind of a meta-package that automatically installs/loads all of the above packages and several other commonly used packages for data analysis that all play well together.[^tidyverse] You could optionally install the tidyverse package instead of all these packages individually. See [tidyverse.org](https://www.tidyverse.org/) for more.
+
+[^rversion]: R version 3.4.0 was released April 2017. If you have not updated your R installation since then, you need to upgrade to a more recent version, since several of the required packages depend on a version at least this recent. You can check your R version with the `sessionInfo()` command.
+
+[^tidyverse]: Installing/loading the tidyverse **tidyverse** will install/load the core tidyverse packages that you are likely to use in almost every analysis:
+**ggplot2** (for data visualisation), **dplyr** (for data manipulation), **tidyr** (for data tidying), **readr** (for data import), **purrr** (for functional programming), and **tibble** (for tibbles, a modern re-imagining of data frames). It also installs a selection of other tidyverse packages that you're likely to use frequently, but probably not in every analysis (these are installed, but you'll have to load them separately with `library(packageName)`). This includes: **hms** (for times), **stringr** (for strings), **lubridate** (for date/times), **forcats** (for factors), **DBI** (for databases), **haven** (for SPSS, SAS and Stata files), **httr** (for web apis), **jsonlite** (or JSON), **readxl** (for .xls and .xlsx files), **rvest** (for web scraping), **xml2** (for XML), **modelr** (for modelling within a pipeline), and **broom** (for turning models into tidy data). After installing tidyverse with `install.packages("tidyverse")` and loading it with `library(tidyverse)`, you can use `tidyverse_update()` to update all the tidyverse packages installed on your system at once.
+
+Check that you've installed everything correctly by closing and reopening RStudio and entering the following command at the console window (don't worry about any messages that look something like `the following objects are masked from ...`[^masking], or `Warning message: package ... was build under R version ...`[^oldversion]):
+
+```r
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+```
+
+[^masking]: We'll talk about this in class. It's not a concern.
+
+[^oldversion]: This means the version of R you have installed is older than the version that the package author used when they built the package you're trying to use. 99% of the time it isn't a problem, unless your R version is very old (you should be using 3.4.0 or later for this course).
+
+This may produce some notes or other output, but as long as you don't get an error message, you're good to go. If you get a message that says something like: `Error in library(somePackageName) : there is no package called 'somePackageName'`, then the required packages did not install correctly. Please do not hesitate to [email one of the instructors](people.html) _prior to class_ if you are still having difficulty. In this email, please copy and paste what you typed in the console, and all of the output that streams by in the console.
+
+
+### Refresher: Tidy EDA
+
+For our refresher course on tidy data and exploratory data analysis, we'll need additional packages from the **tidyverse** suite of packages, as well as a few additional packages. A quick note on the **tidyverse** package (https://www.tidyverse.org/): the tidyverse is a collection of other packages that are often used together. When you install or load tidyverse, you also install and load all the packages that we've used previously: dplyr, tidyr, ggplot2, as well as several others. Because we'll be using so many different packages from the tidyverse collection, it's more efficient load this "meta-package" rather than loading each individual package separately. Install these packages. You'll need all four.
+
+```r
+install.packages("tidyverse")
+install.packages("ggrepel")
+install.packages("scales")
+install.packages("lubridate")
+```
+
+I'll demonstrate some functionality from these other packages as well. They're handy to have installed, but are not strictly required.
+
+```r
+install.packages("plotly")
+install.packages("DT")
+```
+
+To ensure you have all these packages installed correctly, try loading them all with `library()`. 
+
+```r
+## Required packages:
+library(tidyverse)
+library(ggrepel)
+library(scales)
+library(lubridate)
+
+# Optional packages
+library(plotly)
+library(DT)
+```
+
+You may get some red message text, but if you see an **error** message, something along the lines of `Error in library(packageName) : there is no package called 'packageName'`, then the package that raised that error did not install correctly.
+
+
+## Electives
+
+The instructions below apply to additional "elective" classes, and are not strictly required as part of the core set of classes.  Install these as necessary.
+
+### RMarkdown
+
+Several additional setup steps required for the reproducible research with RMarkdown class.
+
+1. First, install R, RStudio, and the core CRAN packages as described above. Also install the knitr and rmarkdown packages.
+
+```r
+install.packages("knitr")
+install.packages("rmarkdown")
+```
+1. Next, launch RStudio (not R). Click File, New File, R Markdown. This may tell you that you need to install additional packages (`knitr`, `yaml`, `htmltools`, `caTools`, `bitops`, `rmarkdown`, and maybe a few others). Click "Yes" to install these.
+1. **_Optional_:** If you want to convert to PDF, you will need to install a **$\LaTeX$** typesetting engine. This differs on Mac and Windows. _Note that this part of the installation may take up to several hours, and isn't strictly required for the class._
+    - **Windows**: Download and install MiKTeX: <https://miktex.org/download>. Read the installation tutorial first at <https://miktex.org/howto/install-miktex>.
+    - **Mac**: Download and install MacTeX.pkg at <http://www.tug.org/mactex/mactex-download.html>. This is a very large download (>2 gigabytes), and may take a while depending on your network speed. Do this _prior to the course_.
+
+
+
+### Bioconductor
+
+Install the core Bioconductor packages ([more information here](https://www.bioconductor.org/install/)). These packages are installed differently than "regular" R packages from CRAN. Copy and paste these lines of code into your R console **one at a time**. 
+
+```r
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+```
+
+A few notes:
+
+- We will be using the latest versions of Bioconductor from the 3.5 release. This requires R version 3.4.0 or higher. If you have R 3.4.0 installed, running the commands above will install Bioconductor 3.5. See <http://bioconductor.org/news/bioc_3_5_release/>.
+- If at any point in the Bioconductor package installations you get prompts in the console asking you to update any existing packages, type `n` at the prompt at hit enter.
+- If you see a note long the lines of "_binary version available but the source version is later_", followed by a question, "_Do you want to install from sources the package which needs compilation? y/n_", type **`n` for no**, and hit enter.
+
+Check that you've installed everything correctly by closing and reopening RStudio and entering the following command at the console window:
+
+```r
+library(BiocInstaller)
+```
+
+If you get a message that says something like: `Error in library(BiocInstaller) : there is no package called 'BiocInstaller'`, then the required packages did not install correctly. Please do not hesitate to [email one of the instructors](people.html) _prior to the course_ if you are still having difficulty. In this email, please copy and paste what you typed in the console, and all of the output that streams by in the console.
+
+
+
+### Survival Analysis
+
+**Prerequisites!** This is _not_ an introductory R class. _This lesson assumes a [basic familiarity with R](r-basics.html), [data frames](r-dataframes.html), and to a lesser degree, [manipulating data with dplyr and `%>%`](r-dplyr-yeast.html), and [data visualization with ggplot2](r-viz-gapminder.html)._
+
+**Software setup:** Follow instructions above for [R+RStudio+Packages](#r), [CRAN packages](#cran-packages), and [Bioconductor](#bioconductor). See the sections above for full instructions and troubleshooting tips. 
+
+_For this class you'll also need the **survminer** package from CRAN and the and **RTCGA**, **RTCGA.clinical**, **RTCGA.mRNA**, packages from Bioconductor._
+
+If you receive an error message when trying to install any particular package, please make note of which one you had trouble with, and [email one of the instructors](people.html) _prior to class_ with the command you typed and the error you received.
+
+```r
+# Install core CRAN packages:
+install.packages("dplyr")
+install.packages("readr")
+install.packages("tidyr")
+install.packages("ggplot2")
+
+# For this class, also install survminer from CRAN
+install.packages("survminer")
+
+
+# Install Bioconductor core packages:
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+
+# For this class, you'll also need RTCGA and RTCGA data packages
+biocLite("RTCGA")
+biocLite("RTCGA.clinical")
+biocLite("RTCGA.mRNA")
+```
+
+Check that you've installed everything correctly by closing and reopening RStudio and entering the following commands one-at-a-time in the console pane:
+
+```r
+# Test CRAN package installation:
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+
+# Test survminer
+library(survminer)
+
+# Test RTCGA:
+library(RTCGA)
+library(RTCGA.clinical)
+library(RTCGA.mRNA)
+```
+
+This may produce some notes or other output, but as long as you don't get an error message, you're good to go. If you get a message that says something like: `Error in library(somePackageName) : there is no package called 'somePackageName'`, then the required packages did not install correctly. Please do not hesitate to [email me](people.html) _prior to class_ if you are still having difficulty. In this email, please copy and paste what you typed in the console, and all of the output that streams by in the console.
+
+### Predictive modeling
+
+**Prerequisites!** This is _not_ an introductory R class. In addition to familiarity with R, this lesson also assumes familiarity with:
+
+- [Advanced data manipulating data with dplyr and `%>%`](r-dplyr-yeast.html)
+- [Data tidying with tidyr](r-tidy.html)
+- [Advanced data visualization with ggplot2](r-viz-gapminder.html)
+
+Some knowledge of statistics and resampling procedures is helpful, but not strictly required.
+
+**Software setup:** Follow instructions above for [R+RStudio+Packages](#r) and [CRAN packages](#cran-packages). For this class, you'll also need several additional packages described below. If you receive an error message when trying to install any particular package, please make note of which one you had trouble with, and [email me](people.html) _prior to class_ with the command you typed and the error you received.
+
+First, install the **[caret](https://cran.r-project.org/package=caret)** package, which provides a unified interface to hundreds of data mining and machine learning algorithms and a framework for model training and evaluation. This command will also install all the additional packages that **caret** recommends. You will also need to install a few other packages that are required by caret that might not be automatically installed. These are also listed below.
+
+```r
+install.packages("caret", dependencies = c("Depends", "Suggests"))
+install.packages("ModelMetrics")
+install.packages("generics")
+install.packages("gower")
+```
+
+When you do this, you may get a note asking you about installing source packages that need compilation. If you get this message, focus on the console pane by clicking and type `n` and hit `Enter` at the prompt for "no."
+
+```
+There are binary versions available but the source versions are later:
+                binary  source  needs_compilation
+somePackage1    ....    ....               TRUE
+somePackage1    ....    ....               FALSE
+
+Do you want to install from sources the package which needs compilation?
+```
+
+Similarly, if you get a message that looks like this, type `n` and hit `Enter` for "no."
+
+```
+Packages which are only available in source form, and may need compilation of C/C++/Fortran: ‘Rpoppler’ ‘Rmpi’
+Do you want to attempt to install these from sources?
+```
+
+The **caret** package provides the utilities for interfacing with many other packages' machine learning algorithms. We're going to fit models using Random Forest, stochastic gradient boosting, k-Nearest Neighbors, Lasso and Elastic-Net Regularized Generalized Linear Models. These require the packages [randomForest](https://cran.r-project.org/package=randomForest), [gbm](https://cran.r-project.org/package=gbm), [kknn](https://cran.r-project.org/package=kknn), and [glmnet](https://cran.r-project.org/package=glmnet), respectively. We will also need the [mice](https://cran.r-project.org/package=mice) package for multiple imputation. The following commands will install these packages.
+
+```r
+install.packages("randomForest")
+install.packages("gbm")
+install.packages("kknn")
+install.packages("glmnet")
+install.packages("mice")
+```
+
+Finally, we'll conclude with a demonstration of _forecasting_, for which we'll need the [prophet](https://cran.r-project.org/package=prophet) package.
+
+```r
+install.packages("prophet")
+```
+
+Check that you've installed everything correctly by closing and reopening RStudio and entering the following commands one-at-a-time in the console pane. If you get an error telling you that the package isn't installed, try re-installing it as demonstrated above. If you're still having trouble, [email me](people.html) _prior to class_ with the command you typed to install and the error(s) you received.
+
+```r
+library(caret)
+library(randomForest)
+library(gbm)
+library(kknn)
+library(glmnet)
+library(mice)
+library(prophet)
+`````
+
+**Download data we'll use in class.** You will need the following datasets from the **[data](data.html)** page:
+
+- **[h7n9.csv](data/h7n9.csv)**: The slightly processed raw dataset from an [influenza A H7N9 outbreak in China in 2013](https://en.wikipedia.org/wiki/Influenza_A_virus_subtype_H7N9), published by [Kucharski _et al_ 2014](https://www.ncbi.nlm.nih.gov/pubmed/24619563). Contains the original variables, with lots of missing data throughout.
+- **[h7n9\_analysisready.csv](data/h7n9_analysisready.csv)**: The "analysis-ready" dataset. This data has been cleaned up, with some "feature extraction" / variable recoding done to make the data more suitable to data mining / machine learning methods used in this class. We will start with the raw data above, but I provide this data in case you don't make it all the way through the data cleaning and feature extraction steps we will need to perform.
+- **[ilinet.csv](data/ilinet.csv)**: Historical flu tracking data from the CDC's U.S. Outpatient [Influenza-like Illness Surveillance Network](https://wwwn.cdc.gov/ilinet/) along with data from the [National Center for Health Statistics (NCHS) Mortality Surveillance System](https://gis.cdc.gov/grasp/fluview/mortality.html). This contains ILI totals from CDC and flu + pneumonia death data from NCHS through the end of September 2018.
+
+
+**Recommended reading** prior to class:
+
+> _(check back later)_
+
+
+
+### Text mining
+
+**Prerequisites!** This is _not_ an introductory R class. In addition to familiarity with R, this lesson also assumes familiarity with:
+
+- [Advanced data manipulating data with dplyr and `%>%`](r-dplyr-yeast.html)
+- [Data tidying with tidyr](r-tidy.html)
+- [Advanced data visualization with ggplot2](r-viz-gapminder.html)
+
+**Software setup:** For this class, you'll need R >= 3.5.0, and several additional packages described below. If you receive an error message when trying to install any particular package, please make note of which one you had trouble with, and [email me](people.html) _prior to class_ with the command you typed and the error you received. If you're not sure which version of R you're using, run the `sessionInfo()` command to check. You must use >= 3.5.0 (3.4.x will not work).
+
+
+```r
+install.packages("tidyverse")
+install.packages("tidytext")
+install.packages("gutenbergr")
+install.packages("tm")
+install.packages("topicmodels")
+```
+
+To check that these are correctly installed, first close RStudio and then reopen it and run the following:
+
+```r
+library(tidyverse)
+library(tidytext)
+library(gutenbergr)
+library(tm)
+library(topicmodels)
+```
+
+Download the **[austen.csv](data/austen.csv)** data we'll use in class from the [data](data.html) page.
+
+## Not Covered This Year
+
+### RNA-seq
+
+**Prerequisites!** This is _not_ an introductory R class. _This lesson assumes a [basic familiarity with R](r-basics.html), [data frames](r-dataframes.html), [manipulating data with dplyr and `%>%`](r-dplyr-yeast.html), and [data visualization with ggplot2](r-viz-gapminder.html)._
+
+**Software setup:** Follow instructions above for [R+RStudio+Packages](#r), [CRAN packages](#cran-packages), and [Bioconductor](#bioconductor). See the sections above for full instructions and troubleshooting tips. 
+
+_For this class you'll also need the **DESeq2** package._
+
+If you receive an error message when trying to install any particular package, please make note of which one you had trouble with, and [email one of the instructors](people.html) _prior to class_ with the command you typed and the error you received.
+
+```r
+# Install core CRAN packages:
+install.packages("dplyr")
+install.packages("readr")
+install.packages("tidyr")
+install.packages("ggplot2")
+
+# Install Bioconductor core packages:
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+
+# For this class, you'll also need DESeq2:
+biocLite("DESeq2")
+```
+
+Check that you've installed everything correctly by closing and reopening RStudio and entering the following commands one-at-a-time in the console pane:
+
+```r
+# Test CRAN package installation:
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+
+# Test DESeq2 installation:
+library(DESeq2)
+```
+
+This may produce some notes or other output, but as long as you don't get an error message, you're good to go. If you get a message that says something like: `Error in library(somePackageName) : there is no package called 'somePackageName'`, then the required packages did not install correctly. Please do not hesitate to [email one of the instructors](people.html) _prior to class_ if you are still having difficulty. In this email, please copy and paste what you typed in the console, and all of the output that streams by in the console.
+
+
+**Download data we'll use in class.** Create a new folder somewhere on your computer that's easy to get to (e.g., your Desktop). Name it `bioconnector`. Inside that folder, make a folder called `data`, all lowercase. Download the 3 data files below, saving them to the new `bioconnector/data` folder you just made.
+
+- Length-scaled count matrix (i.e., `countData`): [airway_scaledcounts.csv](data/airway_scaledcounts.csv)
+- Sample metadata (i.e., `colData`): [airway_metadata.csv](data/airway_metadata.csv)
+- Gene Annotation data: [annotables_grch38.csv](data/annotables_grch38.csv)
+
+
+**Recommended reading** prior to class:
+
+1. [Conesa et al. A survey of best practices for RNA-seq data analysis. _Genome Biology_ 17:13 (2016)](http://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0881-8).
+1. [Soneson et al. "Differential analyses for RNA-seq: transcript-level estimates improve gene-level inferences." _F1000Research_ 4 (2015)](https://f1000research.com/articles/4-1521/v2).
+1. Abstract and introduction sections of [Himes et al. "RNA-Seq transcriptome profiling identifies CRISPLD2 as a glucocorticoid responsive gene that modulates cytokine function in airway smooth muscle cells." _PLoS ONE_ 9.6 (2014): e99625](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0099625).
+
+
+
+### Phylogenetic trees
+
+**Prerequisites!** This is _not_ an introductory R class. _This lesson assumes a [basic familiarity with R](r-basics.html), [data frames](r-dataframes.html), [manipulating data with dplyr and `%>%`](r-dplyr-yeast.html), and most importantly, **[data visualization with ggplot2](r-viz-gapminder.html)**._
+
+**Software setup:** Follow instructions above for [R+RStudio+Packages](#r), [CRAN packages](#cran-packages), and [Bioconductor](#bioconductor). See the sections above for full instructions and troubleshooting tips. 
+
+_For this class you'll also need the **ggtree** and **Biostrings** packages from Bioconductor._
+
+If you receive an error message when trying to install any particular package, please make note of which one you had trouble with, and [email one of the instructors](people.html) _prior to class_ with the command you typed and the error you received.
+
+```r
+# Install core CRAN packages:
+install.packages("dplyr")
+install.packages("readr")
+install.packages("tidyr")
+install.packages("ggplot2")
+
+# Install Bioconductor core packages:
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+
+# For this class, you'll also need ggtree and Biostrings:
+biocLite("ggtree")
+biocLite("Biostrings")
+```
+
+Check that you've installed everything correctly by closing and reopening RStudio and entering the following commands one-at-a-time in the console pane:
+
+```r
+# Test CRAN package installation:
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+
+# Test ggtree and Biostrings installation:
+library(ggtree)
+library(Biostrings)
+```
+
+This may produce some notes or other output, but as long as you don't get an error message, you're good to go. If you get a message that says something like: `Error in library(somePackageName) : there is no package called 'somePackageName'`, then the required packages did not install correctly. Please do not hesitate to [email one of the instructors](people.html) _prior to class_ if you are still having difficulty. In this email, please copy and paste what you typed in the console, and all of the output that streams by in the console.
+
+**Download data we'll use in class.** Create a new folder somewhere on your computer that's easy to get to (e.g., your Desktop). Name it `bioconnector`. Inside that folder, make a folder called `data`, all lowercase. Download the data files below, saving them to the new `bioconnector/data` folder you just made.
+
+- A simple phylogenetic tree in Newick format: [tree_newick.nwk](data/tree_newick.nwk)
+- A rooted, time-measured phylogeny with influenza virus data: [flu_tree_beast.tree](data/flu_tree_beast.tree)
+- Amino acid sequences of flu samples in the data above: [flu_aasequence.fasta](data/flu_aasequence.fasta)
+
+**Recommended reading:** This lesson does _not_ cover methods and software for _generating_ phylogenetic trees, nor does it it cover _interpreting_ phylogenies. **[Here's a quick primer on how to read a phylogeny](http://epidemic.bio.ed.ac.uk/how_to_read_a_phylogeny)** that you should review prior to this lesson, but it is by no means extensive. Genome-wide sequencing allows for examination of the entire genome, and from this, many methods and software tools exist for comparative genomics using SNP- and gene-based phylogenetic analysis, either from unassembled sequencing reads, draft assemblies/contigs, or complete genome sequences. These methods are beyond the scope of this lesson.
+
+
+
+<!--
+
+### Interactive Visualization
+
+The Interactive Visualization with JavaScript and R lesson requires installation of several R packages in addition to those mentioned above:
+
+```r
+install.packages("highcharter")
+install.packages("d3heatmap")
+install.packages("leaflet")
+install.packages("visNetwork")
+install.packages("jsonlite")
+install.packages("threejs")
+install.packages("igraph")
+```
+
+To check that these are correctly installed, first close RStudio and then reopen it and run the following:
+
+```r
+library(highcharter)
+library(d3heatmap)
+library(leaflet)
+library(visNetwork)
+library(jsonlite)
+library(threejs)
+library(igraph)
+```
+
+These commands may produce some notes or other output, but as long as they work without an error message, you're good to go. If you get a message that says something like: `Error in library(packageName) : there is no package called 'packageName'`, then the required packages did not install correctly. Please do not hesitate to [email one of the instructors](people.html) _prior to the course_ if you are still having difficulty.
+
+-->
+
+
+<!--
+
+### Shiny
+
+The [Building Shiny Web Apps in R](r-shiny.html) lesson requires installation of several R packages in addition to those mentioned above:
+
+```r
+install.packages("shiny")
+install.packages("shinythemes")
+install.packages("lubridate")
+```
+
+To check that these are correctly installed, first close RStudio and then reopen it and run the following:
+
+```r
+library(shiny)
+library(shinythemes)
+library(lubridate)
+```
+
+These commands may produce some notes or other output, but as long as they work without an error message, you're good to go. If you get a message that says something like: `Error in library(packageName) : there is no package called 'packageName'`, then the required packages did not install correctly. Please do not hesitate to [email one of the instructors](people.html) _prior to the course_ if you are still having difficulty.
+
+-->
+
+----
+
+----
+

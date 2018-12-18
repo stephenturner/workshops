@@ -1,0 +1,31 @@
+---
+title: "Data"
+output: 
+  html_document:
+    toc: false
+---
+
+```{r, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE)
+suppressPackageStartupMessages(library(dplyr))
+```
+
+```{r zipdir, include=FALSE}
+if (!file.exists("data.zip")) system("rm data.zip ; zip -r data.zip data -x '*bronte.rds' -x '*hgwells.rds' -x '*sci.rds' -x '*.html' -x '*.DS_Store'")
+```
+
+1. **Option 1: Download all the data**. Download and extract **[this zip file <i class="fa fa-file-archive-o" aria-hidden="true"></i>](data.zip)** `r paste0("(", round(file.info("data.zip")$size/1e6, 2), " Mb)")` with all the data for the entire workshop. This may include additional datasets that we won't use here.
+1. **Option 2: Download individual datasets as needed.** 
+    - Create a new folder somewhere on your computer that's easy to get to (e.g., your Desktop). Name it `workshop`. Inside that folder, make a folder called `data`, all lowercase. 
+    - Download individual data files as needed, saving them to the new `workshop/data` folder you just made. Click to download. If data displays in your browser, right-click and select _Save link as..._ (or similar) to save to the desired location.
+
+```{r, results='asis'}
+dir <- "data/"
+list.files(dir) %>%
+  sort %>% 
+  grep("\\.html$", ., value=TRUE, invert=TRUE) %>% 
+  grep("^_", ., value=TRUE, invert=TRUE) %>% 
+  paste0("- [", ., "](", paste0(dir, .), ")") %>% 
+  cat(sep="\n")
+```

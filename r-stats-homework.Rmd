@@ -1,0 +1,192 @@
+---
+title: "Essential Statistics Homework"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache=TRUE)
+```
+
+(_Refer back to the [Essential Statistics lesson](r-stats.html))._
+
+## Key Concepts
+
+> 
+- Descriptive statistics
+- Hypothesis testing
+- Normality assumptions
+- Cross tabulation
+- Logistic regression
+- Interpreting model summaries
+
+The datasets we'll be using for this assignment are both curated and hosted by the [Vanderbilt Department of Biostatistics](http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets).
+
+## Stress Tests
+
+Dobutamine is a drug that is used during echocardiograms (aka "stress tests"), which are clinical tests used to estimate heart function. The treatment causes heart rate to increase, and its effects at different dosages were measured in a [study published in 1999](https://www.ncbi.nlm.nih.gov/pubmed/10080472). We'll be using the data behind this paper to answer the questions that follow. 
+
+```coffee
+# Load libraries
+library(readr)
+library(dplyr)
+
+# Read data
+stress <- read_csv("data/stressEcho.csv")
+
+# Take a look
+stress
+```
+
+```{r, echo=FALSE}
+# Load libraries
+library(readr)
+library(dplyr)
+
+# Read data
+stress <- read_csv("data/stressEcho.csv")
+
+# Take a look
+stress
+```
+
+
+Note that in addition measuring dobutamine dosages during each stress test, the authors collected information on other variables including: resting heart rate, max heart rate, blood pressure, age and (most importantly) whether or not the patient experienced any cardiac event in the 12 months that followed the test.
+
+*Before answering the questions, make sure to review the data dictionary*: 
+
+http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/stressEcho.html
+
+*Note that the data were originally coded by the authors of the study but were then partially recoded when curated. Pay particular attention to the `any.event` variable (did the subject experience any cardiac event over 12 months following the stress test), which should be interpeted as 0=NO, 1=YES. The top of the data dicionary makes this clear that all event variables are recoded such that 0=no and 1=yes, which is more conventional.*
+
+1. What is the highest maximum heart rate double product with Dobutamine (`dpmaxdo`)?
+
+```{r}
+max(stress$dpmaxdo)
+```
+
+2. What is the cutoff for the 99th percentile for the measurment above? 
+
+**HINT**: The `quantile()` function defaults to 0, 0.25, .5, .75 and 1 but can accept arbitrary threshholds. See `?quantile` and look for the `probs` argument.
+
+```{r}
+quantile(stress$dpmaxdo, probs = 0.99)
+```
+
+3. Use **ggplot2** to create a histogram showing the distribution of the `dpmaxdo` values.  
+
+```{r}
+library(ggplot2)
+ggplot(stress, aes(dpmaxdo)) +
+  geom_histogram()
+```
+
+4. The plot above indicates that the distribution is approximately normal, with the except of a few outliers at the right tail. With the normality assumption satisfied, perform a two sample t-test to compare the mean double product max heart values between those who did or did not experience any cardiac event (`any.event`). Assume equal variances between these groups.
+
+```{r}
+t.test(dpmaxdo ~ any.event, data = stress, var.equal = TRUE)
+```
+
+5. What is the p-value for this test? Make sure this is accessed from the results (using the `$` operator) rather than simply re-typing the value. Feel free to extract the p-value directly from the t-test, or first use **broom::tidy()** to tidy the model first.
+
+```{r}
+t.test(dpmaxdo ~ any.event, data = stress, var.equal = TRUE)$p.value
+```
+
+6. The smoking history column (`hxofCig`) is represented categorically as "heavy", "moderate" and "non-smoker". Create a margin table showing the total counts of individuals in each smoking history category, for all individuals who either did or did not have any cardiac event by smoking status. Next, show proportions over the row margin (what percentage of each category had any cardiac event?).
+
+```{r}
+xt <- xtabs(~ hxofCig + any.event, data = stress)
+addmargins(xt)
+round(prop.table(xt, margin=1), 3)
+```
+
+7. Create a mosaic plot to explore the tabulated counts visually.
+
+```{r}
+mosaicplot(xt)
+```
+
+8. Now use a chi-squared test for the independence of smoking history and cardiac event.
+
+```{r}
+chisq.test(xt)
+```
+
+9. Load the **broom** package and "tidy" the model output above. If you don't have the broom package, install it first.
+
+```{r}
+# If you don't have broom installed:
+# install.packages("broom")
+
+library(broom)
+tidy(chisq.test(xt))
+```
+
+
+## Muscular Dystrophy Genetics
+
+The questions that follow are based on a data collected to examine several blood serum markers believed to be associated with genetics for a specific kind of muscular dystrophy (DMD). The data were analyzed and results reported in a [1985 paper](https://www.ncbi.nlm.nih.gov/pubmed/7137219). In particular, the authors were interested in whether a woman's DMD carrier status (`carrier`) was related to the blood serum markers creatine kinase (`ck`), hemopexin (`h`), pyruvate kinase (`pk`) and lactate dehydrogenase (`ld`). 
+
+Use the following to read and store the data:
+
+
+```coffee
+dmd <- read_csv("data/dmd.csv")
+```
+
+
+```{r, echo=FALSE}
+dmd <- read_csv("data/dmd.csv")
+```
+
+For more information on the data set see: 
+
+http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/dmd.html
+
+1. What is the average value for lactate dehydrogenase?
+
+```{r}
+mean(dmd$ld, na.rm = TRUE)
+```
+
+2. The four serum markers (creatine kinase, hemopexin, pyruvate kinase and lactate dehydrogenase) are all predictors of interest in this case. Use **ggplot2** to create histograms to assess the normality of the distribution for each of these variables.
+
+**HINT**: The plot below uses `gather()` from **tidyr** to transform the data so all histograms can be rendered in a single "facet wrapped" plot. Feel free to give this a shot or create separate histograms for each variable. Either method is acceptable.
+
+```{r}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+dmd %>%
+  gather(marker, value,ck:ld) %>%
+  ggplot(aes(value)) +
+  geom_histogram(bins = 25) +
+  facet_wrap(~marker, scales = "free")
+```
+
+3. All of these columns have outliers and are (at least slightly) skewed. But `ck` seems to require the most attention. Try using a log transformation on that column and create another histogram.
+
+```{r}
+dmd %>%
+  mutate(logck = log(ck)) %>%
+  ggplot(aes(logck)) +
+  geom_histogram(bins = 25)
+```
+
+4. Even when transformed, the cytokine kinase is a little skewed. Assuming we can tolerate this, let's try fitting a binary logistic regression model that predicts the mother's status as carrier based on the values of the four blood serum markers. Don't forget to use the log version of `ck`, and to use `summary()` on the model object to view the coefficients.
+
+```{r}
+fit <- glm(carrier ~ log(ck) + h + pk + ld, data = dmd, family= "binomial")
+summary(fit)
+```
+
+5. The coefficient (estimate) for each explanatory variable gives us the log of the odds ratio. Exponentiate the estimates to make them more interpretable (i.e. the odds ratio for each 1-unit increase in the predictor variable).
+
+```{r}
+round(exp(fit$coefficients), 4)
+```
+
+
