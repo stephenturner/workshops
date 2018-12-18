@@ -1,5 +1,5 @@
 ---
-title: "THRIV Biomedical Data Science 2018"
+title: "Workshop Syllabus"
 ---
 
 ## General Information
@@ -21,11 +21,11 @@ Oct 16 | 2-5pm.
 Oct 23 | 2-5pm. **Location change**: [Carter classroom](https://www.hsl.virginia.edu/sites/default/files/floorplan2014.pdf), [Health Sciences Library](https://www.hsl.virginia.edu/directions)
 Oct 30 | **No class.**
 Nov  6 | 2-5pm. 
-Nov 13 | 2-5pm. Joint refresher class with 2nd years.
+Nov 13 | 2-5pm. 
 Nov 20 | 2-5pm. 
 Nov 27 | 2-5pm. 
 Dec  4 | 2-5pm. 
-Dec 11 | 2-5pm. Joint class with 2nd years.
+Dec 11 | 2-5pm. 
 
 Table: Core classes
 

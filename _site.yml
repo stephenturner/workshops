@@ -20,14 +20,14 @@ navbar:
       href: "data.html"
     - text: "Syllabus"
       icon: fa-graduation-cap
-      href: "thriv.html"
+      href: "syllabus.html"
 
     - text: "Course Material"
       icon: fa-university
       menu:
         - text: "Syllabus"
           icon: fa-graduation-cap
-          href: thriv.html
+          href: syllabus.html
         - text: "----"
         - text: "--- Lessons ---"
         - text: "R Basics"
@@ -71,7 +71,7 @@ navbar:
         - text: "Further resources"
           href: help.html
         - text: "Source code for this site"
-          href: https://github.com/thriv/biodatasci
+          href: https://github.com/stephenturner/workshops
 
 output:
   html_document:
