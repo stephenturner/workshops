@@ -11,7 +11,7 @@ title: "Workshop Syllabus"
 <a href="https://github.com/stephenturner/" target="_blank"><i class="fa fa-github"></i></a>
 <!-- <a href="http://www.gettinggeneticsdone.com/" target="_blank"><i class="fa fa-rss"></i></a>   -->
 <br>
-<small>Stephen Turner, Ph.D. is faculty in the Department of Public Health Sciences, and director of the [Bioinformatics Core](http://bioinformatics.virginia.edu) at the UVA School of Medicine.</small>
+<!-- <small>Stephen Turner, Ph.D. is faculty in the Department of Public Health Sciences, and director of the [Bioinformatics Core](http://bioinformatics.virginia.edu) at the UVA School of Medicine.</small> -->
 
 **_When_:**  Fall 2018, Tuesdays **2-5pm** at [560 Ray C Hunt Drive](https://goo.gl/maps/MiqYpredRPS2), unless noted otherwise below. 
 
