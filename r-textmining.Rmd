@@ -81,7 +81,7 @@ text
 Before we can turn this into a tidy text dataset, we first have to put it in a data frame.
 
 ```{r}
-text_df <- data_frame(line = 1:3, text = text)
+text_df <- tibble(line = 1:3, text = text)
 text_df
 ```
 
@@ -196,7 +196,7 @@ To get started you'll need a _sentiment lexicon_ that attempt to evaluate the op
 
 The built-in `sentiments` dataset available when you load the tidytext package contains all of this information. You could filter it to a single lexicon with the dplyr `filter()` function, or use tidytext's `get_sentiments()` to get specific sentiment lexicons containing only the data used for that lexicon.
 
-```{r, results="hide"}
+```{r fixme1, results="hide", eval=FALSE}
 # Look at the sentiments data
 data(sentiments)
 sentiments
@@ -450,7 +450,7 @@ sciwords %>%
 We see some weird things here. We see "fig" for Tesla, but I doubt he was writing about a fruit tree. We see things like ab, ac, rc, etc for Huygens -- these are names of rays and angles, etc. We could create a custom stop words dictionary to remove these. Let's create a stop words data frame, then anti join that before plotting.
 
 ```{r, eval=FALSE}
-mystopwords <- data_frame(word=c("ab", "ac", "rc", "cm", "cg", "cb", "ak", "bn", "fig"))
+mystopwords <- tibble(word=c("ab", "ac", "rc", "cm", "cg", "cb", "ak", "bn", "fig"))
 sciwords %>% 
   anti_join(mystopwords) %>% 
   group_by(author) %>% 

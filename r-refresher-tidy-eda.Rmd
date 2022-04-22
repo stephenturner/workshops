@@ -100,7 +100,7 @@ Let's clean up the data a bit. Remember, construct your pipeline one step at a t
 
 ```{r cleanupmovies, results='hide'}
 mov <- mov_raw %>%
-  select(-X1) %>%
+  select(-...1) %>%
   mutate(release_date = mdy(release_date)) %>%
   mutate(roi = worldwide_gross / production_budget) %>%
   mutate(pct_domestic = domestic_gross / worldwide_gross) %>%
@@ -124,7 +124,7 @@ There doesn't appear to be much documented berfore 1975, so let's restrict (read
 
 ```{r cleanup-final, results='hide'}
 mov <- mov_raw %>%
-  select(-X1) %>%
+  select(-...1) %>%
   mutate(release_date = mdy(release_date)) %>%
   mutate(roi = worldwide_gross / production_budget) %>%
   mutate(pct_domestic = domestic_gross / worldwide_gross) %>%

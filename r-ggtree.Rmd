@@ -218,7 +218,7 @@ ggtree(tree) + geom_tiplab()
 
 Let's grab the most recent common ancestor for taxa C+E, and taxa G+H. We can use `MRCA()` to get the internal node numbers. Go back to the node-labeled plot from before to confirm this.
 
-```{r mrca, results='markup'}
+```{r mrca, results='markup', eval=FALSE}
 MRCA(tree, tip=c("C", "E"))
 MRCA(tree, tip=c("G", "H"))
 ```
@@ -351,7 +351,7 @@ For this you'll need the `flu_tree_beast.tree` output file from BEAST and the `f
 
 Finally, let's add some tip labels. We'll want to right-align them, and by default the dotted line is a little too thick. Let's reduce the `linesize` a bit. Now, some of the labels might be falling off the margin. Set the `xlim` to limit the axis to show between 1990 and 2020. You could get MRCAs and node numbers and do all the annotations that we did before the same way here.
 
-```{r beastplot, fig.keep="last", fig.width=11, fig.height=11}
+```{r beastplot, fig.keep="last", fig.width=11, fig.height=11, eval=FALSE}
 # Read the data
 tree <- read.beast("data/flu_tree_beast.tree")
 
@@ -370,7 +370,7 @@ ggtree(tree, mrsd="2013-01-01") +
 
 Finally, let's look at `?msaplot`. This puts the multiple sequence alignment and the tree side-by-side. The function takes a tree object (produced with `ggtree()`) and the path to the FASTA multiple sequence alignment. You can do it with the entire MSA, or you could restrict to just a window. Want something interesting-looking, but maybe not all that useful? Try changing the coordinate system of the plot itself by passing `+ coord_polar(theta="y")` to the end of the command!
 
-```{r msaplot, fig.width=11, fig.height=11}
+```{r msaplot, fig.width=11, fig.height=11, eval=FALSE}
 msaplot(p=ggtree(tree), fasta="data/flu_aasequence.fasta", window=c(150, 175))
 ```
 

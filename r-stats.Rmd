@@ -242,7 +242,7 @@ Recall several built-in functions that are useful for working with data frames.
     - `glimpse()` (from **dplyr**): Returns a glimpse of your data, telling you the structure of the dataset and information about the class, length and content of each column
 
 
-```{r data_frame_functions, results="hide"}
+```{r tibble_functions, results="hide"}
 head(nh)
 tail(nh)
 dim(nh)

@@ -52,6 +52,10 @@ navbar:
           href: r-predictive-modeling.html
         - text: "Text Mining"
           href: r-textmining.html
+        - text: "RNA-seq"
+          href: r-rnaseq-airway.html
+        - text: "Phylogenetic trees with R"
+          href: r-ggtree.html
 #        - text: "----"
         - text: "--- Homework ---"
         - text: "Data Manipulation"
@@ -62,6 +66,8 @@ navbar:
           href: r-rmarkdown-homework.html
         - text: "Essential Statistics"
           href: r-stats-homework.html
+        - text: "RNA-seq"
+          href: r-rnaseq-homework.html
 
   right:
     - icon: fa-question fa-lg

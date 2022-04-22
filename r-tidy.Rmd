@@ -252,7 +252,7 @@ The code below implements those operations on `yjoined`.
 
 ```{r misctidy}
 nutrientlookup <-
-  data_frame(nutrient = c("G", "L", "N", "P", "S", "U"), nutrientname = c("Glucose", "Leucine", "Ammonia","Phosphate", "Sulfate","Uracil"))
+  tibble(nutrient = c("G", "L", "N", "P", "S", "U"), nutrientname = c("Glucose", "Leucine", "Ammonia","Phosphate", "Sulfate","Uracil"))
 
 yjoined <-
   yjoined %>%

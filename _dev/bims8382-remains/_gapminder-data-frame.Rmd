@@ -58,7 +58,7 @@ There are several built-in functions that are useful for working with data frame
     * `str()`: structure of the object and information about the class, length and content of each column
     * `summary()`: works differently depending on what kind of object you pass to it. Passing a data frame to the `summary()` function prints out some summary statistics about each column (min, max, median, mean, etc.)
 
-```{r data_frame_functions}
+```{r tibble_functions}
 head(gm)
 tail(gm)
 dim(gm)

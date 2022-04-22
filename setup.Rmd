@@ -2,6 +2,62 @@
 title: 'Setup Instructions'
 ---
 
+```{r, eval=FALSE, include=FALSE}
+install.packages("ggthemes", dependencies = TRUE)
+install.packages("caret", dependencies = c("Depends", "Suggests"))
+pkgs <- c("BiocManager",
+          "DT",
+          "ModelMetrics",
+          "d3heatmap",
+          "dplyr",
+          "gbm",
+          "generics",
+          "ggplot2",
+          "ggrepel",
+          "glmnet",
+          "gower",
+          "gutenbergr",
+          "highcharter",
+          "igraph",
+          "jsonlite",
+          "kknn",
+          "knitr",
+          "leaflet",
+          "lubridate",
+          "mice",
+          "plotly",
+          "prophet",
+          "randomForest",
+          "readr",
+          "rmarkdown",
+          "scales",
+          "shiny",
+          "shinythemes",
+          "survminer",
+          "threejs",
+          "tidyr",
+          "tidytext",
+          "tidyverse",
+          "tm",
+          "Tmisc",
+          "NMF",
+          "topicmodels",
+          "visNetwork")
+install.packages(pkgs)
+
+install.packages("BiocManager")
+pkgs_bc <- c("RTCGA",
+             "RTCGA.clinical",
+             "RTCGA.mRNA",
+             "Biostrings",
+             "ggtree",
+             "tidytree",
+             "DESeq2")
+BiocManager::install(pkgs_bc)
+
+```
+
+
 Please follow the instructions under **_Get Data_** and **_Core Software_** headings below. Depending on the class you're taking, you may also need to follow additional setup instructions under the [**_Electives_**](#electives) heading.
 
 
@@ -165,15 +221,13 @@ install.packages("ggplot2")
 # For this class, also install survminer from CRAN
 install.packages("survminer")
 
-
 # Install Bioconductor core packages:
-source("http://bioconductor.org/biocLite.R")
-biocLite()
+install.packages("BiocManager")
 
 # For this class, you'll also need RTCGA and RTCGA data packages
-biocLite("RTCGA")
-biocLite("RTCGA.clinical")
-biocLite("RTCGA.mRNA")
+BiocManager::install("RTCGA")
+BiocManager::install("RTCGA.clinical")
+BiocManager::install("RTCGA.mRNA")
 ```
 
 Check that you've installed everything correctly by closing and reopening RStudio and entering the following commands one-at-a-time in the console pane:
@@ -327,11 +381,11 @@ install.packages("tidyr")
 install.packages("ggplot2")
 
 # Install Bioconductor core packages:
-source("http://bioconductor.org/biocLite.R")
-biocLite()
+install.packages("BiocManager")
+BiocManager::install()
 
 # For this class, you'll also need DESeq2:
-biocLite("DESeq2")
+BiocManager::install("DESeq2")
 ```
 
 Check that you've installed everything correctly by closing and reopening RStudio and entering the following commands one-at-a-time in the console pane:

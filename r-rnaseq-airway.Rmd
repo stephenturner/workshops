@@ -4,7 +4,8 @@ title: "Count-Based Differential Expression Analysis of RNA-seq Data"
 
 ```{r init, include=F}
 library(knitr)
-opts_chunk$set(message=FALSE, warning=FALSE, eval=TRUE, echo=TRUE, cache=TRUE)
+# opts_chunk$set(message=FALSE, warning=FALSE, eval=TRUE, echo=TRUE, cache=TRUE)
+opts_chunk$set(message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE, cache=FALSE)
 .ex <- 1
 library(ggplot2)
 theme_set(theme_bw(base_size=16) + theme(strip.background = element_blank()))
@@ -219,7 +220,8 @@ meancounts %>% filter(log2fc>2)
 meancounts %>% filter(log2fc<(-2))
 ```
 
-In total, we've got `r sum(abs(meancounts$log2fc)>2)` differentially expressed genes, in either direction.
+<!-- Fixme: turn this back on -->
+<!-- In total, we've got `sum(abs(meancounts$log2fc)>2)` differentially expressed genes, in either direction. -->
 
 ---- 
 

@@ -13,35 +13,29 @@ title: "Workshop Syllabus"
 <br>
 <!-- <small>Stephen Turner, Ph.D. is faculty in the Department of Public Health Sciences, and director of the [Bioinformatics Core](http://bioinformatics.virginia.edu) at the UVA School of Medicine.</small> -->
 
-**_When_:**  Fall 2018, Tuesdays **2-5pm** at [560 Ray C Hunt Drive](https://goo.gl/maps/MiqYpredRPS2), unless noted otherwise below. 
+<!-- **_When_:**  Fall 2018, Tuesdays **2-5pm** at [560 Ray C Hunt Drive](https://goo.gl/maps/MiqYpredRPS2), unless noted otherwise below.  -->
 
-Date | Location/Notes
----------|---------
-Oct 16 | 2-5pm. 
-Oct 23 | 2-5pm. **Location change**: [Carter classroom](https://www.hsl.virginia.edu/sites/default/files/floorplan2014.pdf), [Health Sciences Library](https://www.hsl.virginia.edu/directions)
-Oct 30 | **No class.**
-Nov  6 | 2-5pm. 
-Nov 13 | 2-5pm. 
-Nov 20 | 2-5pm. 
-Nov 27 | 2-5pm. 
-Dec  4 | 2-5pm. 
-Dec 11 | 2-5pm. 
+<!-- Date | Location/Notes -->
+<!-- ---------|--------- -->
+<!-- Oct 16 | 2-5pm.  -->
+<!-- Oct 23 | 2-5pm. **Location change**: [Carter classroom](https://www.hsl.virginia.edu/sites/default/files/floorplan2014.pdf), [Health Sciences Library](https://www.hsl.virginia.edu/directions) -->
+<!-- Oct 30 | **No class.** -->
+<!-- Nov  6 | 2-5pm.  -->
+<!-- Nov 13 | 2-5pm.  -->
+<!-- Nov 20 | 2-5pm.  -->
+<!-- Nov 27 | 2-5pm.  -->
+<!-- Dec  4 | 2-5pm.  -->
+<!-- Dec 11 | 2-5pm.  -->
 
-Table: Core classes
+<!-- Table: Core classes -->
 
 
-Date | Location/Notes
----------|---------
-Jan 22 | 2-5pm. Bring your own data.
-Feb 12 | 2-5pm. Bring your own data.
+<!-- Date | Location/Notes -->
+<!-- ---------|--------- -->
+<!-- Jan 22 | 2-5pm. Bring your own data. -->
+<!-- Feb 12 | 2-5pm. Bring your own data. -->
 
-Table: Follow-up classes
-
-<!--
-Spring 2017 Module S1  
-Feb 13 - Mar 27, 2017  
-2:00pm - 5:00pm  
--->
+<!-- Table: Follow-up classes -->
 
 
 ## Setup
