@@ -1,24 +1,34 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Advanced Data Manipulation Homework</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -26,9 +36,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Font Awesome -->
 <!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
@@ -49,12 +58,18 @@
   ga('send', 'pageview');
 </script>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -67,39 +82,12 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -107,13 +95,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -124,44 +107,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -172,62 +167,88 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -241,6 +262,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -276,8 +303,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -293,8 +318,18 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -396,6 +431,12 @@ div.tocify {
     <li>
       <a href="r-textmining.html">Text Mining</a>
     </li>
+    <li>
+      <a href="r-rnaseq-airway.html">RNA-seq</a>
+    </li>
+    <li>
+      <a href="r-ggtree.html">Phylogenetic trees with R</a>
+    </li>
     <li class="dropdown-header">--- Homework ---</li>
     <li>
       <a href="r-dplyr-homework.html">Data Manipulation</a>
@@ -408,6 +449,9 @@ div.tocify {
     </li>
     <li>
       <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-rnaseq-homework.html">RNA-seq</a>
     </li>
   </ul>
 </li>
@@ -437,11 +481,11 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
 </ul>
@@ -473,7 +517,7 @@ div.tocify {
 <div id="getting-started" class="section level3">
 <h3>Getting Started</h3>
 <p>We’re going to work with a different dataset for the homework here. It’s a <a href="https://github.com/jennybc/gapminder">cleaned-up excerpt</a> from the <a href="http://www.gapminder.org/data/">Gapminder data</a>. Download the <a href="data/gapminder.csv"><strong>gapminder.csv</strong> data by clicking here</a> or using the link above. Download it, and save it in a <code>data/</code> subfolder of the project directory where you can access it easily from R.</p>
-<p>Load the <strong>dplyr</strong> and <strong>readr</strong> packages, and read the gapminder data into R using the <code>read_csv()</code> function (n.b. <code>read_csv()</code> is <em>not</em> the same as <code>read.csv()</code>). Assign the data to an object called <code>gm</code>. Run <code>gm</code> to display it.</p>
+<p>Load the <strong>dplyr</strong> and <strong>readr</strong> packages, and read the gapminder data into R using the <code>read_csv()</code> function (n.b. <code>read_csv()</code> is <em>not</em> the same as <code>read.csv()</code>). Assign the data to an object called <code>gm</code>. Run <code>gm</code> to display it.</p>
 <p><em>Note, the code is available by hitting the “Code” button above each expected output, but try not to use it unless you’re stuck</em>.</p>
 <!-- In your submitted homework assignment, I would prefer you use the `read_csv()` function to read the data directly from the web (see below). This way I can run your R code without worrying about whether I have the `data/` directory or not. -->
 <pre class="r"><code># Load required libraries
@@ -485,9 +529,9 @@ gm &lt;- read_csv(&quot;data/gapminder.csv&quot;)
 
 # Take a look
 gm</code></pre>
-<pre><code>## # A tibble: 1,704 x 6
+<pre><code>## # A tibble: 1,704 × 6
 ##    country     continent  year lifeExp      pop gdpPercap
-##    &lt;chr&gt;       &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##    &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ##  1 Afghanistan Asia       1952    28.8  8425333      779.
 ##  2 Afghanistan Asia       1957    30.3  9240934      821.
 ##  3 Afghanistan Asia       1962    32.0 10267083      853.
@@ -498,7 +542,7 @@ gm</code></pre>
 ##  8 Afghanistan Asia       1987    40.8 13867957      852.
 ##  9 Afghanistan Asia       1992    41.7 16317921      649.
 ## 10 Afghanistan Asia       1997    41.8 22227415      635.
-## # ... with 1,694 more rows</code></pre>
+## # … with 1,694 more rows</code></pre>
 </div>
 <div id="problem-set" class="section level3">
 <h3>Problem set</h3>
@@ -509,7 +553,7 @@ gm</code></pre>
 <pre class="r"><code>gm %&gt;% 
   group_by(continent) %&gt;% 
   summarize(n=n_distinct(country))</code></pre>
-<pre><code>## # A tibble: 5 x 2
+<pre><code>## # A tibble: 5 × 2
 ##   continent     n
 ##   &lt;chr&gt;     &lt;int&gt;
 ## 1 Africa       52
@@ -524,9 +568,9 @@ gm</code></pre>
     filter(continent == &quot;Europe&quot; &amp; year == 1997) %&gt;%
     arrange(gdpPercap) %&gt;%
     head(1)</code></pre>
-<pre><code>## # A tibble: 1 x 6
+<pre><code>## # A tibble: 1 × 6
 ##   country continent  year lifeExp     pop gdpPercap
-##   &lt;chr&gt;   &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
+##   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 Albania Europe     1997    73.0 3428038     3193.</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>According to the data available, what was the average life expectancy across each continent in the 1980s? (<em>Hint:</em> filter, group_by, summarize)</li>
@@ -535,7 +579,7 @@ gm</code></pre>
     filter(year == 1982 | year == 1987) %&gt;%
     group_by(continent) %&gt;%
     summarize(mean_lifeExp = mean(lifeExp))</code></pre>
-<pre><code>## # A tibble: 5 x 2
+<pre><code>## # A tibble: 5 × 2
 ##   continent mean_lifeExp
 ##   &lt;chr&gt;            &lt;dbl&gt;
 ## 1 Africa            52.5
@@ -552,7 +596,7 @@ gm</code></pre>
     summarise(Total.GDP = sum(gdp)) %&gt;%
     arrange(desc(Total.GDP)) %&gt;%
     head(5)</code></pre>
-<pre><code>## # A tibble: 5 x 2
+<pre><code>## # A tibble: 5 × 2
 ##   country        Total.GDP
 ##   &lt;chr&gt;              &lt;dbl&gt;
 ## 1 United States    7.68e13
@@ -566,9 +610,9 @@ gm</code></pre>
 <pre class="r"><code>gm %&gt;%
     filter(lifeExp &gt;= 80) %&gt;%
     select(country, lifeExp, year)</code></pre>
-<pre><code>## # A tibble: 22 x 3
+<pre><code>## # A tibble: 22 × 3
 ##    country          lifeExp  year
-##    &lt;chr&gt;              &lt;dbl&gt; &lt;int&gt;
+##    &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;
 ##  1 Australia           80.4  2002
 ##  2 Australia           81.2  2007
 ##  3 Canada              80.7  2007
@@ -579,7 +623,7 @@ gm</code></pre>
 ##  8 Iceland             80.5  2002
 ##  9 Iceland             81.8  2007
 ## 10 Israel              80.7  2007
-## # ... with 12 more rows</code></pre>
+## # … with 12 more rows</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>What 10 countries have the strongest correlation (in either direction) between life expectancy and per capita GDP?</li>
 </ol>
@@ -588,7 +632,7 @@ gm</code></pre>
     summarise(cor = cor(lifeExp, gdpPercap)) %&gt;%
     arrange(desc(abs(cor))) %&gt;%
     head(10)</code></pre>
-<pre><code>## # A tibble: 10 x 2
+<pre><code>## # A tibble: 10 × 2
 ##    country          cor
 ##    &lt;chr&gt;          &lt;dbl&gt;
 ##  1 France         0.996
@@ -609,10 +653,10 @@ gm</code></pre>
     group_by(continent, year) %&gt;%
     summarise(mean.pop = mean(pop)) %&gt;%
     arrange(desc(mean.pop)) </code></pre>
-<pre><code>## # A tibble: 48 x 3
+<pre><code>## # A tibble: 48 × 3
 ## # Groups:   continent [4]
 ##    continent  year  mean.pop
-##    &lt;chr&gt;     &lt;int&gt;     &lt;dbl&gt;
+##    &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;
 ##  1 Americas   2007 35954847.
 ##  2 Americas   2002 33990910.
 ##  3 Americas   1997 31876016.
@@ -623,7 +667,7 @@ gm</code></pre>
 ##  8 Americas   1972 21175368.
 ##  9 Europe     2007 19536618.
 ## 10 Europe     2002 19274129.
-## # ... with 38 more rows</code></pre>
+## # … with 38 more rows</code></pre>
 <ol start="8" style="list-style-type: decimal">
 <li>Which three countries have had the most consistent population estimates (i.e. lowest standard deviation) across the years of available data?</li>
 </ol>
@@ -632,7 +676,7 @@ gm</code></pre>
     summarize(sd.pop = sd(pop)) %&gt;%
     arrange(sd.pop) %&gt;%
     head(3)</code></pre>
-<pre><code>## # A tibble: 3 x 2
+<pre><code>## # A tibble: 3 × 2
 ##   country               sd.pop
 ##   &lt;chr&gt;                  &lt;dbl&gt;
 ## 1 Sao Tome and Principe 45906.
@@ -645,10 +689,10 @@ gm</code></pre>
   arrange(country, year) %&gt;% 
   group_by(country) %&gt;% 
   filter(pop &lt; lag(pop) &amp; lifeExp &gt; lag(lifeExp))</code></pre>
-<pre><code>## # A tibble: 36 x 6
+<pre><code>## # A tibble: 36 × 6
 ## # Groups:   country [22]
 ##    country                continent  year lifeExp      pop gdpPercap
-##    &lt;chr&gt;                  &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##    &lt;chr&gt;                  &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ##  1 Afghanistan            Asia       1982    39.9 12881816      978.
 ##  2 Bosnia and Herzegovina Europe     1992    72.2  4256013     2547.
 ##  3 Bosnia and Herzegovina Europe     1997    73.2  3607000     4766.
@@ -659,7 +703,7 @@ gm</code></pre>
 ##  8 Czech Republic         Europe     2002    75.5 10256295    17596.
 ##  9 Czech Republic         Europe     2007    76.5 10228744    22833.
 ## 10 Equatorial Guinea      Africa     1977    42.0   192675      959.
-## # ... with 26 more rows</code></pre>
+## # … with 26 more rows</code></pre>
 </div>
 
 <div class="footer">
@@ -679,13 +723,64 @@ This work is licensed under the  <a href="https://creativecommons.org/licenses/b
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

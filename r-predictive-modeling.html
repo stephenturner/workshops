@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Predictive Analytics: Predicting and Forecasting Influenza</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Font Awesome -->
 <!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
@@ -48,12 +57,18 @@
   ga('send', 'pageview');
 </script>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -66,39 +81,12 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,13 +94,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -123,44 +106,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -171,54 +166,85 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -232,6 +258,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -267,8 +299,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -284,8 +314,18 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -387,6 +427,12 @@ div.tocify {
     <li>
       <a href="r-textmining.html">Text Mining</a>
     </li>
+    <li>
+      <a href="r-rnaseq-airway.html">RNA-seq</a>
+    </li>
+    <li>
+      <a href="r-ggtree.html">Phylogenetic trees with R</a>
+    </li>
     <li class="dropdown-header">--- Homework ---</li>
     <li>
       <a href="r-dplyr-homework.html">Data Manipulation</a>
@@ -399,6 +445,9 @@ div.tocify {
     </li>
     <li>
       <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-rnaseq-homework.html">RNA-seq</a>
     </li>
   </ul>
 </li>
@@ -428,7 +477,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -511,20 +560,20 @@ flu &lt;- read_csv(&quot;data/h7n9.csv&quot;)
 
 # Take a look
 flu</code></pre>
-<pre><code>## # A tibble: 134 x 8
-##    case_id date_onset date_hospitaliz… date_outcome outcome gender   age
-##    &lt;chr&gt;   &lt;date&gt;     &lt;date&gt;           &lt;date&gt;       &lt;chr&gt;   &lt;chr&gt;  &lt;int&gt;
-##  1 case_1  2013-02-19 NA               2013-03-04   Death   m         58
-##  2 case_2  2013-02-27 2013-03-03       2013-03-10   Death   m          7
-##  3 case_3  2013-03-09 2013-03-19       2013-04-09   Death   f         11
-##  4 case_4  2013-03-19 2013-03-27       NA           &lt;NA&gt;    f         18
-##  5 case_5  2013-03-19 2013-03-30       2013-05-15   Recover f         20
-##  6 case_6  2013-03-21 2013-03-28       2013-04-26   Death   f          9
-##  7 case_7  2013-03-20 2013-03-29       2013-04-09   Death   m         54
-##  8 case_8  2013-03-07 2013-03-18       2013-03-27   Death   m         14
-##  9 case_9  2013-03-25 2013-03-25       NA           &lt;NA&gt;    m         39
-## 10 case_10 2013-03-28 2013-04-01       2013-04-03   Death   m         20
-## # ... with 124 more rows, and 1 more variable: province &lt;chr&gt;</code></pre>
+<pre><code>## # A tibble: 134 × 8
+##    case_id date_onset date_hospitalization date_outcome outcome gender   age
+##    &lt;chr&gt;   &lt;date&gt;     &lt;date&gt;               &lt;date&gt;       &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;
+##  1 case_1  2013-02-19 NA                   2013-03-04   Death   m         58
+##  2 case_2  2013-02-27 2013-03-03           2013-03-10   Death   m          7
+##  3 case_3  2013-03-09 2013-03-19           2013-04-09   Death   f         11
+##  4 case_4  2013-03-19 2013-03-27           NA           &lt;NA&gt;    f         18
+##  5 case_5  2013-03-19 2013-03-30           2013-05-15   Recover f         20
+##  6 case_6  2013-03-21 2013-03-28           2013-04-26   Death   f          9
+##  7 case_7  2013-03-20 2013-03-29           2013-04-09   Death   m         54
+##  8 case_8  2013-03-07 2013-03-18           2013-03-27   Death   m         14
+##  9 case_9  2013-03-25 2013-03-25           NA           &lt;NA&gt;    m         39
+## 10 case_10 2013-03-28 2013-04-01           2013-04-03   Death   m         20
+## # … with 124 more rows, and 1 more variable: province &lt;chr&gt;</code></pre>
 </div>
 <div id="exploratory-data-analysis" class="section level3">
 <h3>Exploratory data analysis</h3>
@@ -559,9 +608,9 @@ flugather &lt;- flu %&gt;%
 
 # Better: Show the data arranged by case_id so you see the three entries
 flugather %&gt;% arrange(case_id)</code></pre>
-<pre><code>## # A tibble: 402 x 7
+<pre><code>## # A tibble: 402 × 7
 ##    case_id  outcome gender   age province key                  date      
-##    &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;  &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;                &lt;date&gt;    
+##    &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;                &lt;date&gt;    
 ##  1 case_1   Death   m         58 Shanghai date_onset           2013-02-19
 ##  2 case_1   Death   m         58 Shanghai date_hospitalization NA        
 ##  3 case_1   Death   m         58 Shanghai date_outcome         2013-03-04
@@ -572,7 +621,7 @@ flugather %&gt;% arrange(case_id)</code></pre>
 ##  8 case_100 &lt;NA&gt;    m         30 Zhejiang date_hospitalization NA        
 ##  9 case_100 &lt;NA&gt;    m         30 Zhejiang date_outcome         NA        
 ## 10 case_101 &lt;NA&gt;    f         51 Zhejiang date_onset           2013-04-13
-## # ... with 392 more rows</code></pre>
+## # … with 392 more rows</code></pre>
 <p>Now that we have this, let’s visualize the number of days that passed between onset, hospitalization and outcome, for each case. We see that there are lots of unconnected points, especially in Jiangsu and Zhejiang provinces, where one of these dates isn’t known.</p>
 <pre class="r"><code>ggplot(flugather, aes(date, y=age, color=outcome)) +
   geom_point() +
@@ -644,9 +693,9 @@ flu &lt;- flu %&gt;%
 
 # Take a look
 flu</code></pre>
-<pre><code>## # A tibble: 134 x 9
+<pre><code>## # A tibble: 134 × 9
 ##    case_id outcome   age province  male hospital days_to_hospital
-##    &lt;chr&gt;   &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;    &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;
+##    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;
 ##  1 case_1  Death      58 Shanghai     1        0               NA
 ##  2 case_2  Death       7 Shanghai     1        1                4
 ##  3 case_3  Death      11 Other        0        1               10
@@ -657,7 +706,7 @@ flu</code></pre>
 ##  8 case_8  Death      14 Zhejiang     1        1               11
 ##  9 case_9  &lt;NA&gt;       39 Zhejiang     1        1                0
 ## 10 case_10 Death      20 Shanghai     1        1                4
-## # ... with 124 more rows, and 2 more variables: days_to_outcome &lt;dbl&gt;,
+## # … with 124 more rows, and 2 more variables: days_to_outcome &lt;dbl&gt;,
 ## #   early_outcome &lt;int&gt;</code></pre>
 </div>
 <div id="create-indicators-for-province" class="section level4">
@@ -672,9 +721,9 @@ flu</code></pre>
   as_tibble() %&gt;%
   select(-province)
 flu</code></pre>
-<pre><code>## # A tibble: 134 x 12
+<pre><code>## # A tibble: 134 × 12
 ##    case_id outcome   age  male hospital days_to_hospital days_to_outcome
-##  * &lt;chr&gt;   &lt;chr&gt;   &lt;int&gt; &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;           &lt;dbl&gt;
+##    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;           &lt;dbl&gt;
 ##  1 case_1  Death      58     1        0               NA              13
 ##  2 case_2  Death       7     1        1                4              11
 ##  3 case_3  Death      11     0        1               10              31
@@ -685,7 +734,7 @@ flu</code></pre>
 ##  8 case_8  Death      14     1        1               11              20
 ##  9 case_9  &lt;NA&gt;       39     1        1                0              NA
 ## 10 case_10 Death      20     1        1                4               6
-## # ... with 124 more rows, and 5 more variables: early_outcome &lt;int&gt;,
+## # … with 124 more rows, and 5 more variables: early_outcome &lt;int&gt;,
 ## #   provinceJiangsu &lt;dbl&gt;, provinceOther &lt;dbl&gt;, provinceShanghai &lt;dbl&gt;,
 ## #   provinceZhejiang &lt;dbl&gt;</code></pre>
 <p><em>Optional</em>: Notice how the new variables are provinceJiangsu, provinceOther, provinceShanghai, provinceZhejiang. If we want to strip off the “province” we can do that. There’s a built-in command called <code>gsub</code> that can help here. Take a look at the help for <code>?gsub</code>.</p>
@@ -712,9 +761,9 @@ flu</code></pre>
 <p>Let’s load the mice package, and take a look at our data again.</p>
 <pre class="r"><code>library(mice)
 flu</code></pre>
-<pre><code>## # A tibble: 134 x 12
+<pre><code>## # A tibble: 134 × 12
 ##    case_id outcome   age  male hospital days_to_hospital days_to_outcome
-##  * &lt;chr&gt;   &lt;chr&gt;   &lt;int&gt; &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;           &lt;dbl&gt;
+##    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;           &lt;dbl&gt;
 ##  1 case_1  Death      58     1        0               NA              13
 ##  2 case_2  Death       7     1        1                4              11
 ##  3 case_3  Death      11     0        1               10              31
@@ -725,7 +774,7 @@ flu</code></pre>
 ##  8 case_8  Death      14     1        1               11              20
 ##  9 case_9  &lt;NA&gt;       39     1        1                0              NA
 ## 10 case_10 Death      20     1        1                4               6
-## # ... with 124 more rows, and 5 more variables: early_outcome &lt;int&gt;,
+## # … with 124 more rows, and 5 more variables: early_outcome &lt;int&gt;,
 ## #   Jiangsu &lt;dbl&gt;, Other &lt;dbl&gt;, Shanghai &lt;dbl&gt;, Zhejiang &lt;dbl&gt;</code></pre>
 <p>Eventually we want to predict the outcome, so we don’t want to factor that into the imputation. We also don’t want to factor in the case ID, because that’s just an individual’s identifier. So let’s create a new dataset selecting out those two variables so we can try to impute everything else.</p>
 <pre class="r"><code>flu %&gt;% 
@@ -744,20 +793,20 @@ fluimp &lt;- flu %&gt;%
   cbind(fluimp) %&gt;%
   as_tibble()
 fluimp</code></pre>
-<pre><code>## # A tibble: 134 x 12
+<pre><code>## # A tibble: 134 × 12
 ##    case_id outcome   age  male hospital days_to_hospital days_to_outcome
-##  * &lt;chr&gt;   &lt;chr&gt;   &lt;int&gt; &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;           &lt;dbl&gt;
-##  1 case_1  Death      58     1        0                4              13
+##    &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;    &lt;int&gt;            &lt;dbl&gt;           &lt;dbl&gt;
+##  1 case_1  Death      58     1        0                7              13
 ##  2 case_2  Death       7     1        1                4              11
 ##  3 case_3  Death      11     0        1               10              31
-##  4 case_4  &lt;NA&gt;       18     0        1                8              46
+##  4 case_4  &lt;NA&gt;       18     0        1                8              38
 ##  5 case_5  Recover    20     0        1               11              57
 ##  6 case_6  Death       9     0        1                7              36
 ##  7 case_7  Death      54     1        1                9              20
 ##  8 case_8  Death      14     1        1               11              20
 ##  9 case_9  &lt;NA&gt;       39     1        1                0              18
 ## 10 case_10 Death      20     1        1                4               6
-## # ... with 124 more rows, and 5 more variables: early_outcome &lt;int&gt;,
+## # … with 124 more rows, and 5 more variables: early_outcome &lt;int&gt;,
 ## #   Jiangsu &lt;dbl&gt;, Other &lt;dbl&gt;, Shanghai &lt;dbl&gt;, Zhejiang &lt;dbl&gt;</code></pre>
 <p>At this point we’re almost ready to do some predictive modeling! If you didn’t make it this far and you just want to read in the analysis ready dataset, you can do that too.</p>
 <pre class="r"><code>fluimp &lt;- read_csv(&quot;data/h7n9_analysisready.csv&quot;)</code></pre>
@@ -777,13 +826,13 @@ fluimp</code></pre>
 </ul>
 <div id="models-available-in-caret" class="section level4">
 <h4>Models available in caret</h4>
-<p>First you have to choose a specific type of model or algorithm. Currently there are <strong>237</strong> different algorithms implemented in caret. Caret provides the interface to the method, but you still need the external package installed. For example, we’ll be fitting a Random Forest model, and for that we’ll need the <a href="https://cran.r-project.org/package=randomForest">randomForest</a> package installed. You can see all the methods that you can deploy by looking at the help for train.</p>
+<p>First you have to choose a specific type of model or algorithm. Currently there are <strong>238</strong> different algorithms implemented in caret. Caret provides the interface to the method, but you still need the external package installed. For example, we’ll be fitting a Random Forest model, and for that we’ll need the <a href="https://cran.r-project.org/package=randomForest">randomForest</a> package installed. You can see all the methods that you can deploy by looking at the help for train.</p>
 <pre class="r"><code>library(caret)
 ?train</code></pre>
 <p>From here, click on the link to see the <a href="http://topepo.github.io/caret/available-models.html">available models</a> or <a href="http://topepo.github.io/caret/train-models-by-tag.html">models by tag</a>. From here you can search for particular models by name. We’re going to fit models using Random Forest, stochastic gradient boosting, k-Nearest Neighbors, Lasso and Elastic-Net Regularized Generalized Linear Models. These require the packages <a href="https://cran.r-project.org/package=randomForest">randomForest</a>, <a href="https://cran.r-project.org/package=gbm">gbm</a>, <a href="https://cran.r-project.org/package=kknn">kknn</a>, and <a href="https://cran.r-project.org/package=glmnet">glmnet</a>, respectively.</p>
 <p>Each of the models may have one or more <em>tuning parameters</em> – some value or option you can set to tweak how the algorithm develops. In k-nearest neighbors, we can try different values of <em>k</em>. With random forest, we can set the <span class="math inline">\(m_{\text{try}}\)</span> option – the algorithm will select <span class="math inline">\(m_{\text{try}}\)</span> number of predictors to attempt a split for classification. Caret attempts to do this using a procedure like this:</p>
 <div class="figure">
-<img src="img/caret-pseudocode.png" alt="The caret model training algorithm. Image from the caret paper." />
+<img src="img/caret-pseudocode.png" alt="" />
 <p class="caption"><em>The caret model training algorithm. Image from the caret paper.</em></p>
 </div>
 <p>That is, it sweeps through each possible parameter you can set for the particular type of model you choose, and uses some kind of resampling scheme with your training data, fitting the model on a subset and testing on the held-out samples.</p>
@@ -792,7 +841,7 @@ fluimp</code></pre>
 <h4>Resampling</h4>
 <p>The default resampling scheme caret uses is the <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)">bootstrap</a>. Bootstrapping takes a random sample <em>with replacement</em> from your data that’s the same size of the original data. Samples might be selected more than once, and some aren’t selected at all. On average, each sample has a ~63.2% chance of showing up at least once in a bootstrap sample. Some samples won’t show up at all, and these <em>held out</em> samples are the ones that are used for testing the performance of the trained model. You repeat this process many times (e.g., 25, 100, etc) to get an average performance estimate on unseen data. Here’s what it looks like in practice.</p>
 <div class="figure">
-<img src="img/caret-bootstrap.png" alt="Bootstrapping schematic. Image from Max Kuhn’s 2013 useR! talk." />
+<img src="img/caret-bootstrap.png" alt="" />
 <p class="caption"><em>Bootstrapping schematic. Image from Max Kuhn’s 2013 useR! talk.</em></p>
 </div>
 <p>Many alternatives exist. Another popular approach is cross-validation. Here, a subset of your data (e.g., 4/5ths, or 80%) is used for training, and the remaining 1/5th or 20% is used for performance assessment. You slide the cross-validation interval over and use the next 4/5ths for training and 1/5th for testing. You do this again for all 5ths of the data. You can optionally repeat this process many times (<em>repeated cross-validation</em>) to get an average cross validation prediction accuracy for a given model and set of tuning parameters.</p>
@@ -851,12 +900,12 @@ modrf</code></pre>
 ## Resampling results across tuning parameters:
 ## 
 ##   mtry  Accuracy  Kappa
-##    2    0.695     0.359
-##    6    0.709     0.394
-##   10    0.690     0.361
+##    2    0.687     0.326
+##    6    0.684     0.324
+##   10    0.692     0.343
 ## 
 ## Accuracy was used to select the optimal model using the largest value.
-## The final value used for the model was mtry = 6.</code></pre>
+## The final value used for the model was mtry = 10.</code></pre>
 <p>Take a look at what that tells us. It tells us it’s fitting a Random Forest model using 77 samples, predicting a categorical outcome class (Death or Recover) based on 10 predictors. It’s not doing any pre-processing like centering or scaling, and it’s doing bootstrap resampling of 77 samples with replacement, repeated 25 times each. Random Forest has a single tuning parameter, <span class="math inline">\(m_{\text{try}}\)</span> – the algorithm will select <span class="math inline">\(m_{\text{try}}\)</span> number of predictors to attempt a split for classification when building a classification tree. The caret package does 25 bootstrap resamples for different values of <span class="math inline">\(m_{\text{try}}\)</span> (you can also control this too if you want), and computes <a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Confusion_matrix">accuracy</a> and <a href="https://en.wikipedia.org/wiki/Cohen%27s_kappa">kappa</a> measures of performance on the held-out samples.</p>
 <p>Accuracy is the number of true assignments to the correct class divided by the total number of samples. <a href="https://en.wikipedia.org/wiki/Cohen%27s_kappa">Kappa</a> takes into account the expected accuracy while considering chance agreement, and is useful for extremely imbalanced class distributions. For continuous outcomes, you can measure things like RMSE or correlation coefficients.</p>
 <blockquote>
@@ -877,15 +926,15 @@ modrf</code></pre>
 ## 
 ##                  Overall
 ## age              100.000
-## days_to_outcome   70.536
-## days_to_hospital  42.324
-## early_outcome     35.710
-## Other             15.716
-## hospital           9.705
-## male               4.751
-## Shanghai           2.891
-## Zhejiang           0.343
-## Jiangsu            0.000</code></pre>
+## days_to_outcome   60.642
+## days_to_hospital  38.333
+## early_outcome     36.591
+## Other             15.772
+## hospital           8.410
+## male               3.758
+## Shanghai           1.687
+## Jiangsu            0.133
+## Zhejiang           0.000</code></pre>
 <p>You can also pass that whole thing to <code>plot()</code>, or wrap the statement in <code>plot()</code>, to see a graphical representation.</p>
 <pre class="r"><code>varImp(modrf, scale=TRUE) %&gt;% plot()</code></pre>
 <p><img src="r-predictive-modeling_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
@@ -908,22 +957,22 @@ modgbm</code></pre>
 ## Resampling results across tuning parameters:
 ## 
 ##   interaction.depth  n.trees  Accuracy  Kappa
-##   1                   50      0.622     0.219
-##   1                  100      0.634     0.244
-##   1                  150      0.622     0.224
-##   2                   50      0.635     0.242
-##   2                  100      0.644     0.259
-##   2                  150      0.638     0.249
-##   3                   50      0.625     0.221
-##   3                  100      0.647     0.272
-##   3                  150      0.639     0.255
+##   1                   50      0.630     0.210
+##   1                  100      0.627     0.210
+##   1                  150      0.630     0.213
+##   2                   50      0.633     0.222
+##   2                  100      0.636     0.218
+##   2                  150      0.632     0.208
+##   3                   50      0.616     0.188
+##   3                  100      0.639     0.227
+##   3                  150      0.636     0.218
 ## 
 ## Tuning parameter &#39;shrinkage&#39; was held constant at a value of 0.1
 ## 
 ## Tuning parameter &#39;n.minobsinnode&#39; was held constant at a value of 10
 ## Accuracy was used to select the optimal model using the largest value.
-## The final values used for the model were n.trees = 100,
-##  interaction.depth = 3, shrinkage = 0.1 and n.minobsinnode = 10.</code></pre>
+## The final values used for the model were n.trees = 100, interaction.depth =
+##  3, shrinkage = 0.1 and n.minobsinnode = 10.</code></pre>
 <p>Notice how stochastic gradient boosting has two different tuning parameters - interaction depth and n trees. There were others (shrinkage, and <code>n.minobsinnode</code>) that were held constant. The caret package automates the bootstrap resampling based performance assessment across all combinations of depth and ntrees, and it tells you where you got the best performance. Notice that the performance here doesn’t seem to be as good as random forest. We can also look at variable importance here too, and see similar rankings.</p>
 <pre class="r"><code>library(gbm) # needed because new version of caret doesn&#39;t load
 varImp(modgbm, scale=TRUE)
@@ -943,13 +992,13 @@ summary(modsum)</code></pre>
 ## 
 ## Accuracy 
 ##      Min. 1st Qu. Median  Mean 3rd Qu.  Max. NA&#39;s
-## gbm 0.500   0.594  0.645 0.647   0.714 0.793    0
-## rf  0.556   0.643  0.714 0.709   0.774 0.867    0
+## gbm 0.483   0.577  0.625 0.639   0.692 0.812    0
+## rf  0.552   0.654  0.692 0.692   0.731 0.864    0
 ## 
 ## Kappa 
-##       Min. 1st Qu. Median  Mean 3rd Qu.  Max. NA&#39;s
-## gbm 0.0249   0.152  0.220 0.272   0.404 0.574    0
-## rf  0.0690   0.279  0.417 0.394   0.509 0.724    0</code></pre>
+##        Min. 1st Qu. Median  Mean 3rd Qu.  Max. NA&#39;s
+## gbm -0.1600   0.103  0.250 0.227   0.319 0.591    0
+## rf  -0.0162   0.255  0.349 0.343   0.421 0.697    0</code></pre>
 <p>It appears that random forest is doing much better in terms of both accuracy and kappa. Let’s train a few other types of models.</p>
 </div>
 <div id="elastic-net-regularized-logistic-regression" class="section level4">
@@ -970,15 +1019,15 @@ modglmnet</code></pre>
 ## Resampling results across tuning parameters:
 ## 
 ##   alpha  lambda    Accuracy  Kappa
-##   0.10   0.000391  0.586     0.150
-##   0.10   0.003908  0.589     0.154
-##   0.10   0.039077  0.602     0.171
-##   0.55   0.000391  0.586     0.150
-##   0.55   0.003908  0.592     0.162
-##   0.55   0.039077  0.623     0.215
-##   1.00   0.000391  0.587     0.152
-##   1.00   0.003908  0.592     0.162
-##   1.00   0.039077  0.629     0.225
+##   0.10   0.000391  0.635     0.226
+##   0.10   0.003908  0.634     0.226
+##   0.10   0.039077  0.630     0.217
+##   0.55   0.000391  0.635     0.226
+##   0.55   0.003908  0.633     0.223
+##   0.55   0.039077  0.633     0.226
+##   1.00   0.000391  0.635     0.226
+##   1.00   0.003908  0.630     0.215
+##   1.00   0.039077  0.643     0.243
 ## 
 ## Accuracy was used to select the optimal model using the largest value.
 ## The final values used for the model were alpha = 1 and lambda = 0.0391.</code></pre>
@@ -1001,16 +1050,16 @@ modknn</code></pre>
 ## Resampling results across tuning parameters:
 ## 
 ##   kmax  Accuracy  Kappa
-##   5     0.634     0.242
-##   7     0.634     0.242
-##   9     0.634     0.242
+##   5     0.635     0.218
+##   7     0.635     0.218
+##   9     0.633     0.214
 ## 
 ## Tuning parameter &#39;distance&#39; was held constant at a value of 2
-## 
-## Tuning parameter &#39;kernel&#39; was held constant at a value of optimal
+## Tuning
+##  parameter &#39;kernel&#39; was held constant at a value of optimal
 ## Accuracy was used to select the optimal model using the largest value.
-## The final values used for the model were kmax = 9, distance = 2 and
-##  kernel = optimal.</code></pre>
+## The final values used for the model were kmax = 7, distance = 2 and kernel
+##  = optimal.</code></pre>
 </div>
 <div id="compare-all-the-models" class="section level4">
 <h4>Compare all the models</h4>
@@ -1026,17 +1075,17 @@ summary(modsum)</code></pre>
 ## 
 ## Accuracy 
 ##         Min. 1st Qu. Median  Mean 3rd Qu.  Max. NA&#39;s
-## gbm    0.500   0.594  0.645 0.647   0.714 0.793    0
-## rf     0.556   0.643  0.714 0.709   0.774 0.867    0
-## glmnet 0.444   0.571  0.625 0.629   0.682 0.767    0
-## knn    0.545   0.588  0.621 0.634   0.679 0.821    0
+## gbm    0.483   0.577  0.625 0.639   0.692 0.812    0
+## rf     0.552   0.654  0.692 0.692   0.731 0.864    0
+## glmnet 0.467   0.615  0.654 0.643   0.692 0.773    0
+## knn    0.452   0.586  0.615 0.635   0.667 0.818    0
 ## 
 ## Kappa 
 ##           Min. 1st Qu. Median  Mean 3rd Qu.  Max. NA&#39;s
-## gbm     0.0249   0.152  0.220 0.272   0.404 0.574    0
-## rf      0.0690   0.279  0.417 0.394   0.509 0.724    0
-## glmnet -0.1345   0.125  0.212 0.225   0.353 0.507    0
-## knn     0.0667   0.152  0.216 0.242   0.322 0.578    0</code></pre>
+## gbm    -0.1600   0.103  0.250 0.227   0.319 0.591    0
+## rf     -0.0162   0.255  0.349 0.343   0.421 0.697    0
+## glmnet -0.0284   0.150  0.267 0.243   0.319 0.538    0
+## knn    -0.2760   0.143  0.199 0.218   0.318 0.627    0</code></pre>
 <p>The <code>bwplot()</code> function can take this model summary object and visualize it.</p>
 <pre class="r"><code>bwplot(modsum)</code></pre>
 <p><img src="r-predictive-modeling_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
@@ -1048,21 +1097,20 @@ summary(modsum)</code></pre>
 <pre class="r"><code>unknown</code></pre>
 <p>Now, since Random Forest worked best, let’s use that model to predict the outcome!</p>
 <pre class="r"><code>predict(modrf, newdata=unknown)</code></pre>
-<pre><code>##  [1] Recover Recover Death   Recover Death   Death   Recover Recover
-##  [9] Death   Recover Death   Recover Recover Recover Recover Death  
-## [17] Recover Death   Death   Death   Recover Recover Recover Recover
-## [25] Recover Recover Recover Recover Death   Death   Recover Recover
-## [33] Recover Recover Recover Recover Recover Recover Recover Recover
-## [41] Recover Recover Recover Death   Recover Recover Recover Death  
-## [49] Recover Recover Recover Recover Recover Recover Recover Recover
-## [57] Recover
+<pre><code>##  [1] Recover Recover Death   Recover Death   Death   Recover Recover Death  
+## [10] Recover Death   Recover Recover Recover Recover Death   Recover Death  
+## [19] Death   Death   Recover Recover Recover Recover Recover Recover Recover
+## [28] Recover Death   Death   Recover Recover Recover Recover Recover Recover
+## [37] Recover Recover Recover Recover Recover Recover Recover Death   Recover
+## [46] Death   Recover Death   Recover Recover Recover Recover Recover Recover
+## [55] Recover Recover Recover
 ## Levels: Death Recover</code></pre>
 <p>This gives you a vector of values that would be the outcome for the individuals in the <code>unknown</code> dataset. From here it’s pretty simple to put them back in the data with a <code>mutate()</code>.</p>
 <pre class="r"><code>unknown %&gt;%
   mutate(outcome=predict(modrf, newdata=unknown))</code></pre>
-<pre><code>## # A tibble: 57 x 12
+<pre><code>## # A tibble: 57 × 12
 ##    case_id outcome   age  male hospital days_to_hospital days_to_outcome
-##    &lt;chr&gt;   &lt;fct&gt;   &lt;int&gt; &lt;int&gt;    &lt;int&gt;            &lt;int&gt;           &lt;int&gt;
+##    &lt;chr&gt;   &lt;fct&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;           &lt;dbl&gt;
 ##  1 case_4  Recover    18     0        1                8              46
 ##  2 case_9  Recover    39     1        1                0              18
 ##  3 case_15 Death      34     0        0               11              38
@@ -1073,17 +1121,17 @@ summary(modsum)</code></pre>
 ##  8 case_32 Recover    46     1        0                3              20
 ##  9 case_38 Death      28     1        0                2               7
 ## 10 case_39 Recover    38     1        1                0              18
-## # ... with 47 more rows, and 5 more variables: early_outcome &lt;int&gt;,
-## #   Jiangsu &lt;int&gt;, Other &lt;int&gt;, Shanghai &lt;int&gt;, Zhejiang &lt;int&gt;</code></pre>
-<p>Alternatively, you could pass in <code>type=&quot;prob&quot;</code> to get prediction probabilities instead of predicted classes.</p>
+## # … with 47 more rows, and 5 more variables: early_outcome &lt;dbl&gt;,
+## #   Jiangsu &lt;dbl&gt;, Other &lt;dbl&gt;, Shanghai &lt;dbl&gt;, Zhejiang &lt;dbl&gt;</code></pre>
+<p>Alternatively, you could pass in <code>type="prob"</code> to get prediction probabilities instead of predicted classes.</p>
 <pre class="r"><code>predict(modrf, newdata=unknown, type=&quot;prob&quot;) %&gt;% head()</code></pre>
 <pre><code>##   Death Recover
-## 1 0.072   0.928
-## 2 0.036   0.964
-## 3 0.602   0.398
-## 4 0.170   0.830
-## 5 0.674   0.326
-## 6 0.954   0.046</code></pre>
+## 1 0.040   0.960
+## 2 0.030   0.970
+## 3 0.564   0.436
+## 4 0.138   0.862
+## 5 0.774   0.226
+## 6 0.972   0.028</code></pre>
 <p>You could also imagine going further to get the prediction probabilities out of each type of model we made. You could add up the prediction probabilities for Death and Recovery for each individual across model types, and then compute a ratio. If across all the models that ratio is, for example, 2x in favor of death, you could predict death, or if it’s 2x in favor of recovery, you predict recover, and if it’s in between, you might call it “uncertain.” This lets you not only reap the advantages of ensemble learning within a single algorithm, but also lets you use information across a variety of different algorithm types.</p>
 </div>
 </div>
@@ -1118,7 +1166,7 @@ summary(modsum)</code></pre>
 </ul>
 <p>These use cases are optimized for business forecasting problems encountered at Facebook, but many of the characteristics here apply well to other kinds of forecasting problems. Further, while the default settings can produce fairly high-quality forecasts, if the results aren’t satisfactory, you aren’t stuck with a completely automated model you can’t change. The prophet package allows you to tweak forecasts using different parameters. The process is summarized in the figure below.</p>
 <div class="figure">
-<img src="img/prophet.png" alt="Schematic view of the analyst-in-the-loop approach to forecasting at scale, which best makes use of human and automated tasks. Image from the Prophet preprint noted above." />
+<img src="img/prophet.png" alt="" />
 <p class="caption"><em>Schematic view of the analyst-in-the-loop approach to forecasting at scale, which best makes use of human and automated tasks. Image from the Prophet preprint noted above.</em></p>
 </div>
 <p><strong><a href="https://cran.r-project.org/package=prophet">Prophet</a></strong> is a good replacement for the <strong><a href="https://cran.r-project.org/package=forecast">forecast</a></strong> package because:</p>
@@ -1144,9 +1192,9 @@ summary(modsum)</code></pre>
 <pre class="r"><code># Read in the ILI data.
 ili &lt;- read_csv(&quot;data/ilinet.csv&quot;)
 ili</code></pre>
-<pre><code>## # A tibble: 818 x 6
+<pre><code>## # A tibble: 818 × 6
 ##    week_start ilitotal total_patients fludeaths pneumoniadeaths all_deaths
-##    &lt;date&gt;        &lt;int&gt;          &lt;dbl&gt;     &lt;int&gt;           &lt;dbl&gt;      &lt;dbl&gt;
+##    &lt;date&gt;        &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;
 ##  1 2003-01-06     3260         171193        NA              NA         NA
 ##  2 2003-01-13     3729         234513        NA              NA         NA
 ##  3 2003-01-20     4204         231550        NA              NA         NA
@@ -1157,12 +1205,12 @@ ili</code></pre>
 ##  8 2003-02-24     7228         241110        NA              NA         NA
 ##  9 2003-03-03     5606         241683        NA              NA         NA
 ## 10 2003-03-10     4450         228549        NA              NA         NA
-## # ... with 808 more rows</code></pre>
+## # … with 808 more rows</code></pre>
 <p>We have information on ILI frequency since January 2003, but we don’t have information on death data until 2009. From here, we have data up through the end of September 2018.</p>
 <pre class="r"><code>tail(ili)</code></pre>
-<pre><code>## # A tibble: 6 x 6
+<pre><code>## # A tibble: 6 × 6
 ##   week_start ilitotal total_patients fludeaths pneumoniadeaths all_deaths
-##   &lt;date&gt;        &lt;int&gt;          &lt;dbl&gt;     &lt;int&gt;           &lt;dbl&gt;      &lt;dbl&gt;
+##   &lt;date&gt;        &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;
 ## 1 2018-08-20     6519         798422         9            2426      46033
 ## 2 2018-08-27     7257         762601         5            2321      45679
 ## 3 2018-09-03     8049         823571         4            2430      44689
@@ -1233,13 +1281,59 @@ This work is licensed under the  <a href="https://creativecommons.org/licenses/b
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

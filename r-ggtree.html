@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Visualizing and Annotating Phylogenetic Trees with R+ggtree</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Font Awesome -->
 <!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
@@ -48,12 +57,18 @@
   ga('send', 'pageview');
 </script>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -66,39 +81,12 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,13 +94,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -123,44 +106,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -171,54 +166,85 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -232,6 +258,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -267,8 +299,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -284,8 +314,18 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -387,6 +427,12 @@ div.tocify {
     <li>
       <a href="r-textmining.html">Text Mining</a>
     </li>
+    <li>
+      <a href="r-rnaseq-airway.html">RNA-seq</a>
+    </li>
+    <li>
+      <a href="r-ggtree.html">Phylogenetic trees with R</a>
+    </li>
     <li class="dropdown-header">--- Homework ---</li>
     <li>
       <a href="r-dplyr-homework.html">Data Manipulation</a>
@@ -399,6 +445,9 @@ div.tocify {
     </li>
     <li>
       <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-rnaseq-homework.html">RNA-seq</a>
     </li>
   </ul>
 </li>
@@ -428,7 +477,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -446,7 +495,7 @@ div.tocify {
 <ol style="list-style-type: decimal">
 <li><strong>ggtree Bioconductor page</strong>: <a href="http://bioconductor.org/packages/release/bioc/html/ggtree.html">bioconductor.org/packages/ggtree</a>.</li>
 <li><strong>ggtree homepage</strong>: <a href="https://guangchuangyu.github.io/ggtree/">guangchuangyu.github.io/ggtree</a> (contains more information about the package, more documentation, a gallery of beautiful images, and links to related resources).</li>
-<li><strong>ggtree publication</strong>: Yu, Guangchuang, et al. “ggtree: an r package for visualization and annotation of phylogenetic trees with their covariates and other associated data.” <em>Methods in Ecology and Evolution</em> (2016) <a href="http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/full">DOI:10.1111/2041-210X.12628</a>.</li>
+<li><strong>ggtree publication</strong>: Yu, Guangchuang, et al. “ggtree: an r package for visualization and annotation of phylogenetic trees with their covariates and other associated data.” <em>Methods in Ecology and Evolution</em> (2016) <a href="http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/full">DOI:10.1111/2041-210X.12628</a>.</li>
 </ol>
 <p>Bioconductor packages usually have great documentation in the form of <em>vignettes</em>. Take a look at the <a href="http://bioconductor.org/packages/release/bioc/html/ggtree.html">landing page for ggtree</a> – about halfway down the page under the “Documentation” heading there are multiple walkthrough tutorials directed to different applications and functionalities of ggtree, chock full of runnable examples and explanations.</p>
 <p>Just like R packages from CRAN, you only need to install Bioconductor packages once (<a href="setup.html#bioconductor">instructions here</a>), then load them every time you start a new R session.</p>
@@ -515,7 +564,7 @@ ggtree(tree) + geom_treescale()
 # or add the entire scale to the x axis with theme_tree2()
 ggtree(tree) + theme_tree2()</code></pre>
 <p><img src="r-ggtree_files/figure-html/scales-1.png" width="672" /></p>
-<p>The default is to plot a phylogram, where the x-axis shows the genetic change / evolutionary distance. If you want to disable scaling and produce a cladogram instead, set the <code>branch.length=&quot;none&quot;</code> option inside the <code>ggtree()</code> call. See <code>?ggtree</code> for more.</p>
+<p>The default is to plot a phylogram, where the x-axis shows the genetic change / evolutionary distance. If you want to disable scaling and produce a cladogram instead, set the <code>branch.length="none"</code> option inside the <code>ggtree()</code> call. See <code>?ggtree</code> for more.</p>
 <pre class="r"><code>ggtree(tree, branch.length=&quot;none&quot;)</code></pre>
 <p><img src="r-ggtree_files/figure-html/cladogram-1.png" width="672" /></p>
 <p>The <code>...</code> option in the help for <code>?ggtree</code> represents additional options that are further passed to <code>ggplot()</code>. You can use this to change aesthetics of the plot. Let’s draw a cladogram (no branch scaling) using thick blue dotted lines (note that I’m not mapping these aesthetics to features of the data with <code>aes()</code> – we’ll get to that later).</p>
@@ -571,14 +620,12 @@ p + geom_tiplab()</code></pre>
 <p>Before we can go further we need to understand how ggtree is handling the tree structure internally. Some of the functions in ggtree for annotating clades need a parameter specifying the internal node number. To get the internal node number, user can use <code>geom_text</code> to display it, where the label is an aesthetic mapping to the “node variable” stored inside the tree object (think of this like the continent variable inside the gapminder object). We also supply the <code>hjust</code> option so that the labels aren’t sitting right on top of the nodes. Read more about this process in the <a href="http://bioconductor.org/packages/release/bioc/vignettes/ggtree/inst/doc/treeManipulation.html#internal-node-number">ggtree manipulation vignette</a>.</p>
 <pre class="r"><code>ggtree(tree) + geom_text(aes(label=node), hjust=-.3)</code></pre>
 <p><img src="r-ggtree_files/figure-html/nodenumber-1.png" width="672" /></p>
-<p>Another way to get the internal node number is using <code>MRCA()</code> function by providing a vector of taxa names (created using <code>c(&quot;taxon1&quot;, &quot;taxon2&quot;)</code>).. The function will return node number of input taxa’s most recent commond ancestor (MRCA). First, re-create the plot so you can choose which taxa you want to grab the MRCA from.</p>
+<p>Another way to get the internal node number is using <code>MRCA()</code> function by providing a vector of taxa names (created using <code>c("taxon1", "taxon2")</code>).. The function will return node number of input taxa’s most recent commond ancestor (MRCA). First, re-create the plot so you can choose which taxa you want to grab the MRCA from.</p>
 <pre class="r"><code>ggtree(tree) + geom_tiplab()</code></pre>
 <p><img src="r-ggtree_files/figure-html/tiplab_for_mrca-1.png" width="672" /></p>
 <p>Let’s grab the most recent common ancestor for taxa C+E, and taxa G+H. We can use <code>MRCA()</code> to get the internal node numbers. Go back to the node-labeled plot from before to confirm this.</p>
-<pre class="r"><code>MRCA(tree, tip=c(&quot;C&quot;, &quot;E&quot;))</code></pre>
-<pre><code>## [1] 17</code></pre>
-<pre class="r"><code>MRCA(tree, tip=c(&quot;G&quot;, &quot;H&quot;))</code></pre>
-<pre><code>## [1] 21</code></pre>
+<pre class="r"><code>MRCA(tree, tip=c(&quot;C&quot;, &quot;E&quot;))
+MRCA(tree, tip=c(&quot;G&quot;, &quot;H&quot;))</code></pre>
 </div>
 <div id="labeling-clades" class="section level3">
 <h3>Labeling clades</h3>
@@ -641,7 +688,7 @@ p + geom_tiplab()</code></pre>
 <ol style="list-style-type: decimal">
 <li>First, find what the MRCA is for taxa <strong>B+C</strong>, and taxa <strong>L+J</strong>. You can do this in one of two ways:
 <ol style="list-style-type: lower-alpha">
-<li>Easiest: use <code>MRCA(tree, tip=c(&quot;taxon1&quot;, &quot;taxon2&quot;))</code> for B/C and L/J separately.</li>
+<li>Easiest: use <code>MRCA(tree, tip=c("taxon1", "taxon2"))</code> for B/C and L/J separately.</li>
 <li>Alternatively: use <code>ggtree(tree) + geom_text(aes(label=node), hjust=-.3)</code> to see what the node labels are on the plot. You might also add tip labels here too.</li>
 </ol></li>
 <li>Draw the tree with <code>ggtree(tree)</code>.</li>
@@ -651,7 +698,7 @@ p + geom_tiplab()</code></pre>
 <li>Link taxa C to E, and G to J with a dashed gray line (hint: get the geom working first, then try changing the aesthetics. You’ll need <code>linetype=2</code> somewhere in the <code>geom_taxalink()</code>).</li>
 <li>Add a scale bar to the bottom by changing the theme.</li>
 <li>Add a title.</li>
-<li>Optionally, go back to the original <code>ggtree(tree, ...)</code> call and change the layout to <code>&quot;circular&quot;</code>.</li>
+<li>Optionally, go back to the original <code>ggtree(tree, ...)</code> call and change the layout to <code>"circular"</code>.</li>
 </ol>
 <p><img src="r-ggtree_files/figure-html/ex3-1.png" width="768" /></p>
 <hr />
@@ -659,10 +706,10 @@ p + geom_tiplab()</code></pre>
 <div id="advanced-tree-annotation" class="section level2">
 <h2>Advanced tree annotation</h2>
 <p>Let’s use a previously published dataset from this paper:</p>
-<p>Liang et al. “Expansion of genotypic diversity and establishment of 2009 H1N1 pandemic-origin internal genes in pigs in China.” <em>Journal of virology</em> (2014): <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4178866/">88(18):10864-74</a>.</p>
+<p>Liang et al. “Expansion of genotypic diversity and establishment of 2009 H1N1 pandemic-origin internal genes in pigs in China.” <em>Journal of virology</em> (2014): <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4178866/">88(18):10864-74</a>.</p>
 <p>This data was reanalyzed in the <a href="http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/full">ggtree paper</a>.</p>
 <p>The subset of the data used here contains 76 H3 hemagglutinin gene sequences of a lineage containing both swine and human influenza A viruses. The sequence data set was re-analyzed by using BEAST (available at <a href="http://beast.bio.ed.ac.uk/" class="uri">http://beast.bio.ed.ac.uk/</a>). BEAST (Bayesian Evolutionary Analysis Sampling Trees) can give you rooted, time-measured phylogenies inferred using molecular clock models.</p>
-<p>For this you’ll need the <code>flu_tree_beast.tree</code> output file from BEAST and the <code>flu_aasequence.fasta</code> FASTA file with the multiple sequence alignment. These are both available on the <a href="data.html">data downloads page</a>. First let’s read in the tree with <code>read.beast()</code> (instead of the <code>read.tree()</code> we used before). Let’s add a scale bar with theme_tree2(). This gives you genetic distance. But, we have time measured here with molecular clock models. We’ve only estimated the <em>relative</em> time between branching events, so if we want to actually see <em>dates</em> on the x-axis, we need to supply the most recent sampling date to the <code>ggtree()</code> call. Do this by setting <code>mrsd=&quot;YYYY-MM-DD&quot;</code> inside <code>ggtree()</code>.</p>
+<p>For this you’ll need the <code>flu_tree_beast.tree</code> output file from BEAST and the <code>flu_aasequence.fasta</code> FASTA file with the multiple sequence alignment. These are both available on the <a href="data.html">data downloads page</a>. First let’s read in the tree with <code>read.beast()</code> (instead of the <code>read.tree()</code> we used before). Let’s add a scale bar with theme_tree2(). This gives you genetic distance. But, we have time measured here with molecular clock models. We’ve only estimated the <em>relative</em> time between branching events, so if we want to actually see <em>dates</em> on the x-axis, we need to supply the most recent sampling date to the <code>ggtree()</code> call. Do this by setting <code>mrsd="YYYY-MM-DD"</code> inside <code>ggtree()</code>.</p>
 <p>Finally, let’s add some tip labels. We’ll want to right-align them, and by default the dotted line is a little too thick. Let’s reduce the <code>linesize</code> a bit. Now, some of the labels might be falling off the margin. Set the <code>xlim</code> to limit the axis to show between 1990 and 2020. You could get MRCAs and node numbers and do all the annotations that we did before the same way here.</p>
 <pre class="r"><code># Read the data
 tree &lt;- read.beast(&quot;data/flu_tree_beast.tree&quot;)
@@ -678,10 +725,8 @@ ggtree(tree, mrsd=&quot;2013-01-01&quot;) +
   # geom_tiplab(align=TRUE, linesize=.5) + 
   geom_tiplab(linesize=.5) + 
   xlim(1990, 2020)</code></pre>
-<p><img src="r-ggtree_files/figure-html/beastplot-1.png" width="1056" /></p>
-<p>Finally, let’s look at <code>?msaplot</code>. This puts the multiple sequence alignment and the tree side-by-side. The function takes a tree object (produced with <code>ggtree()</code>) and the path to the FASTA multiple sequence alignment. You can do it with the entire MSA, or you could restrict to just a window. Want something interesting-looking, but maybe not all that useful? Try changing the coordinate system of the plot itself by passing <code>+ coord_polar(theta=&quot;y&quot;)</code> to the end of the command!</p>
+<p>Finally, let’s look at <code>?msaplot</code>. This puts the multiple sequence alignment and the tree side-by-side. The function takes a tree object (produced with <code>ggtree()</code>) and the path to the FASTA multiple sequence alignment. You can do it with the entire MSA, or you could restrict to just a window. Want something interesting-looking, but maybe not all that useful? Try changing the coordinate system of the plot itself by passing <code>+ coord_polar(theta="y")</code> to the end of the command!</p>
 <pre class="r"><code>msaplot(p=ggtree(tree), fasta=&quot;data/flu_aasequence.fasta&quot;, window=c(150, 175))</code></pre>
-<p><img src="r-ggtree_files/figure-html/msaplot-1.png" width="1056" /></p>
 <p>Take a look at the <a href="http://bioconductor.org/packages/release/bioc/vignettes/ggtree/inst/doc/advanceTreeAnnotation.html">advanced tree annotation vignette</a> for much, much more!</p>
 </div>
 <div id="bonus" class="section level2">
@@ -754,13 +799,59 @@ This work is licensed under the  <a href="https://creativecommons.org/licenses/b
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

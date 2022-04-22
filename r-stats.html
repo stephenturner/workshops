@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Essential Statistics with R</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Font Awesome -->
 <!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
@@ -48,12 +57,18 @@
   ga('send', 'pageview');
 </script>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -66,39 +81,12 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,13 +94,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -123,44 +106,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -171,54 +166,85 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -232,6 +258,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -267,8 +299,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -284,8 +314,18 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -387,6 +427,12 @@ div.tocify {
     <li>
       <a href="r-textmining.html">Text Mining</a>
     </li>
+    <li>
+      <a href="r-rnaseq-airway.html">RNA-seq</a>
+    </li>
+    <li>
+      <a href="r-ggtree.html">Phylogenetic trees with R</a>
+    </li>
     <li class="dropdown-header">--- Homework ---</li>
     <li>
       <a href="r-dplyr-homework.html">Data Manipulation</a>
@@ -399,6 +445,9 @@ div.tocify {
     </li>
     <li>
       <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-rnaseq-homework.html">RNA-seq</a>
     </li>
   </ul>
 </li>
@@ -428,7 +477,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -454,6 +503,10 @@ div.tocify {
 <p>We are using a small slice of this data. We’re only using a handful of variables from the 2011-2012 survey years on about 5,000 individuals. The CDC uses a <a href="http://www.cdc.gov/nchs/data/series/sr_02/sr02_162.pdf">sampling strategy</a> to purposefully oversample certain subpopulations like racial minorities. Naive analysis of the original NHANES data can lead to mistaken conclusions because the percentages of people from each racial group in the data are different from general population. The 5,000 individuals here are resampled from the larger NHANES study population to undo these oversampling effects, so you can treat this as if it were a simple random sample from the American population.</p>
 <p>You can download the data at <a href="data.html">the link above</a>. The file is called <a href="data/nhanes.csv"><strong>nhanes.csv</strong></a>. There’s also a <a href="data/nhanes_dd.csv">data dictionary (filename <strong>nhanes_dd.csv</strong>)</a> that lists and describes each variable in our NHANES dataset. This table is copied below.</p>
 <table>
+<colgroup>
+<col width="16%" />
+<col width="83%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Variable</th>
@@ -601,26 +654,25 @@ library(dplyr)</code></pre>
 <p>Now, let’s actually load the data. When we load data we assign it to a variable just like any other, and we can choose a name for that data. Since we’re going to be referring to this data a lot, let’s give it a short easy name to type. I’m going to call it <code>nh</code>. Once we’ve loaded it we can type the name of the object itself (<code>nh</code>) to see it printed to the screen.</p>
 <pre class="r"><code>nh &lt;- read_csv(file=&quot;data/nhanes.csv&quot;)
 nh</code></pre>
-<pre><code>## # A tibble: 5,000 x 32
-##       id Gender   Age Race    Education    MaritalStatus RelationshipStat…
-##    &lt;int&gt; &lt;chr&gt;  &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;            
-##  1 62163 male      14 Asian   &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;             
-##  2 62172 female    43 Black   High School  NeverMarried  Single           
-##  3 62174 male      80 White   College Grad Married       Committed        
-##  4 62174 male      80 White   College Grad Married       Committed        
-##  5 62175 male       5 White   &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;             
-##  6 62176 female    34 White   College Grad Married       Committed        
-##  7 62178 male      80 White   High School  Widowed       Single           
-##  8 62180 male      35 White   College Grad Married       Committed        
-##  9 62186 female    17 Black   &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;             
-## 10 62190 female    15 Mexican &lt;NA&gt;         &lt;NA&gt;          &lt;NA&gt;             
-## # ... with 4,990 more rows, and 25 more variables: Insured &lt;chr&gt;,
-## #   Income &lt;int&gt;, Poverty &lt;dbl&gt;, HomeRooms &lt;int&gt;, HomeOwn &lt;chr&gt;,
-## #   Work &lt;chr&gt;, Weight &lt;dbl&gt;, Height &lt;dbl&gt;, BMI &lt;dbl&gt;, Pulse &lt;int&gt;,
-## #   BPSys &lt;int&gt;, BPDia &lt;int&gt;, Testosterone &lt;dbl&gt;, HDLChol &lt;dbl&gt;,
-## #   TotChol &lt;dbl&gt;, Diabetes &lt;chr&gt;, DiabetesAge &lt;int&gt;, nPregnancies &lt;int&gt;,
-## #   nBabies &lt;int&gt;, SleepHrsNight &lt;int&gt;, PhysActive &lt;chr&gt;,
-## #   PhysActiveDays &lt;int&gt;, AlcoholDay &lt;int&gt;, AlcoholYear &lt;int&gt;,
+<pre><code>## # A tibble: 5,000 × 32
+##       id Gender   Age Race    Education   MaritalStatus RelationshipSta… Insured
+##    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;  
+##  1 62163 male      14 Asian   &lt;NA&gt;        &lt;NA&gt;          &lt;NA&gt;             Yes    
+##  2 62172 female    43 Black   High School NeverMarried  Single           Yes    
+##  3 62174 male      80 White   College Gr… Married       Committed        Yes    
+##  4 62174 male      80 White   College Gr… Married       Committed        Yes    
+##  5 62175 male       5 White   &lt;NA&gt;        &lt;NA&gt;          &lt;NA&gt;             Yes    
+##  6 62176 female    34 White   College Gr… Married       Committed        Yes    
+##  7 62178 male      80 White   High School Widowed       Single           Yes    
+##  8 62180 male      35 White   College Gr… Married       Committed        Yes    
+##  9 62186 female    17 Black   &lt;NA&gt;        &lt;NA&gt;          &lt;NA&gt;             Yes    
+## 10 62190 female    15 Mexican &lt;NA&gt;        &lt;NA&gt;          &lt;NA&gt;             Yes    
+## # … with 4,990 more rows, and 24 more variables: Income &lt;dbl&gt;, Poverty &lt;dbl&gt;,
+## #   HomeRooms &lt;dbl&gt;, HomeOwn &lt;chr&gt;, Work &lt;chr&gt;, Weight &lt;dbl&gt;, Height &lt;dbl&gt;,
+## #   BMI &lt;dbl&gt;, Pulse &lt;dbl&gt;, BPSys &lt;dbl&gt;, BPDia &lt;dbl&gt;, Testosterone &lt;dbl&gt;,
+## #   HDLChol &lt;dbl&gt;, TotChol &lt;dbl&gt;, Diabetes &lt;chr&gt;, DiabetesAge &lt;dbl&gt;,
+## #   nPregnancies &lt;dbl&gt;, nBabies &lt;dbl&gt;, SleepHrsNight &lt;dbl&gt;, PhysActive &lt;chr&gt;,
+## #   PhysActiveDays &lt;dbl&gt;, AlcoholDay &lt;dbl&gt;, AlcoholYear &lt;dbl&gt;,
 ## #   SmokingStatus &lt;chr&gt;</code></pre>
 <p>Take a look at that output. The nice thing about loading dplyr and reading data with readr functions is that data are displayed in a much more friendly way. This dataset has 5,000 rows and 32 columns. When you import/convert data this way and try to display the object in the console, instead of trying to display all 5,000 rows, you’ll only see about 10 by default. Also, if you have so many columns that the data would wrap off the edge of your screen, those columns will not be displayed, but you’ll see at the bottom of the output which, if any, columns were hidden from view.</p>
 <blockquote>
@@ -717,7 +769,7 @@ library(Tmisc)</code></pre>
 <pre class="r"><code>gg_na(nh)</code></pre>
 <p><img src="r-stats_files/figure-html/ggna-1.png" width="768" /></p>
 <pre class="r"><code>propmiss(nh)</code></pre>
-<pre><code>## # A tibble: 32 x 4
+<pre><code>## # A tibble: 32 × 4
 ##    var                nmiss     n propmiss
 ##    &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
 ##  1 id                     0  5000   0     
@@ -730,7 +782,7 @@ library(Tmisc)</code></pre>
 ##  8 Insured                7  5000   0.0014
 ##  9 Income               377  5000   0.0754
 ## 10 Poverty              325  5000   0.065 
-## # ... with 22 more rows</code></pre>
+## # … with 22 more rows</code></pre>
 <p>Now, let’s talk about exploratory data analysis (EDA).</p>
 </div>
 <div id="eda" class="section level3">
@@ -806,7 +858,7 @@ rm(nh)
 ##  Welch Two Sample t-test
 ## 
 ## data:  Age by Gender
-## t = 2, df = 4000, p-value = 0.06
+## t = 2, df = 3697, p-value = 0.06
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
 ##  -0.0278  2.2219
@@ -818,7 +870,7 @@ rm(nh)
 ##  Welch Two Sample t-test
 ## 
 ## data:  BMI by Diabetes
-## t = -10, df = 400, p-value &lt;2e-16
+## t = -11, df = 407, p-value &lt;2e-16
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
 ##  -5.56 -3.92
@@ -830,7 +882,7 @@ rm(nh)
 ##  Welch Two Sample t-test
 ## 
 ## data:  AlcoholYear by RelationshipStatus
-## t = 5, df = 3000, p-value = 6e-08
+## t = 5, df = 2675, p-value = 6e-08
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
 ##  13.1 27.8
@@ -881,7 +933,7 @@ t.test(AlcoholYear~RelationshipStatus, data=nha, alternative=&quot;less&quot;)</
 ##  Two Sample t-test
 ## 
 ## data:  BMI by RelationshipStatus
-## t = -2, df = 4000, p-value = 0.1
+## t = -2, df = 3552, p-value = 0.1
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
 ##  -0.7782  0.0955
@@ -976,6 +1028,11 @@ anova(fit)</code></pre>
 <p>The F-test on the ANOVA table tells us that there <em>is</em> a significant difference in means between current, former, and never smokers (p=<span class="math inline">\(4.54 \times 10^{-8}\)</span>). However, the linear model output might not have been what we wanted. Because the default handling of categorical variables is to treat the alphabetical first level as the baseline, “Current” smokers are treated as baseline, and this mean becomes the intercept, and the coefficients on “Former” and “Never” describe how those groups’ means differ from current smokers.</p>
 <p>Back to dummy coding / indicator variables: SmokingStatus is “Current”, “Former”, and “Never.” By default, R will create <em>two</em> indicator variables here that in tandem will explain this variable.</p>
 <table>
+<colgroup>
+<col width="27%" />
+<col width="36%" />
+<col width="35%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">Original SmokingStatus</th>
@@ -1111,7 +1168,7 @@ summary(fit)</code></pre>
 ##  Two Sample t-test
 ## 
 ## data:  Testosterone by PhysActive
-## t = -2, df = 3000, p-value = 0.02
+## t = -2, df = 3436, p-value = 0.02
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
 ##  -34.81  -3.72
@@ -1292,7 +1349,7 @@ addmargins(xt)</code></pre>
 ##  Pearson&#39;s Chi-squared test
 ## 
 ## data:  xt
-## X-squared = 300, df = 5, p-value &lt;2e-16</code></pre>
+## X-squared = 323, df = 5, p-value &lt;2e-16</code></pre>
 <p>The result is <em>highly</em> significant. In fact, so significant, that the display rounds off the p-value to something like <span class="math inline">\(&lt;2.2 \times 10^{-16}\)</span>. If you look at the help for <a href="https://stat.ethz.ch/R-manual/R-patched/library/stats/html/chisq.test.html"><code>?chisq.test</code></a> you’ll see that displaying the test only shows you summary information, but other components can be accessed. For example, we can easily get the actual p-value, or the expected counts under the null hypothesis of independence.</p>
 <pre class="r"><code>chisq.test(xt)$p.value</code></pre>
 <pre><code>## [1] 9.75e-68</code></pre>
@@ -1558,7 +1615,7 @@ summary(fit)</code></pre>
 <div id="tidying-models" class="section level2">
 <h2>Tidying models</h2>
 <p><a href="slides/r-stats.html#(11)"><em>(See slides)</em></a></p>
-<p>We spent a lot of time in <a href="r-tidy.html">other lessons</a> on <em>tidy <strong>data</strong></em>, where each column is a variable and each row is an observation. Tidy data is easy to filter observations based on values in a column (e.g., we could get just adult males with <code>filter(nha, Gender==&quot;male&quot; &amp; Age&gt;=18)</code>, and easy to select particular variables/features of interest by their column name.</p>
+<p>We spent a lot of time in <a href="r-tidy.html">other lessons</a> on <em>tidy <strong>data</strong></em>, where each column is a variable and each row is an observation. Tidy data is easy to filter observations based on values in a column (e.g., we could get just adult males with <code>filter(nha, Gender=="male" &amp; Age&gt;=18)</code>, and easy to select particular variables/features of interest by their column name.</p>
 <p>Even when we start with tidy <em>data</em>, we don’t end up with tidy <em>models</em>. The output from tests like <code>t.test</code> or <code>lm</code> are not data.frames, and it’s difficult to get the information out of the model object that we want. The <a href="https://github.com/dgrtwo/broom"><strong>broom</strong> package</a> bridges this gap.</p>
 <p><img src="img/broom.jpg" /></p>
 <p>Depending on the type of model object you’re using, broom provides three methods that do different kinds of tidying:</p>
@@ -1592,7 +1649,7 @@ summary(fit)</code></pre>
 ##   (269 observations deleted due to missingness)
 ## Multiple R-squared:  0.697,  Adjusted R-squared:  0.697 
 ## F-statistic: 2.63e+03 on 3 and 3434 DF,  p-value: &lt;2e-16</code></pre>
-<p>What if we wanted to pull out the coefficient for Age, or the P-value for PhysActive? It gets pretty gross. We first have to <code>coef(summary(lmfit))</code> to get a matrix of coefficients, the terms are still stored in row names, and the column names are inconsistent with other packages (e.g. <code>Pr(&gt;|t|)</code> compared to <code>p.value</code>). Yuck!</p>
+<p>What if we wanted to pull out the coefficient for Age, or the P-value for PhysActive? It gets pretty gross. We first have to <code>coef(summary(lmfit))</code> to get a matrix of coefficients, the terms are still stored in row names, and the column names are inconsistent with other packages (e.g. <code>Pr(&gt;|t|)</code> compared to <code>p.value</code>). Yuck!</p>
 <pre class="r"><code>coef(summary(fit))[&quot;Age&quot;, &quot;Estimate&quot;]</code></pre>
 <pre><code>## [1] -0.59</code></pre>
 <pre class="r"><code>coef(summary(fit))[&quot;PhysActiveYes&quot;, &quot;Pr(&gt;|t|)&quot;]</code></pre>
@@ -1603,38 +1660,38 @@ summary(fit)</code></pre>
 
 library(broom)
 tidy(fit)</code></pre>
-<pre><code>##            term estimate std.error statistic  p.value
-## 1   (Intercept)    46.69     7.573      6.17 7.83e-10
-## 2 PhysActiveYes     9.27     4.462      2.08 3.77e-02
-## 3           Age    -0.59     0.128     -4.60 4.28e-06
-## 4    Gendermale   385.20     4.351     88.53 0.00e+00</code></pre>
+<pre><code>## # A tibble: 4 × 5
+##   term          estimate std.error statistic  p.value
+##   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)     46.7       7.57       6.17 7.83e-10
+## 2 PhysActiveYes    9.27      4.46       2.08 3.77e- 2
+## 3 Age             -0.590     0.128     -4.60 4.28e- 6
+## 4 Gendermale     385.        4.35      88.5  0</code></pre>
 <p>This gives you a data.frame with all your model results. The row names have been moved into a column called <code>term</code>, and the column names are simple and consistent (and can be accessed using <code>$</code>). These can be manipulated with dplyr just like any other data frame.</p>
 <pre class="r"><code>tidy(fit) %&gt;% 
   filter(term!=&quot;(Intercept)&quot;) %&gt;% 
   select(term, p.value) %&gt;% 
   arrange(p.value)</code></pre>
-<pre><code>##            term  p.value
-## 1    Gendermale 0.00e+00
-## 2           Age 4.28e-06
-## 3 PhysActiveYes 3.77e-02</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   term             p.value
+##   &lt;chr&gt;              &lt;dbl&gt;
+## 1 Gendermale    0         
+## 2 Age           0.00000428
+## 3 PhysActiveYes 0.0377</code></pre>
 <p>Instead of viewing the coefficients, you might be interested in the fitted values and residuals for each of the original points in the regression. For this, use <code>augment</code>, which augments the original data with information from the model. New columns begins with a <code>.</code> (to avoid overwriting any of the original columns).</p>
 <pre class="r"><code># Augment the original data
 # IF you get a warning about deprecated... purrr..., ignore. It&#39;s a bug that&#39;ll be fixed soon.
 augment(fit) %&gt;% head</code></pre>
-<pre><code>##   .rownames Testosterone PhysActive Age Gender .fitted .se.fit .resid
-## 1         1         47.5         No  43 female    21.3    4.01  26.22
-## 2         2        642.8         No  80   male   384.7    5.48 258.16
-## 3         3        642.8         No  80   male   384.7    5.48 258.16
-## 4         4         21.1        Yes  34 female    35.9    3.89 -14.79
-## 5         5        562.8         No  80   male   384.7    5.48 178.12
-## 6         6        401.8         No  35   male   411.2    4.36  -9.45
-##       .hat .sigma  .cooksd .std.resid
-## 1 0.000989    128 1.05e-05     0.2057
-## 2 0.001847    127 1.90e-03     2.0262
-## 3 0.001847    127 1.90e-03     2.0262
-## 4 0.000928    128 3.13e-06    -0.1160
-## 5 0.001847    128 9.04e-04     1.3980
-## 6 0.001171    128 1.61e-06    -0.0741</code></pre>
+<pre><code>## # A tibble: 6 × 11
+##   .rownames Testosterone PhysActive   Age Gender .fitted .resid     .hat .sigma
+##   &lt;chr&gt;            &lt;dbl&gt; &lt;fct&gt;      &lt;dbl&gt; &lt;fct&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1 1                 47.5 No            43 female    21.3  26.2  0.000989   128.
+## 2 2                643.  No            80 male     385.  258.   0.00185    127.
+## 3 3                643.  No            80 male     385.  258.   0.00185    127.
+## 4 4                 21.1 Yes           34 female    35.9 -14.8  0.000928   128.
+## 5 5                563.  No            80 male     385.  178.   0.00185    128.
+## 6 6                402.  No            35 male     411.   -9.45 0.00117    128.
+## # … with 2 more variables: .cooksd &lt;dbl&gt;, .std.resid &lt;dbl&gt;</code></pre>
 <pre class="r"><code># Plot residuals vs fitted values for males, 
 # colored by Physical Activity, size scaled by age
 augment(fit) %&gt;% 
@@ -1643,17 +1700,18 @@ augment(fit) %&gt;%
 <p><img src="r-stats_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
 <p>Finally, several summary statistics are computed for the entire regression, such as <span class="math inline">\(R^2\)</span> and the F-statistic. These can be accessed with <code>glance</code>:</p>
 <pre class="r"><code>glance(fit)</code></pre>
-<pre><code>##   r.squared adj.r.squared sigma statistic p.value df logLik   AIC   BIC
-## 1     0.697         0.697   128      2632       0  4 -21545 43100 43130
-##   deviance df.residual
-## 1 55847628        3434</code></pre>
+<pre><code>## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic p.value    df  logLik    AIC    BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.697         0.697  128.     2632.       0     3 -21545. 43100. 43130.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
 <p>The <strong>broom</strong> functions work on a pipe, so you can <code>%&gt;%</code> your model directly to any of the functions like <code>tidy()</code>. Let’s tidy up our t-test:</p>
 <pre class="r"><code>t.test(AlcoholYear~RelationshipStatus, data=nha)</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
 ## 
 ## data:  AlcoholYear by RelationshipStatus
-## t = 5, df = 3000, p-value = 6e-08
+## t = 5, df = 2675, p-value = 6e-08
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
 ##  13.1 27.8
@@ -1661,10 +1719,11 @@ augment(fit) %&gt;%
 ## mean in group Committed    mean in group Single 
 ##                    83.9                    63.5</code></pre>
 <pre class="r"><code>t.test(AlcoholYear~RelationshipStatus, data=nha) %&gt;% tidy()</code></pre>
-<pre><code>##   estimate estimate1 estimate2 statistic  p.value parameter conf.low
-## 1     20.4      83.9      63.5      5.43 6.09e-08      2675     13.1
-##   conf.high                  method alternative
-## 1      27.8 Welch Two Sample t-test   two.sided</code></pre>
+<pre><code>## # A tibble: 1 × 10
+##   estimate estimate1 estimate2 statistic    p.value parameter conf.low conf.high
+##      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1     20.4      83.9      63.5      5.43    6.09e-8     2675.     13.1      27.8
+## # … with 2 more variables: method &lt;chr&gt;, alternative &lt;chr&gt;</code></pre>
 <p>…and our Mann-Whitney <em>U</em> test / Wilcoxon rank-sum test:</p>
 <pre class="r"><code>wilcox.test(AlcoholYear~RelationshipStatus, data=nha)</code></pre>
 <pre><code>## 
@@ -1674,10 +1733,10 @@ augment(fit) %&gt;%
 ## W = 1e+06, p-value = 2e-04
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
 <pre class="r"><code>wilcox.test(AlcoholYear~RelationshipStatus, data=nha) %&gt;% tidy()</code></pre>
-<pre><code>##   statistic  p.value                                            method
-## 1   1067954 0.000166 Wilcoxon rank sum test with continuity correction
-##   alternative
-## 1   two.sided</code></pre>
+<pre><code>## # A tibble: 1 × 4
+##   statistic  p.value method                                          alternative
+##       &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;                                           &lt;chr&gt;      
+## 1  1067954. 0.000166 Wilcoxon rank sum test with continuity correct… two.sided</code></pre>
 <p>…and our Fisher’s exact test on the cross-tabulated data:</p>
 <pre class="r"><code>xtabs(~Gender+Diabetes, data=nha) %&gt;% fisher.test()</code></pre>
 <pre><code>## 
@@ -1692,10 +1751,10 @@ augment(fit) %&gt;%
 ## odds ratio 
 ##       1.24</code></pre>
 <pre class="r"><code>xtabs(~Gender+Diabetes, data=nha) %&gt;% fisher.test() %&gt;% tidy()</code></pre>
-<pre><code>##   estimate p.value conf.low conf.high                             method
-## 1     1.24  0.0599    0.988      1.55 Fisher&#39;s Exact Test for Count Data
-##   alternative
-## 1   two.sided</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   estimate p.value conf.low conf.high method                         alternative
+##      &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                          &lt;chr&gt;      
+## 1     1.24  0.0599    0.988      1.55 Fisher&#39;s Exact Test for Count… two.sided</code></pre>
 <p>…and finally, a logistic regression model:</p>
 <pre class="r"><code># fit the model and summarize it the usual way
 glmfit &lt;- glm(Insured~Race, data=nha, family=binomial)
@@ -1727,13 +1786,15 @@ summary(glmfit)</code></pre>
 ## Number of Fisher Scoring iterations: 4</code></pre>
 <pre class="r"><code># tidy it up!
 tidy(glmfit)</code></pre>
-<pre><code>##           term estimate std.error statistic   p.value
-## 1  (Intercept)    1.942     0.061     31.82 2.96e-222
-## 2    RaceAsian   -0.641     0.177     -3.62  2.97e-04
-## 3    RaceBlack   -0.597     0.136     -4.41  1.05e-05
-## 4 RaceHispanic   -1.414     0.147     -9.62  6.47e-22
-## 5  RaceMexican   -1.984     0.133    -14.95  1.66e-50
-## 6    RaceOther   -1.264     0.222     -5.69  1.29e-08</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   term         estimate std.error statistic   p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)     1.94     0.0610     31.8  2.96e-222
+## 2 RaceAsian      -0.641    0.177      -3.62 2.97e-  4
+## 3 RaceBlack      -0.597    0.136      -4.41 1.05e-  5
+## 4 RaceHispanic   -1.41     0.147      -9.62 6.47e- 22
+## 5 RaceMexican    -1.98     0.133     -14.9  1.66e- 50
+## 6 RaceOther      -1.26     0.222      -5.69 1.29e-  8</code></pre>
 <pre class="r"><code># do whatever you want now
 tidy(glmfit) %&gt;% 
   filter(term!=&quot;(Intercept)&quot;) %&gt;% 
@@ -1760,7 +1821,7 @@ tidy(glmfit) %&gt;%
 <li>Chapter 5 only: <a href="http://onlinelibrary.wiley.com/doi/10.1002/9780470685983.ch5/pdf" class="uri">http://onlinelibrary.wiley.com/doi/10.1002/9780470685983.ch5/pdf</a>.</li>
 <li>Entire book: <a href="https://faculty.mu.edu.sa/public/uploads/1382673974.78419780470741382.pdf" class="uri">https://faculty.mu.edu.sa/public/uploads/1382673974.78419780470741382.pdf</a>.</li>
 </ul></li>
-<li>Leek, Jeffrey T., et al. “Tackling the widespread and critical impact of batch effects in high-throughput data.” <em>Nature Reviews Genetics</em> 11.10 (2010): 733-739. Available at <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3880143/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3880143/</a>.</li>
+<li>Leek, Jeffrey T., et al. “Tackling the widespread and critical impact of batch effects in high-throughput data.” <em>Nature Reviews Genetics</em> 11.10 (2010): 733-739. Available at <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3880143/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3880143/</a>.</li>
 </ol>
 </div>
 <div id="whats-my-n" class="section level4">
@@ -1784,7 +1845,7 @@ tidy(glmfit) %&gt;%
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://www.quora.com/Why-is-P-value-5x10-8-chosen-as-a-threshold-to-reach-genome-wide-significance" class="uri">https://www.quora.com/Why-is-P-value-5x10-8-chosen-as-a-threshold-to-reach-genome-wide-significance</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p><a href="https://www.quora.com/Why-is-P-value-5x10-8-chosen-as-a-threshold-to-reach-genome-wide-significance" class="uri">https://www.quora.com/Why-is-P-value-5x10-8-chosen-as-a-threshold-to-reach-genome-wide-significance</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
@@ -1805,13 +1866,59 @@ This work is licensed under the  <a href="https://creativecommons.org/licenses/b
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Advanced Data Visualization with ggplot2</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Font Awesome -->
 <!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
@@ -48,12 +57,18 @@
   ga('send', 'pageview');
 </script>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -66,39 +81,12 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,13 +94,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -123,44 +106,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -171,54 +166,85 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -232,6 +258,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -267,8 +299,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -284,8 +314,18 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -387,6 +427,12 @@ div.tocify {
     <li>
       <a href="r-textmining.html">Text Mining</a>
     </li>
+    <li>
+      <a href="r-rnaseq-airway.html">RNA-seq</a>
+    </li>
+    <li>
+      <a href="r-ggtree.html">Phylogenetic trees with R</a>
+    </li>
     <li class="dropdown-header">--- Homework ---</li>
     <li>
       <a href="r-dplyr-homework.html">Data Manipulation</a>
@@ -399,6 +445,9 @@ div.tocify {
     </li>
     <li>
       <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-rnaseq-homework.html">RNA-seq</a>
     </li>
   </ul>
 </li>
@@ -428,7 +477,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -454,9 +503,9 @@ gm &lt;- read_csv(file=&quot;data/gapminder.csv&quot;)
 
 # Show the first few lines of the data
 gm</code></pre>
-<pre><code>## # A tibble: 1,704 x 6
+<pre><code>## # A tibble: 1,704 × 6
 ##    country     continent  year lifeExp      pop gdpPercap
-##    &lt;chr&gt;       &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##    &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ##  1 Afghanistan Asia       1952    28.8  8425333      779.
 ##  2 Afghanistan Asia       1957    30.3  9240934      821.
 ##  3 Afghanistan Asia       1962    32.0 10267083      853.
@@ -467,7 +516,7 @@ gm</code></pre>
 ##  8 Afghanistan Asia       1987    40.8 13867957      852.
 ##  9 Afghanistan Asia       1992    41.7 16317921      649.
 ## 10 Afghanistan Asia       1997    41.8 22227415      635.
-## # ... with 1,694 more rows</code></pre>
+## # … with 1,694 more rows</code></pre>
 <pre class="r"><code># Optionally bring up data in a viewer window.
 # View(gm)</code></pre>
 <p>This particular excerpt has 1704 observations on six variables:</p>
@@ -499,9 +548,9 @@ gm</code></pre>
   filter(continent==&quot;Asia&quot;) %&gt;%
   group_by(year) %&gt;%
   summarize(mean(lifeExp), mean(gdp))</code></pre>
-<pre><code>## # A tibble: 12 x 3
+<pre><code>## # A tibble: 12 × 3
 ##     year `mean(lifeExp)`   `mean(gdp)`
-##    &lt;int&gt;           &lt;dbl&gt;         &lt;dbl&gt;
+##    &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;
 ##  1  1952            46.3  34095762661.
 ##  2  1957            49.3  47267432088.
 ##  3  1962            51.6  60136869012.
@@ -564,13 +613,11 @@ p + geom_point() + scale_x_log10()</code></pre>
 <p>Now notice what I’ve saved to <code>p</code> at this point: only the basic plot layout and the log10 mapping on the x-axis. I didn’t save any layers yet because I want to fiddle around with the points for a bit first.</p>
 <p>Above we implied the aesthetic mappings for the x- and y- axis should be <code>gdpPercap</code> and <code>lifeExp</code>, but we can also add aesthetic mappings to the geoms themselves. For instance, what if we wanted to color the points by the value of another variable in the dataset, say, continent?</p>
 <pre class="r"><code>p + geom_point(aes(color=continent))</code></pre>
-<p>Notice the difference here. If I wanted the colors to be some static value, I wouldn’t wrap that in a call to <code>aes()</code>. I would just specify it outright. Same thing with other features of the points. For example, lets make all the points huge (<code>size=8</code>) blue (<code>color=&quot;blue&quot;</code>) semitransparent (<code>alpha=(1/4)</code>) triangles (<code>pch=17</code>):</p>
+<p>Notice the difference here. If I wanted the colors to be some static value, I wouldn’t wrap that in a call to <code>aes()</code>. I would just specify it outright. Same thing with other features of the points. For example, lets make all the points huge (<code>size=8</code>) blue (<code>color="blue"</code>) semitransparent (<code>alpha=(1/4)</code>) triangles (<code>pch=17</code>):</p>
 <pre class="r"><code>p + geom_point(color=&quot;blue&quot;, pch=17, size=8, alpha=1/4)</code></pre>
 <p>Now, this time, let’s map the aesthetics of the point character to certain features of the data. For instance, let’s give the points different colors and character shapes according to the continent, and map the size of the point onto the life Expectancy:</p>
 <pre class="r"><code>p + geom_point(aes(col=continent, shape=continent, size=lifeExp))</code></pre>
 <p>Now, this isn’t a great plot because there are several aesthetic mappings that are redundant. Life expectancy is mapped to both the y-axis and the size of the points – the size mapping is superfluous. Similarly, continent is mapped to both the color and the point character (the shape is superfluous). Let’s get rid of that, but let’s make the points a little bigger outsize of an aesthetic mapping.</p>
-<pre class="r"><code>p + geom_point(aes(col=continent), size=3)</code></pre>
-<p><img src="r-viz-gapminder_files/figure-html/scatter_colContinent_size4-1.png" width="672" /></p>
 <hr />
 <p><strong>EXERCISE 1</strong></p>
 <p>Re-create this same plot from scratch without saving anything to a variable. That is, start from the <code>ggplot</code> call.</p>
@@ -589,9 +636,6 @@ p + geom_point() + scale_x_log10()</code></pre>
 <div id="adding-layers" class="section level3">
 <h3>Adding layers</h3>
 <p>Let’s add a fitted curve to the points. Recreate the plot in the <code>p</code> object if you need to.</p>
-<pre class="r"><code>p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + scale_x_log10()
-p + geom_point() + geom_smooth()</code></pre>
-<p><img src="r-viz-gapminder_files/figure-html/scatter_addsmoothlayer-1.png" width="672" /></p>
 <p>By default <code>geom_smooth()</code> will try to lowess for data with n&lt;1000 or generalized additive models for data with n&gt;1000. We can change that behavior by tweaking the parameters to use a thick red line, use a linear model instead of a GAM, and to turn off the standard error stripes.</p>
 <pre class="r"><code>p + geom_point() + geom_smooth(lwd=2, se=FALSE, method=&quot;lm&quot;, col=&quot;red&quot;)</code></pre>
 <p>But let’s add back in our aesthetic mapping to the continents. Notice what happens here. We’re mapping continent as an aesthetic mapping <em>to the color of the points only</em> – so <code>geom_smooth()</code> still works only on the entire data.</p>
@@ -622,9 +666,8 @@ ggsave(pfinal, file=&quot;myplot.pdf&quot;, width=5, height=15)</code></pre>
 <li>Make a scatter plot of <code>lifeExp</code> on the y-axis against <code>year</code> on the x.</li>
 <li>Make a series of small multiples faceting on continent.</li>
 <li>Add a fitted curve, smooth or lm, with and without facets.</li>
-<li><strong>Bonus</strong>: using <code>geom_line()</code> and and aesthetic mapping <code>country</code> to <code>group=</code>, make a “spaghetti plot”, showing <em>semitransparent</em> lines connected for each country, faceted by continent. Add a smoothed loess curve with a thick (<code>lwd=3</code>) line with no standard error stripe. Reduce the opacity (<code>alpha=</code>) of the individual black lines. <em>Don’t</em> show Oceania countries (that is, <code>filter()</code> the data where <code>continent!=&quot;Oceania&quot;</code> before you plot it).</li>
+<li><strong>Bonus</strong>: using <code>geom_line()</code> and and aesthetic mapping <code>country</code> to <code>group=</code>, make a “spaghetti plot”, showing <em>semitransparent</em> lines connected for each country, faceted by continent. Add a smoothed loess curve with a thick (<code>lwd=3</code>) line with no standard error stripe. Reduce the opacity (<code>alpha=</code>) of the individual black lines. <em>Don’t</em> show Oceania countries (that is, <code>filter()</code> the data where <code>continent!="Oceania"</code> before you plot it).</li>
 </ol>
-<p><img src="r-viz-gapminder_files/figure-html/spaghetti-1.png" width="768" /></p>
 <hr />
 </div>
 </div>
@@ -655,8 +698,6 @@ p + geom_violin() + geom_jitter(alpha=1/2)</code></pre>
 <pre class="r"><code>p + geom_boxplot()</code></pre>
 <p>This plot would be a lot more effective if the continents were shown in some sort of order other than alphabetical. To do that, we’ll have to go back to our basic build of the plot again and use the <code>reorder</code> function in our original aesthetic mapping. Here, reorder is taking the first variable, which is some categorical variable, and ordering it by the level of the mean of the second variable, which is a continuous variable. It looks like this</p>
 <pre class="r"><code>p &lt;- ggplot(gm, aes(x=reorder(continent, lifeExp), y=lifeExp))</code></pre>
-<pre class="r"><code>p + geom_boxplot()</code></pre>
-<p><img src="r-viz-gapminder_files/figure-html/boxplot-1.png" width="672" /></p>
 <hr />
 <p><strong>EXERCISE 3</strong></p>
 <ol style="list-style-type: decimal">
@@ -676,8 +717,6 @@ p + geom_violin() + geom_jitter(alpha=1/2)</code></pre>
 <pre class="r"><code>p + geom_histogram(bins=30)
 p + geom_histogram(bins=10)
 p + geom_histogram(bins=200)</code></pre>
-<pre class="r"><code>p + geom_histogram(bins=60)</code></pre>
-<p><img src="r-viz-gapminder_files/figure-html/histogram-1.png" width="672" /></p>
 <p>Alternative we could plot a smoothed density curve instead of a histogram:</p>
 <pre class="r"><code>p + geom_density()</code></pre>
 <p>Back to histograms. What if we wanted to color this by continent?</p>
@@ -691,8 +730,6 @@ p + geom_histogram(bins=200)</code></pre>
 <p>That’s somewhat helpful, and might work for two distributions, but it gets cumbersome with 5. Let’s go back and try this with density plots, first changing the color of the line:</p>
 <pre class="r"><code>p + geom_density(aes(color=continent))</code></pre>
 <p>Then by changing the color of the fill and setting the transparency to 25%:</p>
-<pre class="r"><code>p + geom_density(aes(fill=continent), alpha=1/4)</code></pre>
-<p><img src="r-viz-gapminder_files/figure-html/densityplot-1.png" width="672" /></p>
 <hr />
 <p><strong>EXERCISE 4</strong></p>
 <ol style="list-style-type: decimal">
@@ -714,13 +751,9 @@ p &lt;- p + aes(col=continent) + geom_point() + geom_smooth(lwd=2, se=FALSE)</co
 <pre class="r"><code>p &lt;- p + ggtitle(&quot;Life expectancy vs GDP by Continent&quot;)
 p &lt;- p + xlab(&quot;GDP Per Capita (USD)&quot;) + ylab(&quot;Life Expectancy (years)&quot;)</code></pre>
 <p>By default, the “gray” theme is the usual background (I’ve changed this course website to use the black and white background for all images).</p>
-<pre class="r"><code>p + theme_gray()</code></pre>
-<p><img src="r-viz-gapminder_files/figure-html/theme_gray-1.png" width="672" /></p>
 <p>We could also get a black and white background:</p>
 <pre class="r"><code>p + theme_bw()</code></pre>
 <p>Or go a step further and remove the gridlines:</p>
-<pre class="r"><code>p + theme_classic()</code></pre>
-<p><img src="r-viz-gapminder_files/figure-html/theme_classic-1.png" width="672" /></p>
 <p>Finally, there’s another package that gives us lots of different themes. Install it if you don’t have it already. Install all its dependencies along with it.</p>
 <pre class="r"><code>install.packages(&quot;ggthemes&quot;, dependencies = TRUE)</code></pre>
 <pre class="r"><code>library(ggthemes)
@@ -760,13 +793,59 @@ This work is licensed under the  <a href="https://creativecommons.org/licenses/b
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

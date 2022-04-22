@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Data Frames</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Font Awesome -->
 <!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
@@ -48,12 +57,18 @@
   ga('send', 'pageview');
 </script>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -66,39 +81,12 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -106,13 +94,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -123,44 +106,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -171,54 +166,85 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -232,6 +258,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -267,8 +299,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -284,8 +314,18 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -387,6 +427,12 @@ div.tocify {
     <li>
       <a href="r-textmining.html">Text Mining</a>
     </li>
+    <li>
+      <a href="r-rnaseq-airway.html">RNA-seq</a>
+    </li>
+    <li>
+      <a href="r-ggtree.html">Phylogenetic trees with R</a>
+    </li>
     <li class="dropdown-header">--- Homework ---</li>
     <li>
       <a href="r-dplyr-homework.html">Data Manipulation</a>
@@ -399,6 +445,9 @@ div.tocify {
     </li>
     <li>
       <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-rnaseq-homework.html">RNA-seq</a>
     </li>
   </ul>
 </li>
@@ -428,7 +477,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -465,20 +514,20 @@ library(dplyr)</code></pre>
 <p>Now, let’s actually load the data. You can get help for the import function with <code>?read_csv</code>. When we load data we assign it to a variable just like any other, and we can choose a name for that data. Since we’re going to be referring to this data a lot, let’s give it a short easy name to type. I’m going to call it <code>ydat</code>. Once we’ve loaded it we can type the name of the object itself (<code>ydat</code>) to see it printed to the screen.</p>
 <pre class="r"><code>ydat &lt;- read_csv(file=&quot;data/brauer2007_tidy.csv&quot;)
 ydat</code></pre>
-<pre><code>## # A tibble: 198,430 x 7
-##    symbol systematic_name nutrient  rate expression bp         mf         
-##    &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      
-##  1 SFB2   YNL049C         Glucose   0.05      -0.24 ER to Gol… molecular …
-##  2 &lt;NA&gt;   YNL095C         Glucose   0.05       0.28 biologica… molecular …
-##  3 QRI7   YDL104C         Glucose   0.05      -0.02 proteolys… metalloend…
-##  4 CFT2   YLR115W         Glucose   0.05      -0.33 mRNA poly… RNA binding
-##  5 SSO2   YMR183C         Glucose   0.05       0.05 vesicle f… t-SNARE ac…
-##  6 PSP2   YML017W         Glucose   0.05      -0.69 biologica… molecular …
-##  7 RIB2   YOL066C         Glucose   0.05      -0.55 riboflavi… pseudourid…
-##  8 VMA13  YPR036W         Glucose   0.05      -0.75 vacuolar … hydrogen-t…
-##  9 EDC3   YEL015W         Glucose   0.05      -0.24 deadenyly… molecular …
-## 10 VPS5   YOR069W         Glucose   0.05      -0.16 protein r… protein tr…
-## # ... with 198,420 more rows</code></pre>
+<pre><code>## # A tibble: 198,430 × 7
+##    symbol systematic_name nutrient  rate expression bp           mf             
+##    &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;          
+##  1 SFB2   YNL049C         Glucose   0.05      -0.24 ER to Golgi… molecular func…
+##  2 &lt;NA&gt;   YNL095C         Glucose   0.05       0.28 biological … molecular func…
+##  3 QRI7   YDL104C         Glucose   0.05      -0.02 proteolysis… metalloendopep…
+##  4 CFT2   YLR115W         Glucose   0.05      -0.33 mRNA polyad… RNA binding    
+##  5 SSO2   YMR183C         Glucose   0.05       0.05 vesicle fus… t-SNARE activi…
+##  6 PSP2   YML017W         Glucose   0.05      -0.69 biological … molecular func…
+##  7 RIB2   YOL066C         Glucose   0.05      -0.55 riboflavin … pseudouridylat…
+##  8 VMA13  YPR036W         Glucose   0.05      -0.75 vacuolar ac… hydrogen-trans…
+##  9 EDC3   YEL015W         Glucose   0.05      -0.24 deadenylyla… molecular func…
+## 10 VPS5   YOR069W         Glucose   0.05      -0.16 protein ret… protein transp…
+## # … with 198,420 more rows</code></pre>
 <p>Take a look at that output. The nice thing about loading dplyr and reading in data with readr is that data frames are displayed in a much more friendly way. This dataset has nearly 200,000 rows and 7 columns. When you import data this way and try to display the object in the console, instead of trying to display all 200,000 rows, you’ll only see about 10 by default. Also, if you have so many columns that the data would wrap off the edge of your screen, those columns will not be displayed, but you’ll see at the bottom of the output which, if any, columns were hidden from view. If you want to see the whole dataset, there are two ways to do this. First, you can click on the name of the data.frame in the <strong>Environment</strong> panel in RStudio. Or you could use the <code>View()</code> function (<em>with a capital V</em>).</p>
 <pre class="r"><code>View(ydat)</code></pre>
 </div>
@@ -508,58 +557,50 @@ ydat</code></pre>
 </ul></li>
 </ul>
 <pre class="r"><code>head(ydat)</code></pre>
-<pre><code>## # A tibble: 6 x 7
-##   symbol systematic_name nutrient  rate expression bp          mf         
-##   &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;      
-## 1 SFB2   YNL049C         Glucose   0.05      -0.24 ER to Golg… molecular …
-## 2 &lt;NA&gt;   YNL095C         Glucose   0.05       0.28 biological… molecular …
-## 3 QRI7   YDL104C         Glucose   0.05      -0.02 proteolysi… metalloend…
-## 4 CFT2   YLR115W         Glucose   0.05      -0.33 mRNA polya… RNA binding
-## 5 SSO2   YMR183C         Glucose   0.05       0.05 vesicle fu… t-SNARE ac…
-## 6 PSP2   YML017W         Glucose   0.05      -0.69 biological… molecular …</code></pre>
+<pre><code>## # A tibble: 6 × 7
+##   symbol systematic_name nutrient  rate expression bp                      mf   
+##   &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;                   &lt;chr&gt;
+## 1 SFB2   YNL049C         Glucose   0.05      -0.24 ER to Golgi transport   mole…
+## 2 &lt;NA&gt;   YNL095C         Glucose   0.05       0.28 biological process unk… mole…
+## 3 QRI7   YDL104C         Glucose   0.05      -0.02 proteolysis and peptid… meta…
+## 4 CFT2   YLR115W         Glucose   0.05      -0.33 mRNA polyadenylylation* RNA …
+## 5 SSO2   YMR183C         Glucose   0.05       0.05 vesicle fusion*         t-SN…
+## 6 PSP2   YML017W         Glucose   0.05      -0.69 biological process unk… mole…</code></pre>
 <pre class="r"><code>tail(ydat)</code></pre>
-<pre><code>## # A tibble: 6 x 7
-##   symbol systematic_name nutrient  rate expression bp           mf        
-##   &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;     
-## 1 DOA1   YKL213C         Uracil     0.3       0.14 ubiquitin-d… molecular…
-## 2 KRE1   YNL322C         Uracil     0.3       0.28 cell wall o… structura…
-## 3 MTL1   YGR023W         Uracil     0.3       0.27 cell wall o… molecular…
-## 4 KRE9   YJL174W         Uracil     0.3       0.43 cell wall o… molecular…
-## 5 UTH1   YKR042W         Uracil     0.3       0.19 mitochondri… molecular…
-## 6 &lt;NA&gt;   YOL111C         Uracil     0.3       0.04 biological … molecular…</code></pre>
+<pre><code>## # A tibble: 6 × 7
+##   symbol systematic_name nutrient  rate expression bp                      mf   
+##   &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;                   &lt;chr&gt;
+## 1 DOA1   YKL213C         Uracil     0.3       0.14 ubiquitin-dependent pr… mole…
+## 2 KRE1   YNL322C         Uracil     0.3       0.28 cell wall organization… stru…
+## 3 MTL1   YGR023W         Uracil     0.3       0.27 cell wall organization… mole…
+## 4 KRE9   YJL174W         Uracil     0.3       0.43 cell wall organization… mole…
+## 5 UTH1   YKR042W         Uracil     0.3       0.19 mitochondrion organiza… mole…
+## 6 &lt;NA&gt;   YOL111C         Uracil     0.3       0.04 biological process unk… mole…</code></pre>
 <pre class="r"><code>dim(ydat)</code></pre>
 <pre><code>## [1] 198430      7</code></pre>
 <pre class="r"><code>names(ydat)</code></pre>
 <pre><code>## [1] &quot;symbol&quot;          &quot;systematic_name&quot; &quot;nutrient&quot;        &quot;rate&quot;           
 ## [5] &quot;expression&quot;      &quot;bp&quot;              &quot;mf&quot;</code></pre>
 <pre class="r"><code>str(ydat)</code></pre>
-<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    198430 obs. of  7 variables:
-##  $ symbol         : chr  &quot;SFB2&quot; NA &quot;QRI7&quot; &quot;CFT2&quot; ...
-##  $ systematic_name: chr  &quot;YNL049C&quot; &quot;YNL095C&quot; &quot;YDL104C&quot; &quot;YLR115W&quot; ...
-##  $ nutrient       : chr  &quot;Glucose&quot; &quot;Glucose&quot; &quot;Glucose&quot; &quot;Glucose&quot; ...
-##  $ rate           : num  0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 ...
-##  $ expression     : num  -0.24 0.28 -0.02 -0.33 0.05 -0.69 -0.55 -0.75 -0.24 -0.16 ...
-##  $ bp             : chr  &quot;ER to Golgi transport&quot; &quot;biological process unknown&quot; &quot;proteolysis and peptidolysis&quot; &quot;mRNA polyadenylylation*&quot; ...
-##  $ mf             : chr  &quot;molecular function unknown&quot; &quot;molecular function unknown&quot; &quot;metalloendopeptidase activity&quot; &quot;RNA binding&quot; ...
-##  - attr(*, &quot;spec&quot;)=List of 2
-##   ..$ cols   :List of 7
-##   .. ..$ symbol         : list()
-##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
-##   .. ..$ systematic_name: list()
-##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
-##   .. ..$ nutrient       : list()
-##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
-##   .. ..$ rate           : list()
-##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
-##   .. ..$ expression     : list()
-##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_double&quot; &quot;collector&quot;
-##   .. ..$ bp             : list()
-##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
-##   .. ..$ mf             : list()
-##   .. .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_character&quot; &quot;collector&quot;
-##   ..$ default: list()
-##   .. ..- attr(*, &quot;class&quot;)= chr  &quot;collector_guess&quot; &quot;collector&quot;
-##   ..- attr(*, &quot;class&quot;)= chr &quot;col_spec&quot;</code></pre>
+<pre><code>## spec_tbl_df [198,430 × 7] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ symbol         : chr [1:198430] &quot;SFB2&quot; NA &quot;QRI7&quot; &quot;CFT2&quot; ...
+##  $ systematic_name: chr [1:198430] &quot;YNL049C&quot; &quot;YNL095C&quot; &quot;YDL104C&quot; &quot;YLR115W&quot; ...
+##  $ nutrient       : chr [1:198430] &quot;Glucose&quot; &quot;Glucose&quot; &quot;Glucose&quot; &quot;Glucose&quot; ...
+##  $ rate           : num [1:198430] 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 ...
+##  $ expression     : num [1:198430] -0.24 0.28 -0.02 -0.33 0.05 -0.69 -0.55 -0.75 -0.24 -0.16 ...
+##  $ bp             : chr [1:198430] &quot;ER to Golgi transport&quot; &quot;biological process unknown&quot; &quot;proteolysis and peptidolysis&quot; &quot;mRNA polyadenylylation*&quot; ...
+##  $ mf             : chr [1:198430] &quot;molecular function unknown&quot; &quot;molecular function unknown&quot; &quot;metalloendopeptidase activity&quot; &quot;RNA binding&quot; ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   symbol = col_character(),
+##   ..   systematic_name = col_character(),
+##   ..   nutrient = col_character(),
+##   ..   rate = col_double(),
+##   ..   expression = col_double(),
+##   ..   bp = col_character(),
+##   ..   mf = col_character()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
 <pre class="r"><code>summary(ydat)</code></pre>
 <pre><code>##     symbol          systematic_name      nutrient              rate      
 ##  Length:198430      Length:198430      Length:198430      Min.   :0.050  
@@ -580,37 +621,172 @@ ydat</code></pre>
 <h3>Other packages</h3>
 <p>The <code>glimpse()</code> function is available once you load the <strong>dplyr</strong> library, and it’s like <code>str()</code> but its display is a little bit better.</p>
 <pre class="r"><code>glimpse(ydat)</code></pre>
-<pre><code>## Observations: 198,430
-## Variables: 7
-## $ symbol          &lt;chr&gt; &quot;SFB2&quot;, NA, &quot;QRI7&quot;, &quot;CFT2&quot;, &quot;SSO2&quot;, &quot;PSP2&quot;, &quot;R...
-## $ systematic_name &lt;chr&gt; &quot;YNL049C&quot;, &quot;YNL095C&quot;, &quot;YDL104C&quot;, &quot;YLR115W&quot;, &quot;Y...
-## $ nutrient        &lt;chr&gt; &quot;Glucose&quot;, &quot;Glucose&quot;, &quot;Glucose&quot;, &quot;Glucose&quot;, &quot;G...
-## $ rate            &lt;dbl&gt; 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05...
-## $ expression      &lt;dbl&gt; -0.24, 0.28, -0.02, -0.33, 0.05, -0.69, -0.55,...
-## $ bp              &lt;chr&gt; &quot;ER to Golgi transport&quot;, &quot;biological process u...
-## $ mf              &lt;chr&gt; &quot;molecular function unknown&quot;, &quot;molecular funct...</code></pre>
-<p>The <strong>skimr</strong> package has a nice function, skim, that provides summary statistics the user can skim quickly to understand your data. You can install it with <code>install.packages(&quot;skimr&quot;)</code> if you don’t have it already.</p>
+<pre><code>## Rows: 198,430
+## Columns: 7
+## $ symbol          &lt;chr&gt; &quot;SFB2&quot;, NA, &quot;QRI7&quot;, &quot;CFT2&quot;, &quot;SSO2&quot;, &quot;PSP2&quot;, &quot;RIB2&quot;, &quot;V…
+## $ systematic_name &lt;chr&gt; &quot;YNL049C&quot;, &quot;YNL095C&quot;, &quot;YDL104C&quot;, &quot;YLR115W&quot;, &quot;YMR183C&quot;,…
+## $ nutrient        &lt;chr&gt; &quot;Glucose&quot;, &quot;Glucose&quot;, &quot;Glucose&quot;, &quot;Glucose&quot;, &quot;Glucose&quot;,…
+## $ rate            &lt;dbl&gt; 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, …
+## $ expression      &lt;dbl&gt; -0.24, 0.28, -0.02, -0.33, 0.05, -0.69, -0.55, -0.75, …
+## $ bp              &lt;chr&gt; &quot;ER to Golgi transport&quot;, &quot;biological process unknown&quot;,…
+## $ mf              &lt;chr&gt; &quot;molecular function unknown&quot;, &quot;molecular function unkn…</code></pre>
+<p>The <strong>skimr</strong> package has a nice function, skim, that provides summary statistics the user can skim quickly to understand your data. You can install it with <code>install.packages("skimr")</code> if you don’t have it already.</p>
 <pre class="r"><code>library(skimr)
 skim(ydat)</code></pre>
-<pre><code>## Skim summary statistics
-##  n obs: 198430 
-##  n variables: 7 
-## 
-## ── Variable type:character ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##         variable missing complete      n min max empty n_unique
-##               bp    7663   190767 198430   7  82     0      880
-##               mf    7663   190767 198430  11 125     0     1085
-##         nutrient       0   198430 198430   6   9     0        6
-##           symbol   47250   151180 198430   2   9     0     4210
-##  systematic_name       0   198430 198430   5   9     0     5536
-## 
-## ── Variable type:numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##    variable missing complete      n   mean    sd    p0   p25 p50  p75 p100
-##  expression       0   198430 198430 0.0034 0.67  -6.5  -0.29 0   0.29 6.64
-##        rate       0   198430 198430 0.18   0.085  0.05  0.1  0.2 0.25 0.3 
-##      hist
-##  ▁▁▁▇▆▁▁▁
-##  ▇▇▁▇▇▁▇▇</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">ydat</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">198430</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">7</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">5</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">symbol</td>
+<td align="right">47250</td>
+<td align="right">0.76</td>
+<td align="right">2</td>
+<td align="right">9</td>
+<td align="right">0</td>
+<td align="right">4210</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">systematic_name</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">5</td>
+<td align="right">9</td>
+<td align="right">0</td>
+<td align="right">5536</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">nutrient</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">6</td>
+<td align="right">9</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">bp</td>
+<td align="right">7663</td>
+<td align="right">0.96</td>
+<td align="right">7</td>
+<td align="right">82</td>
+<td align="right">0</td>
+<td align="right">880</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mf</td>
+<td align="right">7663</td>
+<td align="right">0.96</td>
+<td align="right">11</td>
+<td align="right">125</td>
+<td align="right">0</td>
+<td align="right">1085</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">rate</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.18</td>
+<td align="right">0.09</td>
+<td align="right">0.05</td>
+<td align="right">0.10</td>
+<td align="right">0.2</td>
+<td align="right">0.25</td>
+<td align="right">0.30</td>
+<td align="left">▇▅▅▅▅</td>
+</tr>
+<tr class="even">
+<td align="left">expression</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.00</td>
+<td align="right">0.67</td>
+<td align="right">-6.50</td>
+<td align="right">-0.29</td>
+<td align="right">0.0</td>
+<td align="right">0.29</td>
+<td align="right">6.64</td>
+<td align="left">▁▁▇▁▁</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="accessing-variables-subsetting-data-frames" class="section level2">
@@ -677,181 +853,181 @@ mean(ydat$expression)</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="center">nutrient</th>
-<th align="center">symbol</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">r</th>
+<th align="left">nutrient</th>
+<th align="left">symbol</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">r</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">Ammonia</td>
-<td align="center">LEU1</td>
-<td align="center">-0.82</td>
-<td align="center">0.39</td>
-<td align="center">0.66</td>
+<td align="left">Ammonia</td>
+<td align="left">LEU1</td>
+<td align="right">-0.82</td>
+<td align="right">0.39</td>
+<td align="right">0.66</td>
 </tr>
 <tr class="even">
-<td align="center">Ammonia</td>
-<td align="center">LEU2</td>
-<td align="center">-0.54</td>
-<td align="center">0.38</td>
-<td align="center">-0.19</td>
+<td align="left">Ammonia</td>
+<td align="left">LEU2</td>
+<td align="right">-0.54</td>
+<td align="right">0.38</td>
+<td align="right">-0.19</td>
 </tr>
 <tr class="odd">
-<td align="center">Ammonia</td>
-<td align="center">LEU4</td>
-<td align="center">-0.37</td>
-<td align="center">0.56</td>
-<td align="center">-0.67</td>
+<td align="left">Ammonia</td>
+<td align="left">LEU4</td>
+<td align="right">-0.37</td>
+<td align="right">0.56</td>
+<td align="right">-0.67</td>
 </tr>
 <tr class="even">
-<td align="center">Ammonia</td>
-<td align="center">LEU9</td>
-<td align="center">-1.01</td>
-<td align="center">0.64</td>
-<td align="center">0.87</td>
+<td align="left">Ammonia</td>
+<td align="left">LEU9</td>
+<td align="right">-1.01</td>
+<td align="right">0.64</td>
+<td align="right">0.87</td>
 </tr>
 <tr class="odd">
-<td align="center">Glucose</td>
-<td align="center">LEU1</td>
-<td align="center">-0.55</td>
-<td align="center">0.41</td>
-<td align="center">0.98</td>
+<td align="left">Glucose</td>
+<td align="left">LEU1</td>
+<td align="right">-0.55</td>
+<td align="right">0.41</td>
+<td align="right">0.98</td>
 </tr>
 <tr class="even">
-<td align="center">Glucose</td>
-<td align="center">LEU2</td>
-<td align="center">-0.39</td>
-<td align="center">0.33</td>
-<td align="center">0.90</td>
+<td align="left">Glucose</td>
+<td align="left">LEU2</td>
+<td align="right">-0.39</td>
+<td align="right">0.33</td>
+<td align="right">0.90</td>
 </tr>
 <tr class="odd">
-<td align="center">Glucose</td>
-<td align="center">LEU4</td>
-<td align="center">1.09</td>
-<td align="center">1.01</td>
-<td align="center">-0.97</td>
+<td align="left">Glucose</td>
+<td align="left">LEU4</td>
+<td align="right">1.09</td>
+<td align="right">1.01</td>
+<td align="right">-0.97</td>
 </tr>
 <tr class="even">
-<td align="center">Glucose</td>
-<td align="center">LEU9</td>
-<td align="center">-0.16</td>
-<td align="center">0.35</td>
-<td align="center">0.35</td>
+<td align="left">Glucose</td>
+<td align="left">LEU9</td>
+<td align="right">-0.16</td>
+<td align="right">0.35</td>
+<td align="right">0.35</td>
 </tr>
 <tr class="odd">
-<td align="center">Leucine</td>
-<td align="center">LEU1</td>
-<td align="center">2.70</td>
-<td align="center">1.08</td>
-<td align="center">-0.95</td>
+<td align="left">Leucine</td>
+<td align="left">LEU1</td>
+<td align="right">2.70</td>
+<td align="right">1.08</td>
+<td align="right">-0.95</td>
 </tr>
 <tr class="even">
-<td align="center">Leucine</td>
-<td align="center">LEU2</td>
-<td align="center">0.28</td>
-<td align="center">1.16</td>
-<td align="center">-0.97</td>
+<td align="left">Leucine</td>
+<td align="left">LEU2</td>
+<td align="right">0.28</td>
+<td align="right">1.16</td>
+<td align="right">-0.97</td>
 </tr>
 <tr class="odd">
-<td align="center">Leucine</td>
-<td align="center">LEU4</td>
-<td align="center">0.80</td>
-<td align="center">1.06</td>
-<td align="center">-0.97</td>
+<td align="left">Leucine</td>
+<td align="left">LEU4</td>
+<td align="right">0.80</td>
+<td align="right">1.06</td>
+<td align="right">-0.97</td>
 </tr>
 <tr class="even">
-<td align="center">Leucine</td>
-<td align="center">LEU9</td>
-<td align="center">0.39</td>
-<td align="center">0.18</td>
-<td align="center">-0.77</td>
+<td align="left">Leucine</td>
+<td align="left">LEU9</td>
+<td align="right">0.39</td>
+<td align="right">0.18</td>
+<td align="right">-0.77</td>
 </tr>
 <tr class="odd">
-<td align="center">Phosphate</td>
-<td align="center">LEU1</td>
-<td align="center">-0.43</td>
-<td align="center">0.27</td>
-<td align="center">0.95</td>
+<td align="left">Phosphate</td>
+<td align="left">LEU1</td>
+<td align="right">-0.43</td>
+<td align="right">0.27</td>
+<td align="right">0.95</td>
 </tr>
 <tr class="even">
-<td align="center">Phosphate</td>
-<td align="center">LEU2</td>
-<td align="center">-0.26</td>
-<td align="center">0.19</td>
-<td align="center">0.70</td>
+<td align="left">Phosphate</td>
+<td align="left">LEU2</td>
+<td align="right">-0.26</td>
+<td align="right">0.19</td>
+<td align="right">0.70</td>
 </tr>
 <tr class="odd">
-<td align="center">Phosphate</td>
-<td align="center">LEU4</td>
-<td align="center">-0.99</td>
-<td align="center">0.11</td>
-<td align="center">0.24</td>
+<td align="left">Phosphate</td>
+<td align="left">LEU4</td>
+<td align="right">-0.99</td>
+<td align="right">0.11</td>
+<td align="right">0.24</td>
 </tr>
 <tr class="even">
-<td align="center">Phosphate</td>
-<td align="center">LEU9</td>
-<td align="center">-1.12</td>
-<td align="center">0.53</td>
-<td align="center">0.90</td>
+<td align="left">Phosphate</td>
+<td align="left">LEU9</td>
+<td align="right">-1.12</td>
+<td align="right">0.53</td>
+<td align="right">0.90</td>
 </tr>
 <tr class="odd">
-<td align="center">Sulfate</td>
-<td align="center">LEU1</td>
-<td align="center">-1.17</td>
-<td align="center">0.34</td>
-<td align="center">0.98</td>
+<td align="left">Sulfate</td>
+<td align="left">LEU1</td>
+<td align="right">-1.17</td>
+<td align="right">0.34</td>
+<td align="right">0.98</td>
 </tr>
 <tr class="even">
-<td align="center">Sulfate</td>
-<td align="center">LEU2</td>
-<td align="center">-0.96</td>
-<td align="center">0.30</td>
-<td align="center">0.57</td>
+<td align="left">Sulfate</td>
+<td align="left">LEU2</td>
+<td align="right">-0.96</td>
+<td align="right">0.30</td>
+<td align="right">0.57</td>
 </tr>
 <tr class="odd">
-<td align="center">Sulfate</td>
-<td align="center">LEU4</td>
-<td align="center">-0.24</td>
-<td align="center">0.43</td>
-<td align="center">-0.60</td>
+<td align="left">Sulfate</td>
+<td align="left">LEU4</td>
+<td align="right">-0.24</td>
+<td align="right">0.43</td>
+<td align="right">-0.60</td>
 </tr>
 <tr class="even">
-<td align="center">Sulfate</td>
-<td align="center">LEU9</td>
-<td align="center">-1.24</td>
-<td align="center">0.55</td>
-<td align="center">0.99</td>
+<td align="left">Sulfate</td>
+<td align="left">LEU9</td>
+<td align="right">-1.24</td>
+<td align="right">0.55</td>
+<td align="right">0.99</td>
 </tr>
 <tr class="odd">
-<td align="center">Uracil</td>
-<td align="center">LEU1</td>
-<td align="center">-0.74</td>
-<td align="center">0.73</td>
-<td align="center">0.89</td>
+<td align="left">Uracil</td>
+<td align="left">LEU1</td>
+<td align="right">-0.74</td>
+<td align="right">0.73</td>
+<td align="right">0.89</td>
 </tr>
 <tr class="even">
-<td align="center">Uracil</td>
-<td align="center">LEU2</td>
-<td align="center">0.18</td>
-<td align="center">0.13</td>
-<td align="center">-0.07</td>
+<td align="left">Uracil</td>
+<td align="left">LEU2</td>
+<td align="right">0.18</td>
+<td align="right">0.13</td>
+<td align="right">-0.07</td>
 </tr>
 <tr class="odd">
-<td align="center">Uracil</td>
-<td align="center">LEU4</td>
-<td align="center">-0.65</td>
-<td align="center">0.44</td>
-<td align="center">0.77</td>
+<td align="left">Uracil</td>
+<td align="left">LEU4</td>
+<td align="right">-0.65</td>
+<td align="right">0.44</td>
+<td align="right">0.77</td>
 </tr>
 <tr class="even">
-<td align="center">Uracil</td>
-<td align="center">LEU9</td>
-<td align="center">-1.02</td>
-<td align="center">0.91</td>
-<td align="center">0.94</td>
+<td align="left">Uracil</td>
+<td align="left">LEU9</td>
+<td align="right">-1.02</td>
+<td align="right">0.91</td>
+<td align="right">0.94</td>
 </tr>
 </tbody>
 </table>
@@ -876,13 +1052,59 @@ This work is licensed under the  <a href="https://creativecommons.org/licenses/b
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

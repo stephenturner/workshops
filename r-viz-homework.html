@@ -1,24 +1,34 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Advanced Data Visualization Homework</title>
 
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -26,9 +36,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
-<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Font Awesome -->
 <!-- <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" /> -->
 <!-- <script src="https://use.fontawesome.com/54ee8c2dfd.js"></script> -->
@@ -49,12 +58,18 @@
   ga('send', 'pageview');
 </script>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -67,39 +82,12 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css" />
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -107,13 +95,8 @@ h6 {
   margin-left: auto;
   margin-right: auto;
 }
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -124,44 +107,56 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
+.dropdown-submenu {
+  position: relative;
 }
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
 }
-
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
 }
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
 }
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
 }
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left {
+  float: none;
 }
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -172,62 +167,88 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
-
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -241,6 +262,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -276,8 +303,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -293,8 +318,18 @@ div.tocify {
 
 </style>
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -396,6 +431,12 @@ div.tocify {
     <li>
       <a href="r-textmining.html">Text Mining</a>
     </li>
+    <li>
+      <a href="r-rnaseq-airway.html">RNA-seq</a>
+    </li>
+    <li>
+      <a href="r-ggtree.html">Phylogenetic trees with R</a>
+    </li>
     <li class="dropdown-header">--- Homework ---</li>
     <li>
       <a href="r-dplyr-homework.html">Data Manipulation</a>
@@ -408,6 +449,9 @@ div.tocify {
     </li>
     <li>
       <a href="r-stats-homework.html">Essential Statistics</a>
+    </li>
+    <li>
+      <a href="r-rnaseq-homework.html">RNA-seq</a>
     </li>
   </ul>
 </li>
@@ -437,11 +481,11 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
 </ul>
@@ -487,20 +531,20 @@ ydat &lt;- read_csv(&quot;data/brauer2007_tidy.csv&quot;)
 
 # Display the data
 ydat</code></pre>
-<pre><code>## # A tibble: 198,430 x 7
-##    symbol systematic_name nutrient  rate expression bp         mf         
-##    &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      
-##  1 SFB2   YNL049C         Glucose   0.05      -0.24 ER to Gol… molecular …
-##  2 &lt;NA&gt;   YNL095C         Glucose   0.05       0.28 biologica… molecular …
-##  3 QRI7   YDL104C         Glucose   0.05      -0.02 proteolys… metalloend…
-##  4 CFT2   YLR115W         Glucose   0.05      -0.33 mRNA poly… RNA binding
-##  5 SSO2   YMR183C         Glucose   0.05       0.05 vesicle f… t-SNARE ac…
-##  6 PSP2   YML017W         Glucose   0.05      -0.69 biologica… molecular …
-##  7 RIB2   YOL066C         Glucose   0.05      -0.55 riboflavi… pseudourid…
-##  8 VMA13  YPR036W         Glucose   0.05      -0.75 vacuolar … hydrogen-t…
-##  9 EDC3   YEL015W         Glucose   0.05      -0.24 deadenyly… molecular …
-## 10 VPS5   YOR069W         Glucose   0.05      -0.16 protein r… protein tr…
-## # ... with 198,420 more rows</code></pre>
+<pre><code>## # A tibble: 198,430 × 7
+##    symbol systematic_name nutrient  rate expression bp                     mf   
+##    &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;                  &lt;chr&gt;
+##  1 SFB2   YNL049C         Glucose   0.05      -0.24 ER to Golgi transport  mole…
+##  2 &lt;NA&gt;   YNL095C         Glucose   0.05       0.28 biological process un… mole…
+##  3 QRI7   YDL104C         Glucose   0.05      -0.02 proteolysis and pepti… meta…
+##  4 CFT2   YLR115W         Glucose   0.05      -0.33 mRNA polyadenylylatio… RNA …
+##  5 SSO2   YMR183C         Glucose   0.05       0.05 vesicle fusion*        t-SN…
+##  6 PSP2   YML017W         Glucose   0.05      -0.69 biological process un… mole…
+##  7 RIB2   YOL066C         Glucose   0.05      -0.55 riboflavin biosynthes… pseu…
+##  8 VMA13  YPR036W         Glucose   0.05      -0.75 vacuolar acidification hydr…
+##  9 EDC3   YEL015W         Glucose   0.05      -0.24 deadenylylation-indep… mole…
+## 10 VPS5   YOR069W         Glucose   0.05      -0.16 protein retention in … prot…
+## # … with 198,420 more rows</code></pre>
 </div>
 <div id="problem-set" class="section level3">
 <h3>Problem Set</h3>
@@ -509,25 +553,13 @@ ydat</code></pre>
 <h4>Part 1</h4>
 <p>We can start by taking a look at the distribution of the expression values.</p>
 <ol style="list-style-type: decimal">
-<li>Plot a histogram of the expression variable, and set the bin number equal to 100.</li>
+<li><p>Plot a histogram of the expression variable, and set the bin number equal to 100.</p></li>
+<li><p>Check the distribution of each nutrient in the data set by adjusting the fill aesthetic. Use the same bin number for this histogram.</p></li>
 </ol>
-<pre class="r"><code>ggplot(ydat, aes(x = expression)) +
-    geom_histogram(bins = 100) </code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<ol start="2" style="list-style-type: decimal">
-<li>Check the distribution of each nutrient in the data set by adjusting the fill aesthetic. Use the same bin number for this histogram.</li>
-</ol>
-<pre class="r"><code>ggplot(ydat, aes(x = expression, fill = nutrient)) +
-    geom_histogram(bins = 100)</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Wow. That’s ugly. Might be a candidate for <a href="http://accidental-art.tumblr.com/">accidental aRt</a> but not very helpful for our analysis.</p>
 <ol start="3" style="list-style-type: decimal">
 <li>Now split off the same histogram into a faceted display with 3 columns.</li>
 </ol>
-<pre class="r"><code>ggplot(ydat, aes(x = expression, fill = nutrient)) +
-    geom_histogram(bins = 100) +
-    facet_wrap(~ nutrient, ncol = 3)</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>The basic exploratory process above confirms that the overall distribution (as well each distribution by nutrient) is normal.</p>
 </div>
 <div id="part-2" class="section level4">
@@ -547,7 +579,7 @@ ydat</code></pre>
     summarise(meanexp = mean(expression)) %&gt;%
     arrange(desc(meanexp)) %&gt;%
     filter(row_number() == 1 | row_number() == n())</code></pre>
-<pre><code>## # A tibble: 2 x 2
+<pre><code>## # A tibble: 2 × 2
 ##   symbol meanexp
 ##   &lt;chr&gt;    &lt;dbl&gt;
 ## 1 HXT3      4.01
@@ -559,65 +591,28 @@ ydat</code></pre>
 <blockquote>
 <p><strong>HINT</strong> you can add a “jitter” position to <code>geom_point()</code> but it’s easier to control width of the effect if you use <code>geom_jitter()</code></p>
 </blockquote>
-<pre class="r"><code>gene_exp &lt;- 
-    ydat %&gt;%
-    filter(symbol == &quot;HXT3&quot; | symbol == &quot;HXT6&quot;)
-
-ggplot(gene_exp, aes(x = symbol, y = expression)) +
-    geom_jitter(width = 0.1)</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <ol start="5" style="list-style-type: decimal">
 <li>Now map each observation to its nutrient by color and adjust the size of the points to be 2.</li>
 </ol>
-<pre class="r"><code>ggplot(gene_exp, aes(x = symbol, y = expression)) +
-    geom_jitter(aes(col = nutrient), width = 0.1, size = 2)</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Although these two genes are on opposite ends of the distribution of average expression values, they both seem to express similar amounts when Glucose is the restricted nutrient.</p>
 </div>
 <div id="part-3" class="section level4">
 <h4>Part 3</h4>
 <p>Now let’s try to make something that has a little bit more of a polished look.</p>
 <ol start="6" style="list-style-type: decimal">
-<li>Using <strong>dplyr</strong> logic, create a data frame that has the mean expression values for all combinations of rate and nutrient (<em>hint</em>: use <code>group_by()</code> and <code>summarize()</code>). Create a plot of this data with rate on the x-axis and mean expression on the y-axis and lines colored by nutrient.</li>
-</ol>
-<pre class="r"><code>nutrient_rates &lt;-
-    ydat %&gt;%
-    group_by(rate, nutrient) %&gt;%
-    summarise(meanexp = mean(expression)) 
-
-ggplot(nutrient_rates, aes(x = rate, y =  meanexp)) + geom_line(aes(col=nutrient))</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<ol start="7" style="list-style-type: decimal">
-<li>Add black dotted line (lty=3) that represents the smoothed mean of expression across all combinations of nutrients and rates.</li>
-</ol>
-<pre class="r"><code>ggplot(nutrient_rates, aes(x = rate, y =  meanexp)) + 
-  geom_line(aes(col=nutrient), lty=1) + 
-  geom_smooth(col = &quot;black&quot;, lty=3, se = FALSE) </code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<ol start="8" style="list-style-type: decimal">
-<li>Change the scale to include breaks for <em>all</em> of the rates.</li>
+<li><p>Using <strong>dplyr</strong> logic, create a data frame that has the mean expression values for all combinations of rate and nutrient (<em>hint</em>: use <code>group_by()</code> and <code>summarize()</code>). Create a plot of this data with rate on the x-axis and mean expression on the y-axis and lines colored by nutrient.</p></li>
+<li><p>Add black dotted line (lty=3) that represents the smoothed mean of expression across all combinations of nutrients and rates.</p></li>
+<li><p>Change the scale to include breaks for <em>all</em> of the rates.</p></li>
 </ol>
 <blockquote>
 <p><strong>HINT</strong> The <code>read_csv()</code> function read in the rate variable as continuous rather than discrete. There are a few ways to remedy this, but first see if you can set the scale for the x axis variable without changing the dataframe.</p>
 </blockquote>
-<pre class="r"><code>ggplot(nutrient_rates, aes(x = rate, y =  meanexp)) + 
-  geom_line(aes(col=nutrient), lty=1) + 
-  geom_smooth(col = &quot;black&quot;, se = FALSE, lty=3) + 
-  scale_x_continuous(breaks = nutrient_rates$rate)</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <ol start="9" style="list-style-type: decimal">
 <li>By default <code>ggplot()</code> will name the x and y axes with names of their respective variables. You might want to apply more meaningful labels. Change the name of the x-axis to “Rate”, the name of the y-axis to “Mean Expression” and the plot title to “Mean Expression By Rate (Brauer)”</li>
 </ol>
 <blockquote>
 <p><strong>HINT</strong> <code>?labs</code> will pull up the <strong>ggplot2</strong> documentation on axes labels and plot titles.</p>
 </blockquote>
-<pre class="r"><code>ggplot(nutrient_rates, aes(x = rate, y =  meanexp)) + 
-  geom_line(aes(col=nutrient), lty=1) + 
-  geom_smooth(col = &quot;black&quot;, se = FALSE, lty=3) + 
-  scale_x_continuous(breaks = nutrient_rates$rate) + 
-  xlab(&quot;Rate&quot;) + ylab(&quot;Mean Expression&quot;) + 
-  ggtitle(&quot;Mean Expression By Rate (Brauer)&quot;)</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <ol start="10" style="list-style-type: decimal">
 <li>Add a theme from the <strong>ggthemes</strong> package. The plot below is based on Edward Tufte’s book <em>The Visual Display of Quantitative Information</em>. Choose a theme that you like, but choose wisely – some of these themes will override other adjustments you’ve made to your plot above, including axis labels.</li>
 </ol>
@@ -627,15 +622,6 @@ ggplot(nutrient_rates, aes(x = rate, y =  meanexp)) + geom_line(aes(col=nutrient
 <blockquote>
 <p><strong>HINT 2</strong> You can either do this by trial-and-error or check out the package vignette to get an idea of what each theme looks like: <a href="https://github.com/jrnold/ggthemes" class="uri">https://github.com/jrnold/ggthemes</a></p>
 </blockquote>
-<pre class="r"><code>library(ggthemes)
-ggplot(nutrient_rates, aes(x = rate, y =  meanexp)) + 
-  geom_line(aes(col=nutrient), lty=1) + 
-  geom_smooth(col = &quot;black&quot;, se = FALSE, lty=3) + 
-  scale_x_continuous(breaks = nutrient_rates$rate) + 
-  xlab(&quot;Rate&quot;) + ylab(&quot;Mean Expression&quot;) + 
-  ggtitle(&quot;Mean Expression By Rate (Brauer)&quot;) + 
-  theme_tufte()</code></pre>
-<p><img src="r-viz-homework_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <ol start="11" style="list-style-type: decimal">
 <li>The last step is to save the plot you’ve created. Write your plot to a 10 X 6 PDF using a <strong>ggplot2</strong> function.</li>
 </ol>
@@ -668,13 +654,64 @@ This work is licensed under the  <a href="https://creativecommons.org/licenses/b
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
